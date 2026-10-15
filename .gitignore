@@ -25,3 +25,5 @@ __pycache__/
 
 # Runtime data
 data/scores*.json
+
+.claude/settings.local.json
