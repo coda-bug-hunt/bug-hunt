@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  content:
+    name: Validate game content
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check that every bug file is valid JSON
+        run: |
+          shopt -s globstar nullglob
+          status=0
+          for file in data/bugs/**/*.json; do
+            if ! jq empty "$file"; then
+              echo "::error file=$file::Invalid JSON"
+              status=1
+            fi
+          done
+          exit $status
+
+  # front: lint, tests and build, to add once the stack is chosen
+  # back: lint and tests, to add once the stack is chosen
