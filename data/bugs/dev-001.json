@@ -14,7 +14,7 @@
     "return price + shipping;",
     "return price * shipping;",
     "return shipping - price;"
-  ]
+  ],
   "answer": 0,
   "explanation": "Le prix total additionne les frais de port."
 }
