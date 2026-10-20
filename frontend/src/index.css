@@ -17,3 +17,9 @@
   --font-sans: "DM Sans", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 }
+
+@layer base {
+  body {
+    @apply bg-night text-ink font-sans;
+  }
+}
