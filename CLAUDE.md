@@ -6,7 +6,6 @@ Team workflow and rules: see CONTRIBUTING.md. Follow them.
 
 ## Stack
 
-
 | Outil           | À quoi ça sert                                                                                   |
 |-----------------|--------------------------------------------------------------------------------------------------|
 | **Symfony 7.4** | Le framework PHP. Il gère les routes, le JSON, la validation, etc.                               |
@@ -17,19 +16,21 @@ Team workflow and rules: see CONTRIBUTING.md. Follow them.
 | **Make**        | Des raccourcis : `make up` au lieu de `docker compose up -d --wait`.                             |
 | **React**       | Pour le front.                                                                                   |
 
+- Front end details: `frontend/CLAUDE.md`.
+- The API contract is spec section 3.2 (v1). The front end codes against it
+  through a mock client; never change a route or a field without updating the spec.
 
 ## Commands
 
-<!-- Fill in once the stack is chosen -->
-- Install: TBD
-- Dev server: TBD
-- Tests: TBD
-- Lint: TBD
+- Front end (in `frontend/`): `npm ci`, `npm run dev`, `npm run lint`, `npm run build`
+- Back end (in `backend/`): `make install` (first time), `make up`, `make down`,
+  `make logs`, `make migrate`; `make help` lists every target
 
 ## Project layout
 
+- `frontend/` — the player, leaderboard and admin views
+- `backend/` — the API
 - `data/bugs/` — game content, one JSON file per bug (format below)
-- Front end and back end folders: TBD
 
 ## Domain rules (do not change without asking)
 
@@ -47,6 +48,7 @@ explanation. Game texts in French, everything else in English.
 
 ## Working rules
 
+- Start from the GitHub issue: its "Done when" list is the acceptance criteria.
 - Plan before coding on anything bigger than a small fix; show the plan first.
 - Work on a branch, never on main. Keep changes within the scope of the issue.
 - Run tests and lint before saying a task is done.
