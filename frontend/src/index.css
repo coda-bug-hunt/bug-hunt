@@ -13,6 +13,11 @@
   --color-pink: #FFAEFE;
   --color-danger: #FF8A8A;
 
+  /* Duck mascot */
+  --color-duck: #8B5CFF;
+  --color-duck-dark: #6A35F0;
+  --color-tear: #7FD0FF;
+
   --font-display: "Space Grotesk", sans-serif;
   --font-sans: "DM Sans", sans-serif;
   --font-mono: "JetBrains Mono", monospace;

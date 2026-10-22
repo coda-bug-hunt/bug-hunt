@@ -3,11 +3,11 @@
 
 import { ApiRequestError, type GameApi, type GameSession } from './gameApi'
 import { randomId } from './deviceId'
+import { isValidPseudo } from './pseudo'
 import { mockBugs, type MockBug } from './mockBugs'
 import { LEVELS, MAX_PER_TRACK, TIME_LIMIT, affinityOf, percentOf, pointsFor } from './mockRules'
 import type { Affinity, ByTrack, LeaderboardEntry, PublicBug } from './types'
 
-const PSEUDO_PATTERN = /^[A-Za-z0-9_-]{3,16}$/
 const TOP_SIZE = 10
 const ADMIN_LIST_SIZE = 50
 
@@ -123,7 +123,7 @@ export function createMockClient(options: MockClientOptions = {}): GameApi {
 
   return {
     async createGame({ pseudo, deviceId }) {
-      if (!PSEUDO_PATTERN.test(pseudo)) throw new ApiRequestError('pseudo_invalid')
+      if (!isValidPseudo(pseudo)) throw new ApiRequestError('pseudo_invalid')
       const pseudoKey = pseudo.toLowerCase()
       const player = players.get(pseudoKey)
       if (player && player.deviceId !== deviceId) throw new ApiRequestError('pseudo_unavailable')
