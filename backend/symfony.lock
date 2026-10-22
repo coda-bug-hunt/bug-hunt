@@ -1,0 +1,41 @@
+{
+    "doctrine/deprecations": {
+        "version": "1.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "fdd756167454623e21f1d769c5b814b243782a67"
+        }
+    },
+    "doctrine/doctrine-bundle": {
+        "version": "2.14"
+    },
+    "doctrine/doctrine-migrations-bundle": {
+        "version": "3.4"
+    },
+    "symfony/console": {
+        "version": "7.4"
+    },
+    "symfony/flex": {
+        "version": "2.5"
+    },
+    "symfony/framework-bundle": {
+        "version": "7.4"
+    },
+    "symfony/maker-bundle": {
+        "version": "1.62"
+    },
+    "symfony/property-info": {
+        "version": "7.4"
+    },
+    "symfony/routing": {
+        "version": "7.4"
+    },
+    "symfony/serializer": {
+        "version": "7.4"
+    },
+    "symfony/validator": {
+        "version": "7.4"
+    }
+}

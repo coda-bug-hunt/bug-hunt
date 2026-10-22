@@ -1,0 +1,15 @@
+# Configuration des services (les classes de src/ sont injectables automatiquement)
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/DependencyInjection/'
+            - '../src/Dto/'
+            - '../src/Entity/'
+            - '../src/Kernel.php'

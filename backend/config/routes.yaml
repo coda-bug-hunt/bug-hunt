@@ -1,0 +1,6 @@
+# Les routes sont déclarées directement dans les contrôleurs avec #[Route(...)]
+controllers:
+    resource:
+        path: ../src/Controller/
+        namespace: App\Controller
+    type: attribute
