@@ -181,11 +181,12 @@ export function createMockClient(options: MockClientOptions = {}): GameApi {
         throw new ApiRequestError('already_answered')
       }
       const bug = currentBug(game, bugId)
-      if (game.lineCorrect === null) throw new ApiRequestError('selection_missing')
+      // A timeout (choice null) needs no selection: the timer can run out before it.
+      if (game.lineCorrect === null && choice !== null) throw new ApiRequestError('selection_missing')
 
       const elapsed = game.sentAt === null ? 0 : now() - game.sentAt
       const timedOut = choice === null || elapsed > TIME_LIMIT * 1000
-      const points = pointsFor(bug.difficulty, game.lineCorrect, choice === bug.answer, timedOut)
+      const points = pointsFor(bug.difficulty, game.lineCorrect ?? false, choice === bug.answer, timedOut)
       game.byTrack[bug.track] += points
 
       game.index += 1

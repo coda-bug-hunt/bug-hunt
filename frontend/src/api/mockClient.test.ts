@@ -106,6 +106,14 @@ describe('scoring', () => {
     expect((await api.answer(session, { bugId: bug.id, choice: null })).points).toBe(0)
   })
 
+  it('accepts a timeout before any line was selected', async () => {
+    const api = createMockClient()
+    const session = await start(api)
+    const bug = fullBug((await api.nextBug(session))!.bug)
+    const answer = await api.answer(session, { bugId: bug.id, choice: null })
+    expect(answer).toMatchObject({ correct: false, points: 0, finished: false })
+  })
+
   it('gives 0 for an answer after 60 seconds, even a right one', async () => {
     const clock = fakeClock()
     const api = createMockClient({ now: clock.now })
