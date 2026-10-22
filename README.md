@@ -9,6 +9,7 @@ development or networking. A live leaderboard is shown on a big screen.
 
 ## Team
 
+- René - Archi
 - Charly — front end, repo, contact with the school
 - AeRia — back end (game flow), CI, Docker
 - Bezou — back end (storage, players, leaderboard) and game content
