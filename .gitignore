@@ -11,6 +11,7 @@ Thumbs.db
 .env
 .env.*
 !.env.example
+!frontend/.env.development
 
 # Node (front end, whatever the back-end stack)
 node_modules/
