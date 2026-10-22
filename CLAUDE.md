@@ -33,15 +33,20 @@ Team workflow and rules: see CONTRIBUTING.md. Follow them.
 
 ## Domain rules (do not change without asking)
 
-- A game is 8 bugs: 4 dev, 4 network, alternating, levels 1 to 4.
-- Points: 100 x level. Wrong line then right fix: 50%. Wrong fix or timeout: 0.
+- 2 tracks: dev and network (shown as "SR" to players). Track id stays `network`.
+- 5 levels, 0 to 4. Level 0 targets complete beginners (high-school students):
+  very short, everyday logic, no jargon. Difficulty rises with each level.
+- A game is 10 bugs: for each level from 0 to 4, one dev bug then one network bug.
+- Pool: 5 bugs per level per track (50 bugs); each game picks one at random.
+- Points: 100 x (level + 1). Wrong line then right fix: 50%. Wrong fix or timeout: 0.
 - 60 seconds per bug, enforced by the server, never by the client.
 - The right answer is never sent to the client before the player answers.
-- Orientation: compare dev % and network %; a gap of 10 points or less is "both".
+- Affinity: dev % = dev points / max dev points, same for network.
+  A gap of 10 points or less is "both".
 
 ## Bug JSON format
 
-Fields: id, track (dev|network), difficulty (1-4), points, title, code (array of
+Fields: id, track (dev|network), difficulty (0-4), points, title, code (array of
 lines) or diagram, bugLine (0-based) or bugTarget, choices (3), answer (0-based),
 explanation. Game texts in French, everything else in English.
 

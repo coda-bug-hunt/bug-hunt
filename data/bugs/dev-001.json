@@ -1,7 +1,7 @@
 {
   "id": "dev-001",
   "track": "dev",
-  "difficulty": 1,
+  "difficulty": 0,
   "points": 100,
   "title": "Le panier compte mal",
   "code": [

@@ -7,7 +7,7 @@ labels: content
 ## Track and level
 
 - Track: dev / network
-- Level: 1 to 4
+- Level: 0 to 4 (0 = complete beginners: very short, everyday logic, no jargon)
 
 ## The bug
 
