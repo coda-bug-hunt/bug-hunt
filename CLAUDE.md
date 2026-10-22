@@ -17,8 +17,9 @@ Team workflow and rules: see CONTRIBUTING.md. Follow them.
 | **React**       | Pour le front.                                                                                   |
 
 - Front end details: `frontend/CLAUDE.md`.
-- The API contract is spec section 3.2 (v1). The front end codes against it
-  through a mock client; never change a route or a field without updating the spec.
+- The API contract is the "API contract (v1)" section below. The front end codes
+  against it through a mock client; never change a route or a field without
+  updating that section and `frontend/src/api/types.ts`.
 
 ## Commands
 
@@ -50,6 +51,22 @@ Team workflow and rules: see CONTRIBUTING.md. Follow them.
 Fields: id, track (dev|network), difficulty (0-4), points, title, code (array of
 lines) or diagram, bugLine (0-based) or bugTarget, choices (3), answer (0-based),
 explanation. Game texts in French, everything else in English.
+
+## API contract (v1)
+
+Types: `frontend/src/api/types.ts`. Game routes need `Authorization: Bearer <token>`
+(401 `bad_token`, 404 `unknown_game`). Every error is `{"error": "<code>"}`.
+
+| Method | Route | Input | Output |
+| --- | --- | --- | --- |
+| POST | `/api/games` | `pseudo`, `deviceId` | 201 `gameId`, `token`, `totalBugs` (10) · 400 `pseudo_invalid`, `pseudo_unavailable` |
+| GET | `/api/games/{id}/next` | – | 200 `index`, `bug` (no `bugLine`, `bugTarget`, `answer`, `explanation`), `timeLimit`, `remainingSeconds` · 204 when the game is over |
+| POST | `/api/games/{id}/selection` | `bugId`, `selectedLine` or `selectedTarget` | 200 `lineCorrect`, `correctLine` or `correctTarget` · 409 `already_selected`, `not_current_bug` |
+| POST | `/api/games/{id}/answers` | `bugId`, `choice` (0-2, or `null` on timeout) | 200 `correct`, `correctChoice`, `points`, `explanation`, `score`, `finished` · 409 `already_answered`, `selection_missing`, `not_current_bug` |
+| GET | `/api/games/{id}/result` | – | 200 `score`, `maxScore` (3000), `byTrack`, `percentByTrack` (track points / 1500), `affinity` (`dev`, `network`, `both`, or `null` in dev-only mode), `rank`, `playersCount` · 409 `game_not_finished` |
+| GET | `/api/leaderboard` | – | 200 `top` (10: `rank`, `pseudo`, `score`, `affinity`, `byTrack`), `gauges` (`dev`, `network`), `gamesPlayed` |
+| GET | `/api/admin/players` | header `X-Admin-Pin` | 200 `players` (50 latest: `pseudo`, `bestScore`, `affinity`, `hidden`, `lastPlayedAt`) · 401 `bad_pin` |
+| PATCH | `/api/admin/players/{pseudo}` | `hidden`, header `X-Admin-Pin` | 204 · 401 `bad_pin` · 404 `unknown_player` |
 
 ## Working rules
 
