@@ -6,7 +6,17 @@ Team workflow and rules: see CONTRIBUTING.md. Follow them.
 
 ## Stack
 
-TBD (React front end; back end in Node or FastAPI, decided by AeRia).
+
+| Outil           | À quoi ça sert                                                                                   |
+|-----------------|--------------------------------------------------------------------------------------------------|
+| **Symfony 7.4** | Le framework PHP. Il gère les routes, le JSON, la validation, etc.                               |
+| **Doctrine**    | Fait le lien entre tes classes PHP et la base de données (pas besoin d'écrire du SQL à la main). |
+| **FrankenPHP**  | Le serveur web qui exécute PHP.                                                                  |
+| **MariaDB**     | La base de données.                                                                              |
+| **Adminer**     | Une page web pour voir et modifier la base.                                                      |
+| **Make**        | Des raccourcis : `make up` au lieu de `docker compose up -d --wait`.                             |
+| **React**       | Pour le front.                                                                                   |
+
 
 ## Commands
 

@@ -4,14 +4,15 @@ Un point de départ pour créer une API REST en PHP avec Symfony, sans rien inst
 
 Ce qu'il y a dedans :
 
-| Outil | À quoi ça sert |
-|---|---|
-| **Symfony 7.4** | Le framework PHP. Il gère les routes, le JSON, la validation, etc. |
-| **Doctrine** | Fait le lien entre tes classes PHP et la base de données (pas besoin d'écrire du SQL à la main). |
-| **FrankenPHP** | Le serveur web qui exécute PHP. |
-| **MariaDB** | La base de données. |
-| **Adminer** | Une page web pour voir et modifier la base. |
-| **Make** | Des raccourcis : `make up` au lieu de `docker compose up -d --wait`. |
+| Outil           | À quoi ça sert                                                                                   |
+|-----------------|--------------------------------------------------------------------------------------------------|
+| **Symfony 7.4** | Le framework PHP. Il gère les routes, le JSON, la validation, etc.                               |
+| **Doctrine**    | Fait le lien entre tes classes PHP et la base de données (pas besoin d'écrire du SQL à la main). |
+| **FrankenPHP**  | Le serveur web qui exécute PHP.                                                                  |
+| **MariaDB**     | La base de données.                                                                              |
+| **Adminer**     | Une page web pour voir et modifier la base.                                                      |
+| **Make**        | Des raccourcis : `make up` au lieu de `docker compose up -d --wait`.                             |
+| **React**       | Pour le front.                                                                                   |
 
 Un exemple complet est fourni : une API de **tâches** (créer, lister, modifier, supprimer). Tu peux t'en inspirer puis le supprimer.
 
