@@ -60,7 +60,7 @@ Types: `frontend/src/api/types.ts`. Game routes need `Authorization: Bearer <tok
 | Method | Route | Input | Output |
 | --- | --- | --- | --- |
 | POST | `/api/games` | `pseudo`, `deviceId` | 201 `gameId`, `token`, `totalBugs` (10) · 400 `pseudo_invalid`, `pseudo_unavailable` |
-| GET | `/api/games/{id}/next` | – | 200 `index`, `bug` (no `bugLine`, `bugTarget`, `answer`, `explanation`), `timeLimit`, `remainingSeconds` · 204 when the game is over |
+| GET | `/api/games/{id}/next` | – | 200 `index`, `bug` (no `bugLine`, `bugTarget`, `answer`, `explanation`; optional `hint`, which never gives the answer), `timeLimit`, `remainingSeconds` · 204 when the game is over |
 | POST | `/api/games/{id}/selection` | `bugId`, `selectedLine` or `selectedTarget` | 200 `lineCorrect`, `correctLine` or `correctTarget` · 409 `already_selected`, `not_current_bug` |
 | POST | `/api/games/{id}/answers` | `bugId`, `choice` (0-2, or `null` on timeout, allowed without a selection) | 200 `correct`, `correctChoice`, `points`, `explanation`, `score`, `finished` · 409 `already_answered`, `selection_missing`, `not_current_bug` |
 | GET | `/api/games/{id}/result` | – | 200 `score`, `maxScore` (3000), `byTrack`, `percentByTrack` (track points / 1500), `affinity` (`dev`, `network`, `both`, or `null` in dev-only mode), `rank`, `playersCount` · 409 `game_not_finished` |
