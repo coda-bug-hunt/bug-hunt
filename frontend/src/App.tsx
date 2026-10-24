@@ -2,7 +2,7 @@ import { useCallback, useState, type ReactNode } from 'react'
 import { useGame } from './game/useGame'
 import { clearGame, readGame, saveGame, type ActiveGame } from './game/session'
 import BugScreen from './screens/Bug/BugScreen'
-import FeedbackPlaceholder from './screens/Feedback/FeedbackPlaceholder'
+import FeedbackScreen from './screens/Feedback/FeedbackScreen'
 import HomeScreen from './screens/Home/HomeScreen'
 
 function Centered({ children }: { children: ReactNode }) {
@@ -44,7 +44,18 @@ function GameView({ game, onLeave }: { game: ActiveGame; onLeave: () => void }) 
     )
   }
 
-  if (state.phase === 'feedback') return <FeedbackPlaceholder answer={state.answer!} onNext={next} />
+  if (state.phase === 'feedback') {
+    return (
+      <FeedbackScreen
+        bug={state.current!.bug}
+        answer={state.answer!}
+        verdict={state.verdict}
+        index={state.current!.index}
+        totalBugs={game.totalBugs}
+        onNext={next}
+      />
+    )
+  }
 
   // Placeholder until the end screen (#37).
   return (
