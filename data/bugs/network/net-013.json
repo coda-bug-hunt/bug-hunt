@@ -1,0 +1,23 @@
+{
+  "id": "net-013",
+  "track": "network",
+  "difficulty": 2,
+  "points": 300,
+  "title": "Le PC de Yanis est invisible en LAN",
+  "diagram": {
+    "devices": [
+      { "id": "pc1", "label": "PC de Léo", "ip": "192.168.1.10", "mask": "255.255.255.0" },
+      { "id": "switch", "label": "Switch réseau" },
+      { "id": "pc2", "label": "PC de Yanis", "ip": "192.168.1.0", "mask": "255.255.255.0" }
+    ],
+    "links": [["pc1", "switch"], ["switch", "pc2"]]
+  },
+  "bugTarget": "pc2",
+  "choices": [
+    "Donner au PC de Yanis l'adresse 192.168.1.20",
+    "Donner au PC de Léo l'adresse 192.168.1.0",
+    "Débrancher le switch réseau"
+  ],
+  "answer": 0,
+  "explanation": "La première adresse d'un réseau, celle qui finit par 0, est réservée : elle désigne le réseau entier, comme le nom d'une rue. Aucune machine ne peut la prendre."
+}

@@ -1,0 +1,23 @@
+{
+  "id": "net-014",
+  "track": "network",
+  "difficulty": 3,
+  "points": 400,
+  "title": "Ta console : « Échec de la connexion »",
+  "diagram": {
+    "devices": [
+      { "id": "console", "label": "Ta console", "ip": "169.254.12.7" },
+      { "id": "box", "label": "Box", "ip": "192.168.1.1" },
+      { "id": "internet", "label": "Internet" }
+    ],
+    "links": [["console", "box"], ["box", "internet"]]
+  },
+  "bugTarget": "console",
+  "choices": [
+    "Faire redemander une adresse à la box par ta console",
+    "Donner à la box l'adresse 169.254.12.7",
+    "Débrancher la box d'Internet"
+  ],
+  "answer": 0,
+  "explanation": "Normalement, la box donne une adresse à chaque appareil. Quand ta console n'en reçoit pas, elle s'en invente une qui commence par 169.254. Avec elle, elle ne parle à personne : il faut redemander une vraie adresse à la box."
+}

@@ -1,0 +1,23 @@
+{
+  "id": "net-011",
+  "track": "network",
+  "difficulty": 0,
+  "points": 100,
+  "title": "Ta console ne trouve pas ton pote",
+  "diagram": {
+    "devices": [
+      { "id": "console", "label": "Ta nouvelle console", "ip": "0.0.0.0" },
+      { "id": "box", "label": "Box", "ip": "192.168.1.1" },
+      { "id": "pc", "label": "PC de Léo", "ip": "192.168.1.20" }
+    ],
+    "links": [["console", "box"], ["box", "pc"]]
+  },
+  "bugTarget": "console",
+  "choices": [
+    "Donner à ta console l'adresse 192.168.1.15",
+    "Donner à ta console l'adresse 192.168.1.1",
+    "Retirer l'adresse du PC de Léo"
+  ],
+  "answer": 0,
+  "explanation": "Ta console affiche 0.0.0.0 : ça veut dire qu'elle n'a pas d'adresse. Sans adresse, c'est comme une maison sans numéro : personne ne peut l'inviter dans une partie."
+}

@@ -1,0 +1,23 @@
+{
+  "id": "net-012",
+  "track": "network",
+  "difficulty": 1,
+  "points": 200,
+  "title": "La tablette de ta sœur coupe Fortnite",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "Ton PC gamer", "ip": "192.168.1.10" },
+      { "id": "box", "label": "Box", "ip": "192.168.1.1" },
+      { "id": "tablet", "label": "Tablette de ta sœur", "ip": "192.168.1.1" }
+    ],
+    "links": [["pc", "box"], ["box", "tablet"]]
+  },
+  "bugTarget": "tablet",
+  "choices": [
+    "Donner à la tablette l'adresse 192.168.1.30",
+    "Donner à ton PC l'adresse 192.168.1.1",
+    "Débrancher ton PC"
+  ],
+  "answer": 0,
+  "explanation": "Dès que la tablette se connecte, tout le monde est éjecté du jeu. Elle a pris la même adresse que la box : les messages qui devaient passer par la box se perdent."
+}

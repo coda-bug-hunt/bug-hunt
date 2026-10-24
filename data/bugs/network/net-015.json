@@ -1,0 +1,23 @@
+{
+  "id": "net-015",
+  "track": "network",
+  "difficulty": 4,
+  "points": 500,
+  "title": "Sarah ne voit pas le serveur de la LAN",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC de Sarah", "ip": "192.168.2.10", "mask": "255.255.0.0" },
+      { "id": "switch", "label": "Switch réseau" },
+      { "id": "server", "label": "Serveur de la LAN", "ip": "192.168.1.20", "mask": "255.255.255.0" }
+    ],
+    "links": [["pc", "switch"], ["switch", "server"]]
+  },
+  "bugTarget": "pc",
+  "choices": [
+    "Donner au PC de Sarah l'adresse 192.168.1.10 et le masque /24",
+    "Donner au PC de Sarah le masque /8",
+    "Donner au PC de Sarah l'adresse 192.168.1.20"
+  ],
+  "answer": 0,
+  "explanation": "Tout le monde joue sur le serveur, sauf Sarah. Son PC est dans le réseau 192.168.2, le serveur dans le 192.168.1, et son masque /16, trop large, lui fait croire qu'ils sont voisins. Il faut la remettre dans le bon réseau, avec le même masque /24 que le serveur."
+}
