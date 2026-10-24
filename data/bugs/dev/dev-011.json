@@ -1,0 +1,21 @@
+{
+  "id": "dev-011",
+  "track": "dev",
+  "difficulty": 0,
+  "points": 100,
+  "title": "Le minuteur compte 200 minutes pour 2 heures",
+  "code": [
+    "def to_minutes(hours):",
+    "    minutes = hours * 100",
+    "    return minutes",
+    "print(to_minutes(2))"
+  ],
+  "bugLine": 1,
+  "choices": [
+    "minutes = hours * 60",
+    "minutes = hours * 24",
+    "minutes = hours + 60"
+  ],
+  "answer": 0,
+  "explanation": "Une heure dure 60 minutes, pas 100. Il faut multiplier par 60."
+}

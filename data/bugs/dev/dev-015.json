@@ -1,0 +1,22 @@
+{
+  "id": "dev-015",
+  "track": "dev",
+  "difficulty": 4,
+  "points": 500,
+  "title": "Les soldes à -50 % réduisent aussi les frais de port",
+  "code": [
+    "def final_price(price, shipping):",
+    "    price = price + shipping",
+    "    price = price * 0.5",
+    "    return price",
+    "print(final_price(20, 5))"
+  ],
+  "bugLine": 1,
+  "choices": [
+    "Mettre la ligne 2 après la ligne 3",
+    "Mettre la ligne 4 avant la ligne 3",
+    "Mettre la ligne 3 après la ligne 4"
+  ],
+  "answer": 0,
+  "explanation": "Les frais de port sont ajoutés avant la réduction, donc ils sont coupés en deux aussi. Il faut d'abord réduire le prix, puis ajouter les frais."
+}

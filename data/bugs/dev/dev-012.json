@@ -1,0 +1,22 @@
+{
+  "id": "dev-012",
+  "track": "dev",
+  "difficulty": 1,
+  "points": 200,
+  "title": "Il fait 35 °C, mais l'appli dit qu'il ne fait pas chaud",
+  "code": [
+    "def is_hot(temp):",
+    "    if temp < 30:",
+    "        return True",
+    "    return False",
+    "print(is_hot(35))"
+  ],
+  "bugLine": 1,
+  "choices": [
+    "if temp > 30:",
+    "if temp == 30:",
+    "if temp < 35:"
+  ],
+  "answer": 0,
+  "explanation": "< veut dire « plus petit que » : l'appli dit qu'il fait chaud quand il fait moins de 30 °C. Il faut > (« plus grand que »)."
+}

@@ -1,0 +1,24 @@
+{
+  "id": "dev-014",
+  "track": "dev",
+  "difficulty": 3,
+  "points": 400,
+  "title": "Le meilleur score affiché est 0",
+  "code": [
+    "def best_score(scores):",
+    "    best = 0",
+    "    for s in scores:",
+    "        if s < best:",
+    "            best = s",
+    "    return best",
+    "print(best_score([12, 18, 7]))"
+  ],
+  "bugLine": 3,
+  "choices": [
+    "if s > best:",
+    "if s == best:",
+    "if best > s:"
+  ],
+  "answer": 0,
+  "explanation": "La boucle doit garder un score quand il est plus grand que le meilleur trouvé. Avec <, aucun score ne bat 0."
+}

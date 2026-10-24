@@ -1,0 +1,21 @@
+{
+  "id": "dev-013",
+  "track": "dev",
+  "difficulty": 2,
+  "points": 300,
+  "title": "Une pièce de 3 m sur 5 m ne fait pas 9 m²",
+  "code": [
+    "def area(width, height):",
+    "    result = width * width",
+    "    return result",
+    "print(area(3, 5))"
+  ],
+  "bugLine": 1,
+  "choices": [
+    "result = width * height",
+    "result = height * height",
+    "result = width + height"
+  ],
+  "answer": 0,
+  "explanation": "La surface, c'est la largeur fois la hauteur. Ici, la largeur est utilisée deux fois."
+}
