@@ -33,4 +33,16 @@ describe('FixSheet', () => {
     await userEvent.click(screen.getByRole('button', { name: /return price \* shipping/ }))
     expect(onChoose).toHaveBeenCalledWith(1)
   })
+
+  it('shows a tutorial tip first, then gives the focus back to the title', async () => {
+    const onTipDone = vi.fn()
+    const sheet = (tip?: string) => (
+      <FixSheet choices={choices} verdict={{ lineCorrect: null }} correctLabel={null} onChoose={() => {}} tip={tip} onTipDone={onTipDone} />
+    )
+    const { rerender } = render(sheet('Choisis la bonne correction.'))
+    await userEvent.click(screen.getByRole('button', { name: 'Compris' }))
+    expect(onTipDone).toHaveBeenCalledOnce()
+    rerender(sheet())
+    expect(document.activeElement).toBe(screen.getByRole('heading'))
+  })
 })

@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import type { Choice, Track } from '../../api'
 import Duck from '../../components/Duck'
 import TrackIcon from '../../components/TrackIcon'
@@ -7,6 +8,11 @@ import { useCountdown } from '../../game/useCountdown'
 import CodeLines from './CodeLines'
 import NetworkDiagram from './NetworkDiagram'
 import FixSheet from './FixSheet'
+import TutorialTip from './TutorialTip'
+import { markTutorialSeen, tutorialSeen } from './tutorial'
+
+// First-bug tutorial: one duck bubble per gesture, then the usual tips.
+type TutorialStep = 'line' | 'fix' | 'done'
 
 type BugScreenProps = {
   state: GameState
@@ -26,6 +32,18 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
   const { bug } = current
   const left = useCountdown(state.endTime, () => onAnswer(null))
   const hurry = left <= 10
+  const heading = useRef<HTMLHeadingElement>(null)
+  // The screen is mounted again for each bug: the tutorial is decided once.
+  const [step, setStep] = useState<TutorialStep>(() => (current.index === 0 && !tutorialSeen() ? 'line' : 'done'))
+
+  useEffect(() => {
+    if (step === 'line') markTutorialSeen()
+  }, [step])
+
+  function lineTipDone() {
+    setStep('fix')
+    heading.current?.focus()
+  }
 
   const { verdict } = state
   let correctLabel: string | null = null
@@ -68,7 +86,9 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
           <TrackIcon track={bug.track} />
           {bug.track === 'dev' ? 'DEV' : 'SR'} · NIVEAU {bug.difficulty}
         </span>
-        <h1 className="font-display text-[26px] leading-tight font-bold">{bug.title}</h1>
+        <h1 ref={heading} tabIndex={-1} className="font-display text-[26px] leading-tight font-bold outline-none">
+          {bug.title}
+        </h1>
         <p className="text-[15px] text-ink-soft">
           {bug.track === 'dev' ? 'Touche la ligne qui contient le bug.' : "Touche l'appareil mal configuré."}
         </p>
@@ -89,15 +109,28 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
       {!verdict && (
         <div className="mt-auto flex items-center gap-2.5">
           <Duck mood="think" size={72} />
-          <p className="flex-1 rounded-2xl rounded-bl-sm border border-line bg-surface px-3.5 py-2.5 text-sm leading-snug text-ink-soft">
-            {bug.track === 'dev'
-              ? "Coin… Lis chaque ligne à voix haute, comme si tu me l'expliquais."
-              : 'Coin… Compare bien les réglages de chaque appareil.'}
-          </p>
+          {step === 'line' ? (
+            <TutorialTip text="Touche la ligne où se cache le bug." onDone={lineTipDone} />
+          ) : (
+            <p className="flex-1 rounded-2xl rounded-bl-sm border border-line bg-surface px-3.5 py-2.5 text-sm leading-snug text-ink-soft">
+              {bug.track === 'dev'
+                ? "Coin… Lis chaque ligne à voix haute, comme si tu me l'expliquais."
+                : 'Coin… Compare bien les réglages de chaque appareil.'}
+            </p>
+          )}
         </div>
       )}
 
-      {verdict && <FixSheet choices={bug.choices} verdict={verdict} correctLabel={correctLabel} onChoose={onAnswer} />}
+      {verdict && (
+        <FixSheet
+          choices={bug.choices}
+          verdict={verdict}
+          correctLabel={correctLabel}
+          onChoose={onAnswer}
+          tip={step === 'done' ? undefined : 'Choisis la bonne correction.'}
+          onTipDone={() => setStep('done')}
+        />
+      )}
     </main>
   )
 }

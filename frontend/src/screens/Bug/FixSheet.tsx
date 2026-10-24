@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import type { Choice } from '../../api'
 import Duck from '../../components/Duck'
 import type { Verdict } from '../../game/gameReducer'
+import TutorialTip from './TutorialTip'
 
 const LETTERS = ['A', 'B', 'C']
 
@@ -11,15 +12,19 @@ type FixSheetProps = {
   // "la ligne 4" or the device name, for the title.
   correctLabel: string | null
   onChoose: (choice: Choice) => void
+  // First-bug tutorial: shown above the fixes until understood.
+  tip?: string
+  onTipDone?: () => void
 }
 
 // Bottom sheet with the 3 fixes (Coda mockup E3). The code stays visible above.
-function FixSheet({ choices, verdict, correctLabel, onChoose }: FixSheetProps) {
+function FixSheet({ choices, verdict, correctLabel, onChoose, tip, onTipDone }: FixSheetProps) {
   const title = useRef<HTMLHeadingElement>(null)
 
+  // The tip takes the focus first; the title gets it once the tip is closed.
   useEffect(() => {
-    title.current?.focus()
-  }, [])
+    if (!tip) title.current?.focus()
+  }, [tip])
 
   let heading = 'Quelle correction ?'
   if (verdict.lineCorrect === true && correctLabel) heading = `Bien vu, ${correctLabel} ! Quelle correction ?`
@@ -37,6 +42,7 @@ function FixSheet({ choices, verdict, correctLabel, onChoose }: FixSheetProps) {
           {heading}
         </h2>
       </div>
+      {tip && <TutorialTip text={tip} onDone={() => onTipDone?.()} />}
       {choices.map((choice, index) => (
         <button
           key={index}
