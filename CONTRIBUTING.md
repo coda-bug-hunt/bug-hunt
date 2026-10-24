@@ -110,11 +110,12 @@ Every PR is reviewed by someone other than its author.
 
 | Change | Reviewer |
 | --- | --- |
-| Front end | AeRia or Bezou: test the screen at 390 px wide, against the mockup |
-| Back end | the other back-end developer (AeRia <-> Bezou) |
-| Dev bugs | Charly or AeRia: play the bug, read the explanation |
+| Front end | Bezou or AeRia: test the screen at 390 px wide, against the mockup |
+| Back end | Charly (contract and types) or MrLeoufff |
+| Dev bugs | Charly or Bezou: play the bug, read the explanation |
 | Network bugs | a network-track student for the content, then Bezou or Charly |
-| Docker, CI, infra | Charly |
+| Deployment, Docker | Bezou (API side) or Charly |
+| CI | Charly |
 
 **As a reviewer**, answer within 24 hours, and check:
 
