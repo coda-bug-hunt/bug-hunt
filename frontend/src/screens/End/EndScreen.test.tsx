@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import type { GameResult } from '../../api'
+import { sound } from '../../sound/player'
 import EndScreen from './EndScreen'
 
 const result: GameResult = {
@@ -59,5 +60,14 @@ describe('EndScreen', () => {
     renderEnd({}, onReplay)
     await userEvent.click(screen.getByRole('button', { name: 'Rejouer' }))
     expect(onReplay).toHaveBeenCalledTimes(1)
+  })
+})
+
+describe('EndScreen sound', () => {
+  it('plays a fanfare', () => {
+    const play = vi.spyOn(sound, 'play').mockImplementation(() => {})
+    renderEnd()
+    expect(play).toHaveBeenCalledWith('fanfare')
+    play.mockRestore()
   })
 })

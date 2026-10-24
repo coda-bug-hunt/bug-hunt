@@ -3,6 +3,7 @@ import { ApiRequestError, api, getDeviceId } from '../../api'
 import { PSEUDO_MAX_LENGTH, isValidPseudo } from '../../api/pseudo'
 import Duck from '../../components/Duck'
 import type { ActiveGame } from '../../game/session'
+import { sound } from '../../sound/player'
 import TrackIcon from '../../components/TrackIcon'
 import { readLastPseudo, saveLastPseudo } from './lastPseudo'
 import { randomPseudo } from './randomPseudo'
@@ -45,6 +46,8 @@ function HomeScreen({ onStart }: HomeScreenProps) {
   async function start(event: FormEvent) {
     event.preventDefault()
     if (!valid || sending) return
+    // iOS only starts audio from a user gesture: this tap unlocks it for the game.
+    sound.unlock()
     setSending(true)
     try {
       const { gameId, token, totalBugs } = await api.createGame({ pseudo, deviceId: getDeviceId() })

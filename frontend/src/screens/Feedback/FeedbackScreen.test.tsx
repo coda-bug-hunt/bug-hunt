@@ -3,6 +3,7 @@ import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
 import type { AnswerResponse, PublicBug } from '../../api'
+import { sound } from '../../sound/player'
 import FeedbackScreen from './FeedbackScreen'
 
 const devBug: PublicBug = {
@@ -86,5 +87,22 @@ describe('FeedbackScreen', () => {
 
     renderFeedback({ answer: { ...right, finished: true } })
     expect(screen.getByRole('button', { name: 'Voir mon résultat' })).toBeTruthy()
+  })
+})
+
+describe('FeedbackScreen sounds', () => {
+  it('cheers a right answer and groans at a wrong one', () => {
+    const play = vi.spyOn(sound, 'play').mockImplementation(() => {})
+    const { unmount } = renderFeedback()
+    expect(play).toHaveBeenLastCalledWith('right')
+    unmount()
+    renderFeedback({ answer: { ...right, correct: false, points: 0 } })
+    expect(play).toHaveBeenLastCalledWith('wrong')
+    play.mockRestore()
+  })
+
+  it('has a mute button', () => {
+    renderFeedback()
+    expect(screen.getByRole('button', { name: 'Couper le son' })).toBeTruthy()
   })
 })
