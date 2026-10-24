@@ -1,6 +1,7 @@
 # Bug files
 
-One JSON file per bug, named after its `id` (`dev-001.json`, `net-001.json`).
+One JSON file per bug, named after its `id`, in the folder of its track:
+`dev/dev-001.json`, `network/net-001.json`.
 Keys in English; game texts (`title`, `choices`, `explanation`, device
 `label`) in French.
 
@@ -27,7 +28,7 @@ client before the player answers.
 | `code` | array of strings | One string per line, indentation kept |
 | `bugLine` | integer | 0-based index of the faulty line in `code` |
 
-Example: `dev-001.json`.
+Example: `dev/dev-001.json`.
 
 ## Network bug
 
@@ -51,12 +52,12 @@ A device:
 
 `links` and `bugTarget` must only use `id`s listed in `devices`.
 
-Example: `net-001.json`.
+Example: `network/net-001.json`.
 
 ## Checks
 
 ```bash
-jq empty data/bugs/*.json
+jq empty data/bugs/**/*.json
 ```
 
 Then play the bug once in the game.
