@@ -1,0 +1,24 @@
+{
+  "id": "dev-003",
+  "track": "dev",
+  "difficulty": 3,
+  "points": 400,
+  "title": "Le nombre de notes validées reste à 0",
+  "code": [
+    "function countPassed(grades) {",
+    "  let passed = 0;",
+    "  for (const g of grades) {",
+    "    if (g >= 10) passed + 1;",
+    "  }",
+    "  return passed;",
+    "}"
+  ],
+  "bugLine": 3,
+  "choices": [
+    "if (g >= 10) passed = passed + 1;",
+    "if (g >= 10) passed = 1;",
+    "if (g >= 10) passed = g + 1;"
+  ],
+  "answer": 0,
+  "explanation": "passed + 1 calcule un nombre mais ne le garde nulle part. Il faut écrire passed = passed + 1 pour que le compteur augmente."
+}

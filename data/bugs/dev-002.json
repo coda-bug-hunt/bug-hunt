@@ -1,0 +1,23 @@
+{
+  "id": "dev-002",
+  "track": "dev",
+  "difficulty": 1,
+  "points": 200,
+  "title": "Les jeunes de 18 ans ne peuvent pas voter",
+  "code": [
+    "function canVote(age) {",
+    "  if (age > 18) {",
+    "    return true;",
+    "  }",
+    "  return false;",
+    "}"
+  ],
+  "bugLine": 1,
+  "choices": [
+    "if (age >= 18) {",
+    "if (age < 18) {",
+    "if (age <= 18) {"
+  ],
+  "answer": 0,
+  "explanation": "18 n'est pas plus grand que 18, donc il est refusé. Le signe >= veut dire « plus grand ou égal »."
+}

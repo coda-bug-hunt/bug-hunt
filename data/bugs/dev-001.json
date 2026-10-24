@@ -6,14 +6,16 @@
   "title": "Le panier compte mal",
   "code": [
     "function getTotal(price, shipping) {",
-    "  return price - shipping;",
+    "  let total = price;",
+    "  total = total - shipping;",
+    "  return total;",
     "}"
   ],
-  "bugLine": 1,
+  "bugLine": 2,
   "choices": [
-    "return price + shipping;",
-    "return price * shipping;",
-    "return shipping - price;"
+    "total = total + shipping;",
+    "total = total * shipping;",
+    "total = shipping - total;"
   ],
   "answer": 0,
   "explanation": "Le prix total additionne les frais de port."

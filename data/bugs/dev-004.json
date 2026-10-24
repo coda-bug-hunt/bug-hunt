@@ -1,0 +1,22 @@
+{
+  "id": "dev-004",
+  "track": "dev",
+  "difficulty": 2,
+  "points": 300,
+  "title": "La promo de 20 % ne change pas le prix",
+  "code": [
+    "function getSalePrice(price) {",
+    "  const discount = price * 0.2;",
+    "  const newPrice = price - discount;",
+    "  return price;",
+    "}"
+  ],
+  "bugLine": 3,
+  "choices": [
+    "return newPrice;",
+    "return discount;",
+    "return newPrice - discount;"
+  ],
+  "answer": 0,
+  "explanation": "Le prix réduit est bien calculé dans newPrice, mais la fonction renvoie le prix de départ."
+}
