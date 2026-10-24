@@ -1,0 +1,23 @@
+{
+  "id": "net-008",
+  "track": "network",
+  "difficulty": 2,
+  "points": 300,
+  "title": "Le PC de Tom n'arrive pas à imprimer",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC de Tom", "ip": "192.168.1.11", "mask": "255.255.255.128" },
+      { "id": "switch", "label": "Switch" },
+      { "id": "printer", "label": "Imprimante", "ip": "192.168.1.200", "mask": "255.255.255.0" }
+    ],
+    "links": [["pc", "switch"], ["switch", "printer"]]
+  },
+  "bugTarget": "pc",
+  "choices": [
+    "Mettre le masque du PC de Tom à /24, comme l'imprimante",
+    "Mettre le masque de l'imprimante à /25",
+    "Donner au PC de Tom l'adresse 192.168.1.200"
+  ],
+  "answer": 0,
+  "explanation": "Le masque (le /24 ou /25 après l'adresse) dit jusqu'où va le réseau d'une machine. Avec /25, le PC de Tom croit que l'imprimante est dans un autre réseau, et ne lui parle pas directement."
+}

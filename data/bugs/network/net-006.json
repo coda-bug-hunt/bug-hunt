@@ -1,0 +1,22 @@
+{
+  "id": "net-006",
+  "track": "network",
+  "difficulty": 0,
+  "points": 100,
+  "title": "Le téléphone ne se connecte pas à la box",
+  "diagram": {
+    "devices": [
+      { "id": "phone", "label": "Téléphone", "ip": "10.0.0.15" },
+      { "id": "box", "label": "Box", "ip": "192.168.1.1" }
+    ],
+    "links": [["phone", "box"]]
+  },
+  "bugTarget": "phone",
+  "choices": [
+    "Donner au téléphone l'adresse 192.168.1.15",
+    "Donner à la box l'adresse 10.0.0.15",
+    "Donner au téléphone l'adresse 192.168.2.15"
+  ],
+  "answer": 0,
+  "explanation": "Pour se parler directement, deux machines doivent avoir le même début d'adresse. Le téléphone est en 10.0.0, la box en 192.168.1 : ils ne sont pas dans le même réseau."
+}

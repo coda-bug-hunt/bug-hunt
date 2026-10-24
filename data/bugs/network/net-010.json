@@ -1,0 +1,22 @@
+{
+  "id": "net-010",
+  "track": "network",
+  "difficulty": 4,
+  "points": 500,
+  "title": "Le serveur Minecraft est allumé, mais personne ne peut s'y connecter",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC d'un joueur", "ip": "192.168.1.10" },
+      { "id": "server", "label": "Serveur Minecraft", "ip": "192.168.1.100", "ports": [{ "port": 22, "open": true }, { "port": 25565, "open": false }] }
+    ],
+    "links": [["pc", "server"]]
+  },
+  "bugTarget": "server",
+  "choices": [
+    "Ouvrir la porte 25565 du serveur",
+    "Ouvrir la porte 25565 du PC du joueur",
+    "Fermer la porte 22 du serveur"
+  ],
+  "answer": 0,
+  "explanation": "Une machine a plusieurs portes d'entrée, appelées ports, et Minecraft utilise la porte 25565. Sur le serveur, elle est fermée, donc aucun joueur ne peut entrer."
+}

@@ -1,0 +1,23 @@
+{
+  "id": "net-009",
+  "track": "network",
+  "difficulty": 3,
+  "points": 400,
+  "title": "Le PC de Lucas n'arrive à joindre personne",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC de Lucas", "ip": "192.168.1.255" },
+      { "id": "switch", "label": "Switch" },
+      { "id": "printer", "label": "Imprimante", "ip": "192.168.1.20" }
+    ],
+    "links": [["pc", "switch"], ["switch", "printer"]]
+  },
+  "bugTarget": "pc",
+  "choices": [
+    "Donner au PC de Lucas l'adresse 192.168.1.30",
+    "Donner au PC de Lucas l'adresse 192.168.1.256",
+    "Donner à l'imprimante l'adresse 192.168.1.255"
+  ],
+  "answer": 0,
+  "explanation": "La dernière adresse d'un réseau, ici celle qui finit par 255, est réservée : elle sert à parler à toutes les machines en même temps. Aucune machine ne peut la prendre."
+}

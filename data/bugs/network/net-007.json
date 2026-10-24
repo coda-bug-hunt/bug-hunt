@@ -1,0 +1,23 @@
+{
+  "id": "net-007",
+  "track": "network",
+  "difficulty": 1,
+  "points": 200,
+  "title": "L'imprimante ne répond plus depuis qu'on a retapé son adresse",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC", "ip": "192.168.1.10" },
+      { "id": "switch", "label": "Switch" },
+      { "id": "printer", "label": "Imprimante", "ip": "192.186.1.20" }
+    ],
+    "links": [["pc", "switch"], ["switch", "printer"]]
+  },
+  "bugTarget": "printer",
+  "choices": [
+    "Corriger l'adresse de l'imprimante en 192.168.1.20",
+    "Corriger l'adresse de l'imprimante en 192.168.2.20",
+    "Corriger l'adresse de l'imprimante en 192.168.1.10"
+  ],
+  "answer": 0,
+  "explanation": "En retapant l'adresse de l'imprimante, deux chiffres ont été inversés : 186 au lieu de 168. L'imprimante se retrouve dans un autre réseau que le PC."
+}
