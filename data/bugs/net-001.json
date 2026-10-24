@@ -1,0 +1,22 @@
+{
+  "id": "net-001",
+  "track": "network",
+  "difficulty": 0,
+  "points": 100,
+  "title": "Le PC ne trouve pas l'imprimante",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC", "ip": "192.168.1.10", "mask": "255.255.255.0" },
+      { "id": "printer", "label": "Imprimante", "ip": "192.168.2.20", "mask": "255.255.255.0" }
+    ],
+    "links": [["pc", "printer"]]
+  },
+  "bugTarget": "printer",
+  "choices": [
+    "Passer l'imprimante en 192.168.1.20",
+    "Passer le PC en 10.0.0.10",
+    "Changer le masque du PC en 255.0.0.0"
+  ],
+  "answer": 0,
+  "explanation": "Deux machines doivent être dans le même sous-réseau pour se voir."
+}

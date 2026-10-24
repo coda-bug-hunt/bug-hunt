@@ -33,7 +33,7 @@ export type PublicDevBug = PublicBugBase & {
   code: string[]
 }
 
-// Device fields are pending the bug JSON format issue (#2).
+// Device fields follow the bug JSON format in data/bugs/README.md.
 export type NetworkInterface = { ip: string; mask: string }
 
 export type NetworkDevice = {
