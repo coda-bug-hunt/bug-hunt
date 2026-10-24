@@ -1,7 +1,9 @@
 import { useCallback, useState, type ReactNode } from 'react'
 import { useGame } from './game/useGame'
+import { useResult } from './game/useResult'
 import { clearGame, readGame, saveGame, type ActiveGame } from './game/session'
 import BugScreen from './screens/Bug/BugScreen'
+import EndScreen from './screens/End/EndScreen'
 import FeedbackScreen from './screens/Feedback/FeedbackScreen'
 import HomeScreen from './screens/Home/HomeScreen'
 
@@ -57,14 +59,25 @@ function GameView({ game, onLeave }: { game: ActiveGame; onLeave: () => void }) 
     )
   }
 
-  // Placeholder until the end screen (#37).
+  return <EndView game={game} onReplay={onLeave} />
+}
+
+function EndView({ game, onReplay }: { game: ActiveGame; onReplay: () => void }) {
+  const { result, error, retry } = useResult(game)
+
+  if (result) return <EndScreen pseudo={game.pseudo} result={result} onReplay={onReplay} />
   return (
     <Centered>
-      <h1 className="font-display text-3xl font-bold">Partie terminée</h1>
-      <p className="font-mono text-lime">{state.score} pts</p>
-      <button type="button" onClick={onLeave} className={primaryButton}>
-        Rejouer
-      </button>
+      {error ? (
+        <>
+          <p role="alert" className="text-danger">Connexion perdue.</p>
+          <button type="button" onClick={retry} className={primaryButton}>
+            Réessayer
+          </button>
+        </>
+      ) : (
+        <p className="text-ink-soft">Calcul de ton résultat…</p>
+      )}
     </Centered>
   )
 }

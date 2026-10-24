@@ -1,6 +1,6 @@
 import type { GameSession } from '../api'
 
-export type ActiveGame = GameSession & { totalBugs: number }
+export type ActiveGame = GameSession & { totalBugs: number; pseudo: string }
 
 const STORAGE_KEY = 'bug-hunt:game'
 

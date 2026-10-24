@@ -49,7 +49,7 @@ function HomeScreen({ onStart }: HomeScreenProps) {
     try {
       const { gameId, token, totalBugs } = await api.createGame({ pseudo, deviceId: getDeviceId() })
       saveLastPseudo(pseudo)
-      onStart({ gameId, token, totalBugs })
+      onStart({ gameId, token, totalBugs, pseudo })
     } catch (caught) {
       // Banned word and taken nickname share one neutral message (spec 2.5).
       const rejected =
