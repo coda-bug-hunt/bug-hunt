@@ -26,6 +26,8 @@ type PublicBugBase = {
   points: number
   title: string
   choices: [string, string, string]
+  // A nudge whispered by the duck: points the way, never gives the answer.
+  hint?: string
 }
 
 export type PublicDevBug = PublicBugBase & {
