@@ -16,11 +16,11 @@ const next: NextBugResponse = {
   },
 }
 
-function stateWith(secondsLeft: number): GameState {
+function stateWith(secondsLeft: number, current: NextBugResponse = next): GameState {
   return {
     ...initialGameState,
     phase: 'playing',
-    current: next,
+    current,
     endTime: Date.now() + secondsLeft * 1000,
     score: 300,
     tracks: ['dev', 'network', 'dev'],
@@ -28,6 +28,7 @@ function stateWith(secondsLeft: number): GameState {
 }
 
 beforeEach(() => {
+  localStorage.clear()
   vi.useFakeTimers()
   vi.setSystemTime(0)
 })
