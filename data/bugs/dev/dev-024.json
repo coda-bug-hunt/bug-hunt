@@ -1,0 +1,24 @@
+{
+  "id": "dev-024",
+  "track": "dev",
+  "difficulty": 3,
+  "points": 400,
+  "title": "Il y a 3 \"a\" dans banana, mais on en compte 0",
+  "code": [
+    "def count_a(word):",
+    "    count = 0",
+    "    for letter in word:",
+    "        if word == \"a\":",
+    "            count = count + 1",
+    "    return count",
+    "print(count_a(\"banana\"))"
+  ],
+  "bugLine": 3,
+  "choices": [
+    "if letter == \"a\":",
+    "if word == \"banana\":",
+    "if count == \"a\":"
+  ],
+  "answer": 0,
+  "explanation": "La boucle passe sur chaque lettre, mais on compare le mot entier à \"a\". Il faut comparer la lettre : letter."
+}

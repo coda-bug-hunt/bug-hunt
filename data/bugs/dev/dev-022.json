@@ -1,0 +1,22 @@
+{
+  "id": "dev-022",
+  "track": "dev",
+  "difficulty": 1,
+  "points": 200,
+  "title": "On répond \"oui\", mais l'appli comprend non",
+  "code": [
+    "def is_yes(answer):",
+    "    if answer == \"OUI\":",
+    "        return True",
+    "    return False",
+    "print(is_yes(\"oui\"))"
+  ],
+  "bugLine": 1,
+  "choices": [
+    "if answer == \"oui\":",
+    "if answer == \"Oui\":",
+    "if answer == \" oui\":"
+  ],
+  "answer": 0,
+  "explanation": "Pour Python, une majuscule n'est pas la même lettre qu'une minuscule : \"OUI\" et \"oui\" sont différents."
+}

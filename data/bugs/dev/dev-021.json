@@ -1,0 +1,21 @@
+{
+  "id": "dev-021",
+  "track": "dev",
+  "difficulty": 0,
+  "points": 100,
+  "title": "4 places de ciné à 8 € coûteraient 24 €",
+  "code": [
+    "def price_for(seats):",
+    "    total = seats * 8",
+    "    return total",
+    "print(price_for(3))"
+  ],
+  "bugLine": 3,
+  "choices": [
+    "print(price_for(4))",
+    "print(price_for(8))",
+    "print(price_for(3 + 4))"
+  ],
+  "answer": 0,
+  "explanation": "Le calcul est juste, mais on demande le prix de 3 places au lieu de 4."
+}

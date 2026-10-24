@@ -1,0 +1,21 @@
+{
+  "id": "dev-025",
+  "track": "dev",
+  "difficulty": 4,
+  "points": 500,
+  "title": "Le programme plante avant de dire bonjour",
+  "code": [
+    "print(greet(\"Léa\"))",
+    "def greet(name):",
+    "    message = \"Salut \" + name",
+    "    return message"
+  ],
+  "bugLine": 0,
+  "choices": [
+    "Mettre la ligne 1 après la ligne 4",
+    "Mettre la ligne 4 avant la ligne 3",
+    "Mettre la ligne 3 avant la ligne 2"
+  ],
+  "answer": 0,
+  "explanation": "Python lit le programme de haut en bas : à la ligne 1, la fonction greet n'existe pas encore. Il faut l'utiliser après l'avoir écrite."
+}

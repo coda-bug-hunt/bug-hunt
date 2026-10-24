@@ -1,0 +1,21 @@
+{
+  "id": "dev-023",
+  "track": "dev",
+  "difficulty": 2,
+  "points": 300,
+  "title": "Le rendu de monnaie est de -3 €",
+  "code": [
+    "def change(price, paid):",
+    "    money_back = price - paid",
+    "    return money_back",
+    "print(change(7, 10))"
+  ],
+  "bugLine": 1,
+  "choices": [
+    "money_back = paid - price",
+    "money_back = price + paid",
+    "money_back = paid + price"
+  ],
+  "answer": 0,
+  "explanation": "On rend ce que le client a donné moins le prix : 10 - 7 = 3. Ici, la soustraction est faite à l'envers."
+}
