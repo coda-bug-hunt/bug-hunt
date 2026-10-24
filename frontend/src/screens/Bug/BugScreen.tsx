@@ -5,7 +5,7 @@ import { formatSeconds } from '../../game/countdown'
 import type { GameState, Selection } from '../../game/gameReducer'
 import { useCountdown } from '../../game/useCountdown'
 import CodeLines from './CodeLines'
-import DeviceList from './DeviceList'
+import NetworkDiagram from './NetworkDiagram'
 import FixSheet from './FixSheet'
 
 type BugScreenProps = {
@@ -77,7 +77,7 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
       {bug.track === 'dev' ? (
         <CodeLines code={bug.code} selected={state.selected} verdict={verdict} onSelect={onSelect} />
       ) : (
-        <DeviceList devices={bug.diagram.devices} selected={state.selected} verdict={verdict} onSelect={onSelect} />
+        <NetworkDiagram diagram={bug.diagram} selected={state.selected} verdict={verdict} onSelect={onSelect} />
       )}
 
       {state.error && (
@@ -92,7 +92,7 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
           <p className="flex-1 rounded-2xl rounded-bl-sm border border-line bg-surface px-3.5 py-2.5 text-sm leading-snug text-ink-soft">
             {bug.track === 'dev'
               ? "Coin… Lis chaque ligne à voix haute, comme si tu me l'expliquais."
-              : 'Coin… Vérifie chaque appareil, un par un.'}
+              : 'Coin… Compare bien les réglages de chaque appareil.'}
           </p>
         </div>
       )}
