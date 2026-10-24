@@ -96,7 +96,7 @@ export type SelectionResponse =
 
 export type AnswerRequest = {
   bugId: string
-  // null when the timer ran out on screen: scores 0.
+  // null when the timer ran out on screen: scores 0, and needs no selection.
   choice: Choice | null
 }
 
