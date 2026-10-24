@@ -1,8 +1,7 @@
 import { useState, type FormEvent, type ReactNode } from 'react'
-import { ApiRequestError, api, getDeviceId } from '../../api'
+import { ApiRequestError, api, getDeviceId, type GameSession } from '../../api'
 import { PSEUDO_MAX_LENGTH, isValidPseudo } from '../../api/pseudo'
 import Duck from '../../components/Duck'
-import type { ActiveGame } from '../../game/session'
 import TrackIcon from '../../components/TrackIcon'
 import { readLastPseudo, saveLastPseudo } from './lastPseudo'
 import { randomPseudo } from './randomPseudo'
@@ -27,7 +26,7 @@ function DiceIcon() {
 }
 
 type HomeScreenProps = {
-  onStart: (game: ActiveGame) => void
+  onStart: (session: GameSession) => void
 }
 
 function HomeScreen({ onStart }: HomeScreenProps) {
@@ -47,9 +46,9 @@ function HomeScreen({ onStart }: HomeScreenProps) {
     if (!valid || sending) return
     setSending(true)
     try {
-      const { gameId, token, totalBugs } = await api.createGame({ pseudo, deviceId: getDeviceId() })
+      const { gameId, token } = await api.createGame({ pseudo, deviceId: getDeviceId() })
       saveLastPseudo(pseudo)
-      onStart({ gameId, token, totalBugs })
+      onStart({ gameId, token })
     } catch (caught) {
       // Banned word and taken nickname share one neutral message (spec 2.5).
       const rejected =
