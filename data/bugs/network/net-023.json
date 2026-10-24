@@ -1,0 +1,23 @@
+{
+  "id": "net-023",
+  "track": "network",
+  "difficulty": 2,
+  "points": 300,
+  "title": "Yanis s'est fait passer pour Google",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC de Yanis", "ip": "8.8.8.8" },
+      { "id": "switch", "label": "Switch réseau" },
+      { "id": "server", "label": "Serveur de la LAN", "ip": "192.168.1.20" }
+    ],
+    "links": [["pc", "switch"], ["switch", "server"]]
+  },
+  "bugTarget": "pc",
+  "choices": [
+    "Donner au PC de Yanis l'adresse 192.168.1.40",
+    "Donner au serveur l'adresse 8.8.8.8",
+    "Débrancher le switch réseau"
+  ],
+  "answer": 0,
+  "explanation": "8.8.8.8, c'est l'adresse d'un serveur de Google sur Internet. Dans une LAN, on utilise des adresses privées, comme 192.168.1. Il faut redonner à Yanis une adresse du réseau de la LAN."
+}

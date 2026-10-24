@@ -1,0 +1,23 @@
+{
+  "id": "net-022",
+  "track": "network",
+  "difficulty": 1,
+  "points": 200,
+  "title": "La LAN party reste porte close",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC de Léo", "ip": "192.168.1.10" },
+      { "id": "switch", "label": "Switch réseau" },
+      { "id": "server", "label": "Serveur de la LAN", "ip": "192.168.1.20", "ports": [{ "port": 7777, "open": false }] }
+    ],
+    "links": [["pc", "switch"], ["switch", "server"]]
+  },
+  "bugTarget": "server",
+  "choices": [
+    "Ouvrir la porte 7777 du serveur de la LAN",
+    "Ouvrir la porte 7777 du PC de Léo",
+    "Débrancher le switch réseau"
+  ],
+  "answer": 0,
+  "explanation": "Le serveur de la LAN n'a qu'une porte d'entrée, la 7777, et elle est fermée. Les joueurs frappent, mais personne ne leur ouvre. Il faut ouvrir cette porte sur le serveur."
+}

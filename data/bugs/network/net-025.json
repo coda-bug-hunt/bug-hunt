@@ -1,0 +1,23 @@
+{
+  "id": "net-025",
+  "track": "network",
+  "difficulty": 4,
+  "points": 500,
+  "title": "Liam hurle dans le vide",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC de Liam", "ip": "192.168.1.127", "mask": "255.255.255.128" },
+      { "id": "switch", "label": "Switch réseau" },
+      { "id": "server", "label": "Serveur du tournoi", "ip": "192.168.1.20", "mask": "255.255.255.128" }
+    ],
+    "links": [["pc", "switch"], ["switch", "server"]]
+  },
+  "bugTarget": "pc",
+  "choices": [
+    "Donner au PC de Liam l'adresse 192.168.1.27",
+    "Donner au PC de Liam l'adresse 192.168.1.128",
+    "Donner au serveur l'adresse 192.168.1.127"
+  ],
+  "answer": 0,
+  "explanation": "Avec /25, le réseau s'arrête à 127. Cette dernière adresse est réservée pour parler à tout le monde en même temps, comme un haut-parleur. Personne ne peut la prendre : il faut donner à Liam une adresse libre avant 127."
+}

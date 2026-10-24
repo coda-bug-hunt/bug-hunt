@@ -1,0 +1,23 @@
+{
+  "id": "net-021",
+  "track": "network",
+  "difficulty": 0,
+  "points": 100,
+  "title": "Depuis qu'Inès est arrivée, Léo saute",
+  "diagram": {
+    "devices": [
+      { "id": "pc1", "label": "PC de Léo", "ip": "192.168.1.10" },
+      { "id": "switch", "label": "Switch réseau" },
+      { "id": "pc2", "label": "PC d'Inès", "ip": "192.168.1.10" }
+    ],
+    "links": [["pc1", "switch"], ["switch", "pc2"]]
+  },
+  "bugTarget": "pc2",
+  "choices": [
+    "Donner au PC d'Inès l'adresse 192.168.1.11",
+    "Donner au PC de Léo l'adresse 192.168.1.1",
+    "Débrancher le switch réseau"
+  ],
+  "answer": 0,
+  "explanation": "Inès a pris exactement la même adresse que Léo. Le réseau ne sait plus à qui envoyer les messages, alors ils sautent chacun leur tour. Il faut donner à Inès une adresse libre, du même réseau."
+}

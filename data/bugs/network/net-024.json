@@ -1,0 +1,23 @@
+{
+  "id": "net-024",
+  "track": "network",
+  "difficulty": 3,
+  "points": 400,
+  "title": "Le PC de Sarah vit dans un placard",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC de Sarah", "ip": "192.168.1.10", "mask": "255.255.255.252" },
+      { "id": "switch", "label": "Switch réseau" },
+      { "id": "server", "label": "Serveur de la LAN", "ip": "192.168.1.20", "mask": "255.255.255.0" }
+    ],
+    "links": [["pc", "switch"], ["switch", "server"]]
+  },
+  "bugTarget": "pc",
+  "choices": [
+    "Donner au PC de Sarah le masque /24",
+    "Donner au serveur le masque /30",
+    "Donner au PC de Sarah l'adresse 192.168.1.20"
+  ],
+  "answer": 0,
+  "explanation": "Le masque dit la taille du réseau. Avec /30, le réseau de Sarah ne compte que 2 places, comme un placard : le serveur n'y rentre pas. Il faut donner au PC de Sarah le même masque /24 que le serveur."
+}
