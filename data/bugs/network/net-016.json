@@ -1,0 +1,23 @@
+{
+  "id": "net-016",
+  "track": "network",
+  "difficulty": 0,
+  "points": 100,
+  "title": "Inès est seule dans le lobby",
+  "diagram": {
+    "devices": [
+      { "id": "pc1", "label": "PC de Léo", "ip": "192.168.1.10" },
+      { "id": "switch", "label": "Switch réseau" },
+      { "id": "pc2", "label": "PC d'Inès", "ip": "10.0.0.12" }
+    ],
+    "links": [["pc1", "switch"], ["switch", "pc2"]]
+  },
+  "bugTarget": "pc2",
+  "choices": [
+    "Donner au PC d'Inès l'adresse 192.168.1.12",
+    "Donner au PC de Léo l'adresse 10.0.0.12",
+    "Débrancher le switch réseau"
+  ],
+  "answer": 0,
+  "explanation": "Léo a lancé la partie en 192.168.1, mais Inès attend en 10.0.0 : ils ne sont pas dans le même réseau, donc pas dans le même lobby. Même début d'adresse = même partie."
+}

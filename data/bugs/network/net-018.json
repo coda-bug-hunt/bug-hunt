@@ -1,0 +1,23 @@
+{
+  "id": "net-018",
+  "track": "network",
+  "difficulty": 2,
+  "points": 300,
+  "title": "Toc toc, porte 25565 ?",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC du joueur", "ip": "192.168.1.10" },
+      { "id": "switch", "label": "Switch réseau" },
+      { "id": "server", "label": "Serveur de jeu", "ip": "192.168.1.20", "ports": [{ "port": 25565, "open": false }, { "port": 25566, "open": true }] }
+    ],
+    "links": [["pc", "switch"], ["switch", "server"]]
+  },
+  "bugTarget": "server",
+  "choices": [
+    "Ouvrir la porte 25565 du serveur",
+    "Ouvrir la porte 25566 du PC du joueur",
+    "Fermer la porte 25566 du serveur"
+  ],
+  "answer": 0,
+  "explanation": "Une machine a plusieurs portes d'entrée, appelées ports. Le jeu frappe à la porte 25565, mais le serveur a ouvert la 25566 : la porte du voisin. Il faut ouvrir la bonne porte sur le serveur."
+}

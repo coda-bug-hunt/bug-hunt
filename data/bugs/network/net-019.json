@@ -1,0 +1,23 @@
+{
+  "id": "net-019",
+  "track": "network",
+  "difficulty": 3,
+  "points": 400,
+  "title": "Hugo ne parle qu'à lui-même",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC de Hugo", "ip": "127.0.0.1" },
+      { "id": "switch", "label": "Switch réseau" },
+      { "id": "server", "label": "Serveur de la LAN", "ip": "192.168.1.20" }
+    ],
+    "links": [["pc", "switch"], ["switch", "server"]]
+  },
+  "bugTarget": "pc",
+  "choices": [
+    "Donner au PC de Hugo l'adresse 192.168.1.30",
+    "Donner au serveur l'adresse 127.0.0.1",
+    "Débrancher le serveur de la LAN"
+  ],
+  "answer": 0,
+  "explanation": "L'adresse 127.0.0.1 veut dire « moi-même ». Avec elle, Hugo s'envoie ses messages à lui-même, comme s'il jouait en ligne… tout seul. Il faut lui donner une vraie adresse du réseau de la LAN."
+}

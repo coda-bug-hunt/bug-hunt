@@ -1,0 +1,23 @@
+{
+  "id": "net-020",
+  "track": "network",
+  "difficulty": 4,
+  "points": 500,
+  "title": "Le nouveau serveur joue à cache-cache",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC de Sarah", "ip": "192.168.1.10", "mask": "255.255.255.128" },
+      { "id": "switch", "label": "Switch réseau" },
+      { "id": "server", "label": "Nouveau serveur", "ip": "192.168.1.140", "mask": "255.255.255.128" }
+    ],
+    "links": [["pc", "switch"], ["switch", "server"]]
+  },
+  "bugTarget": "server",
+  "choices": [
+    "Donner au nouveau serveur l'adresse 192.168.1.40",
+    "Donner au PC de Sarah l'adresse 192.168.1.140",
+    "Donner au nouveau serveur le masque /26"
+  ],
+  "answer": 0,
+  "explanation": "Le masque /25 coupe le réseau en deux moitiés, comme deux équipes : de 0 à 127, et de 128 à 255. Sarah est dans la première, le nouveau serveur s'est caché dans la deuxième. Il faut le ramener dans l'équipe de Sarah."
+}

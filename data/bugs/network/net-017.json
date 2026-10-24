@@ -1,0 +1,23 @@
+{
+  "id": "net-017",
+  "track": "network",
+  "difficulty": 1,
+  "points": 200,
+  "title": "Hugo s'est perdu en route vers le tournoi",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC de Hugo", "ip": "192.168.11.30" },
+      { "id": "switch", "label": "Switch réseau" },
+      { "id": "server", "label": "Serveur du tournoi", "ip": "192.168.1.20" }
+    ],
+    "links": [["pc", "switch"], ["switch", "server"]]
+  },
+  "bugTarget": "pc",
+  "choices": [
+    "Donner au PC de Hugo l'adresse 192.168.1.30",
+    "Donner au serveur l'adresse 192.168.1.30",
+    "Débrancher le switch réseau"
+  ],
+  "answer": 0,
+  "explanation": "Hugo a tapé 11 au lieu de 1, comme une faute de frappe dans un pseudo. Un seul chiffre en trop, et il atterrit dans un autre réseau que le tournoi. Il faut corriger son adresse en 192.168.1."
+}
