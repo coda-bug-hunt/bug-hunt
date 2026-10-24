@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { NextBugResponse } from '../../api'
 import { initialGameState, type GameState } from '../../game/gameReducer'
@@ -15,11 +15,11 @@ const next: NextBugResponse = {
   },
 }
 
-function stateWith(secondsLeft: number): GameState {
+function stateWith(secondsLeft: number, current: NextBugResponse = next): GameState {
   return {
     ...initialGameState,
     phase: 'playing',
-    current: next,
+    current,
     endTime: Date.now() + secondsLeft * 1000,
     score: 300,
     tracks: ['dev', 'network', 'dev'],
@@ -27,6 +27,7 @@ function stateWith(secondsLeft: number): GameState {
 }
 
 beforeEach(() => {
+  localStorage.clear()
   vi.useFakeTimers()
   vi.setSystemTime(0)
 })
@@ -53,5 +54,60 @@ describe('BugScreen', () => {
     const onAnswer = vi.fn()
     render(<BugScreen state={stateWith(0)} totalBugs={10} onSelect={() => {}} onAnswer={onAnswer} />)
     expect(onAnswer).toHaveBeenCalledWith(null)
+  })
+})
+
+describe('BugScreen tutorial', () => {
+  const first: NextBugResponse = { ...next, index: 0 }
+  const lineTip = 'Touche la ligne où se cache le bug.'
+  const fixTip = 'Choisis la bonne correction.'
+
+  it('explains the first gesture on the first bug of a new device', () => {
+    render(<BugScreen state={stateWith(60, first)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(screen.getByText(lineTip)).toBeTruthy()
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Compris' }))
+  })
+
+  it('gives the duck its usual tip back once understood', () => {
+    render(<BugScreen state={stateWith(60, first)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Compris' }))
+    expect(screen.queryByText(lineTip)).toBeNull()
+    expect(screen.getByText(/Lis chaque ligne à voix haute/)).toBeTruthy()
+    expect(document.activeElement).toBe(screen.getByRole('heading', { level: 1 }))
+  })
+
+  it('explains the second gesture when the fix sheet opens', () => {
+    const state = { ...stateWith(50, first), selected: 0, verdict: { lineCorrect: true, correctSelection: 0 } }
+    render(<BugScreen state={state} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(screen.getByText(fixTip)).toBeTruthy()
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Compris' }))
+  })
+
+  it('is shown only once per device', () => {
+    const { unmount } = render(<BugScreen state={stateWith(60, first)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    unmount()
+    render(<BugScreen state={stateWith(60, first)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(screen.queryByText(lineTip)).toBeNull()
+  })
+
+  it('is not shown after the first bug', () => {
+    render(<BugScreen state={stateWith(60)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(screen.queryByText(lineTip)).toBeNull()
+  })
+
+  it('still shows when storage is blocked', () => {
+    const blocked = () => {
+      throw new Error('blocked')
+    }
+    vi.stubGlobal('localStorage', { getItem: blocked, setItem: blocked })
+    render(<BugScreen state={stateWith(60, first)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(screen.getByText(lineTip)).toBeTruthy()
+    vi.unstubAllGlobals()
+  })
+
+  it('keeps the timer running', () => {
+    render(<BugScreen state={stateWith(60, first)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    act(() => vi.advanceTimersByTime(5000))
+    expect(screen.getByRole('timer').textContent).toBe('0:55')
   })
 })
