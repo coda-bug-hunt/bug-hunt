@@ -1,0 +1,21 @@
+{
+  "id": "dev-016",
+  "track": "dev",
+  "difficulty": 0,
+  "points": 100,
+  "title": "Le message dit \"Salut name\" au lieu du prénom",
+  "code": [
+    "def greet(name):",
+    "    message = \"Salut \" + \"name\"",
+    "    return message",
+    "print(greet(\"Léa\"))"
+  ],
+  "bugLine": 1,
+  "choices": [
+    "message = \"Salut \" + name",
+    "message = \"Salut \" + \"Léa\"",
+    "message = \"Salut name\""
+  ],
+  "answer": 0,
+  "explanation": "Entre guillemets, name est juste un mot. Sans guillemets, Python utilise le prénom reçu."
+}

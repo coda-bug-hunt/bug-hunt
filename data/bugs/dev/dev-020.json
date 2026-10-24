@@ -1,0 +1,23 @@
+{
+  "id": "dev-020",
+  "track": "dev",
+  "difficulty": 4,
+  "points": 500,
+  "title": "Après 3 manches, le score ne compte que la dernière",
+  "code": [
+    "def count_points(rounds):",
+    "    for r in rounds:",
+    "        total = 0",
+    "        total = total + r",
+    "    return total",
+    "print(count_points([10, 20, 30]))"
+  ],
+  "bugLine": 2,
+  "choices": [
+    "Sortir la ligne 3 de la boucle, avant la ligne 2",
+    "Sortir la ligne 4 de la boucle, avant la ligne 5",
+    "Mettre la ligne 3 après la ligne 4"
+  ],
+  "answer": 0,
+  "explanation": "total = 0 est dans la boucle, donc le score repart de 0 à chaque manche. Il faut le sortir de la boucle pour ne le mettre à 0 qu'une fois, au début."
+}

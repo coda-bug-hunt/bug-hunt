@@ -1,0 +1,22 @@
+{
+  "id": "dev-018",
+  "track": "dev",
+  "difficulty": 2,
+  "points": 300,
+  "title": "Le nombre devrait doubler, mais il reste à 5",
+  "code": [
+    "def double(n):",
+    "    return n * 2",
+    "x = 5",
+    "double(x)",
+    "print(x)"
+  ],
+  "bugLine": 3,
+  "choices": [
+    "x = double(x)",
+    "double(x * 2)",
+    "x == double(x)"
+  ],
+  "answer": 0,
+  "explanation": "double(x) calcule 10, mais le résultat n'est rangé nulle part. Il faut le mettre dans x : x = double(x)."
+}

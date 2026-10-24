@@ -1,0 +1,22 @@
+{
+  "id": "dev-017",
+  "track": "dev",
+  "difficulty": 1,
+  "points": 200,
+  "title": "Un enfant de 8 ans doit payer le musée",
+  "code": [
+    "def is_free(age):",
+    "    if age < 12 and age > 65:",
+    "        return True",
+    "    return False",
+    "print(is_free(8))"
+  ],
+  "bugLine": 1,
+  "choices": [
+    "if age < 12 or age > 65:",
+    "if age > 12 and age < 65:",
+    "if age == 12 or age == 65:"
+  ],
+  "answer": 0,
+  "explanation": "and veut dire « et » : personne n'a à la fois moins de 12 ans et plus de 65 ans. Il faut or, qui veut dire « ou »."
+}
