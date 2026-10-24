@@ -1,0 +1,23 @@
+{
+  "id": "net-002",
+  "track": "network",
+  "difficulty": 1,
+  "points": 200,
+  "title": "L'imprimante ne répond plus depuis qu'on a branché le nouveau PC",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC", "ip": "192.168.1.10" },
+      { "id": "printer", "label": "Imprimante", "ip": "192.168.1.20" },
+      { "id": "newpc", "label": "Nouveau PC", "ip": "192.168.1.20" }
+    ],
+    "links": [["pc", "printer"], ["pc", "newpc"]]
+  },
+  "bugTarget": "newpc",
+  "choices": [
+    "Passer le nouveau PC en 192.168.1.30",
+    "Passer l'imprimante en 10.0.0.20",
+    "Passer le nouveau PC en 192.168.1.10"
+  ],
+  "answer": 0,
+  "explanation": "Le nouveau PC a pris la même adresse que l'imprimante. Deux machines d'un même réseau doivent avoir des adresses différentes."
+}

@@ -1,0 +1,23 @@
+{
+  "id": "net-004",
+  "track": "network",
+  "difficulty": 3,
+  "points": 400,
+  "title": "Le PC ne trouve aucun site quand on tape son nom",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC", "ip": "192.168.1.10", "gateway": "192.168.1.1", "dns": "192.168.1.50" },
+      { "id": "box", "label": "Box (la sortie et l'annuaire)", "ip": "192.168.1.1" },
+      { "id": "internet", "label": "Internet" }
+    ],
+    "links": [["pc", "box"], ["box", "internet"]]
+  },
+  "bugTarget": "pc",
+  "choices": [
+    "Mettre l'annuaire du PC sur 192.168.1.1, l'adresse de la box",
+    "Donner au PC l'adresse 192.168.1.50",
+    "Changer l'adresse de la box en 192.168.1.50"
+  ],
+  "answer": 0,
+  "explanation": "Le DNS est un annuaire qui traduit le nom d'un site en adresse : ici, il est dans la box, en 192.168.1.1. Le PC le cherche en 192.168.1.50, où il n'y a personne."
+}

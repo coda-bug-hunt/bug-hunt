@@ -1,0 +1,22 @@
+{
+  "id": "net-005",
+  "track": "network",
+  "difficulty": 4,
+  "points": 500,
+  "title": "Le serveur est allumé, mais le site de l'école refuse tout le monde",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC d'un visiteur", "ip": "192.168.1.10" },
+      { "id": "server", "label": "Serveur du site", "ip": "192.168.1.100", "ports": [{ "port": 22, "open": true }, { "port": 443, "open": false }] }
+    ],
+    "links": [["pc", "server"]]
+  },
+  "bugTarget": "server",
+  "choices": [
+    "Ouvrir la porte 443 du serveur",
+    "Ouvrir la porte 443 du PC du visiteur",
+    "Fermer la porte 22 du serveur"
+  ],
+  "answer": 0,
+  "explanation": "Une machine a plusieurs portes d'entrée, appelées ports, et les sites web passent par la porte 443. Sur le serveur, elle est fermée, donc personne ne peut entrer."
+}

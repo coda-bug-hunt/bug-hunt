@@ -1,0 +1,23 @@
+{
+  "id": "net-003",
+  "track": "network",
+  "difficulty": 2,
+  "points": 300,
+  "title": "Le PC n'arrive pas à sortir sur Internet",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC", "ip": "192.168.1.10", "gateway": "192.168.1.254" },
+      { "id": "box", "label": "Box (la sortie vers Internet)", "ip": "192.168.1.1" },
+      { "id": "internet", "label": "Internet" }
+    ],
+    "links": [["pc", "box"], ["box", "internet"]]
+  },
+  "bugTarget": "pc",
+  "choices": [
+    "Mettre la sortie du PC sur 192.168.1.1, l'adresse de la box",
+    "Donner au PC l'adresse 192.168.1.254",
+    "Mettre la sortie du PC sur 192.168.1.10, sa propre adresse"
+  ],
+  "answer": 0,
+  "explanation": "Pour aller sur Internet, le PC passe par une porte de sortie, la passerelle : ici, c'est la box, en 192.168.1.1. Mais le PC la cherche en 192.168.1.254, où il n'y a rien."
+}
