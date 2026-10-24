@@ -1,6 +1,8 @@
+import { useEffect } from 'react'
 import type { Affinity, GameResult, Track } from '../../api'
 import Duck from '../../components/Duck'
 import TrackIcon from '../../components/TrackIcon'
+import { sound } from '../../sound/player'
 import { formatScore, rankText } from './endFormat'
 
 // Drafts, to be validated by the team (#37).
@@ -55,6 +57,10 @@ type EndScreenProps = {
 // Coda mockup E6.
 function EndScreen({ pseudo, result, onReplay }: EndScreenProps) {
   const affinity = result.affinity ? affinities[result.affinity] : null
+
+  useEffect(() => {
+    sound.play('fanfare')
+  }, [])
 
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-[18px] px-5 pt-7 pb-6">

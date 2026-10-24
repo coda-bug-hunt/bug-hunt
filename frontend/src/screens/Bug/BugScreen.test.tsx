@@ -3,6 +3,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { NextBugResponse } from '../../api'
 import { initialGameState, type GameState } from '../../game/gameReducer'
+import { sound } from '../../sound/player'
 import BugScreen from './BugScreen'
 
 const next: NextBugResponse = {
@@ -57,57 +58,38 @@ describe('BugScreen', () => {
   })
 })
 
-describe('BugScreen tutorial', () => {
-  const first: NextBugResponse = { ...next, index: 0 }
-  const lineTip = 'Touche la ligne où se cache le bug.'
-  const fixTip = 'Choisis la bonne correction.'
-
-  it('explains the first gesture on the first bug of a new device', () => {
-    render(<BugScreen state={stateWith(60, first)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
-    expect(screen.getByText(lineTip)).toBeTruthy()
-    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Compris' }))
+describe('BugScreen sounds', () => {
+  it('ticks each of the last 10 seconds only', () => {
+    const play = vi.spyOn(sound, 'play').mockImplementation(() => {})
+    render(<BugScreen state={stateWith(12)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(play).not.toHaveBeenCalledWith('tick')
+    act(() => vi.advanceTimersByTime(2000))
+    expect(play).toHaveBeenCalledWith('tick')
+    act(() => vi.advanceTimersByTime(1000))
+    expect(play.mock.calls.filter(([name]) => name === 'tick')).toHaveLength(2)
+    play.mockRestore()
   })
 
-  it('gives the duck its usual tip back once understood', () => {
-    render(<BugScreen state={stateWith(60, first)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
-    fireEvent.click(screen.getByRole('button', { name: 'Compris' }))
-    expect(screen.queryByText(lineTip)).toBeNull()
-    expect(screen.getByText(/Lis chaque ligne à voix haute/)).toBeTruthy()
-    expect(document.activeElement).toBe(screen.getByRole('heading', { level: 1 }))
+  it('sounds the timeout at 0', () => {
+    const play = vi.spyOn(sound, 'play').mockImplementation(() => {})
+    render(<BugScreen state={stateWith(0)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(play).toHaveBeenCalledWith('timeout')
+    expect(play).not.toHaveBeenCalledWith('tick')
+    play.mockRestore()
   })
 
-  it('explains the second gesture when the fix sheet opens', () => {
-    const state = { ...stateWith(50, first), selected: 0, verdict: { lineCorrect: true, correctSelection: 0 } }
-    render(<BugScreen state={state} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
-    expect(screen.getByText(fixTip)).toBeTruthy()
-    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Compris' }))
+  it('clicks when a line is touched', () => {
+    const play = vi.spyOn(sound, 'play').mockImplementation(() => {})
+    const onSelect = vi.fn()
+    render(<BugScreen state={stateWith(42)} totalBugs={10} onSelect={onSelect} onAnswer={() => {}} />)
+    fireEvent.click(screen.getByRole('button', { name: /return age > 18/ }))
+    expect(play).toHaveBeenCalledWith('tap')
+    expect(onSelect).toHaveBeenCalled()
+    play.mockRestore()
   })
 
-  it('is shown only once per device', () => {
-    const { unmount } = render(<BugScreen state={stateWith(60, first)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
-    unmount()
-    render(<BugScreen state={stateWith(60, first)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
-    expect(screen.queryByText(lineTip)).toBeNull()
-  })
-
-  it('is not shown after the first bug', () => {
-    render(<BugScreen state={stateWith(60)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
-    expect(screen.queryByText(lineTip)).toBeNull()
-  })
-
-  it('still shows when storage is blocked', () => {
-    const blocked = () => {
-      throw new Error('blocked')
-    }
-    vi.stubGlobal('localStorage', { getItem: blocked, setItem: blocked })
-    render(<BugScreen state={stateWith(60, first)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
-    expect(screen.getByText(lineTip)).toBeTruthy()
-    vi.unstubAllGlobals()
-  })
-
-  it('keeps the timer running', () => {
-    render(<BugScreen state={stateWith(60, first)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
-    act(() => vi.advanceTimersByTime(5000))
-    expect(screen.getByRole('timer').textContent).toBe('0:55')
+  it('has a mute button', () => {
+    render(<BugScreen state={stateWith(42)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(screen.getByRole('button', { name: 'Couper le son' })).toBeTruthy()
   })
 })

@@ -5,6 +5,8 @@ import TrackIcon from '../../components/TrackIcon'
 import { formatSeconds } from '../../game/countdown'
 import type { GameState, Selection } from '../../game/gameReducer'
 import { useCountdown } from '../../game/useCountdown'
+import { sound } from '../../sound/player'
+import SoundToggle from '../../sound/SoundToggle'
 import CodeLines from './CodeLines'
 import NetworkDiagram from './NetworkDiagram'
 import FixSheet from './FixSheet'
@@ -30,7 +32,10 @@ function segmentColor(index: number, current: number, tracks: Track[]): string {
 function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
   const current = state.current!
   const { bug } = current
-  const left = useCountdown(state.endTime, () => onAnswer(null))
+  const left = useCountdown(state.endTime, () => {
+    sound.play('timeout')
+    onAnswer(null)
+  })
   const hurry = left <= 10
   const heading = useRef<HTMLHeadingElement>(null)
   // The screen is mounted again for each bug: the tutorial is decided once.
@@ -43,6 +48,15 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
   function lineTipDone() {
     setStep('fix')
     heading.current?.focus()
+  }
+
+  useEffect(() => {
+    if (left > 0 && left <= 10) sound.play('tick')
+  }, [left])
+
+  function select(selection: Selection) {
+    sound.play('tap')
+    onSelect(selection)
   }
 
   const { verdict } = state
@@ -67,7 +81,10 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
         >
           {formatSeconds(left)}
         </span>
-        <span className="text-muted">{state.score} pts</span>
+        <span className="flex items-center gap-1 text-muted">
+          {state.score} pts
+          <SoundToggle />
+        </span>
       </div>
       <p aria-live="polite" className="sr-only">
         {hurry && left > 0 ? 'Plus que 10 secondes' : ''}
@@ -95,9 +112,9 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
       </div>
 
       {bug.track === 'dev' ? (
-        <CodeLines code={bug.code} selected={state.selected} verdict={verdict} onSelect={onSelect} />
+        <CodeLines code={bug.code} selected={state.selected} verdict={verdict} onSelect={select} />
       ) : (
-        <NetworkDiagram diagram={bug.diagram} selected={state.selected} verdict={verdict} onSelect={onSelect} />
+        <NetworkDiagram diagram={bug.diagram} selected={state.selected} verdict={verdict} onSelect={select} />
       )}
 
       {state.error && (

@@ -1,6 +1,9 @@
+import { useEffect } from 'react'
 import type { AnswerResponse, PublicBug } from '../../api'
 import Duck from '../../components/Duck'
 import type { Verdict } from '../../game/gameReducer'
+import { sound } from '../../sound/player'
+import SoundToggle from '../../sound/SoundToggle'
 
 type FeedbackScreenProps = {
   bug: PublicBug
@@ -32,6 +35,10 @@ function FeedbackScreen({ bug, answer, verdict, index, totalBugs, onNext }: Feed
   const fix = bug.choices[answer.correctChoice]
   const target = correctSelection(verdict)
 
+  useEffect(() => {
+    sound.play(answer.correct ? 'right' : 'wrong')
+  }, [answer.correct])
+
   let correction
   if (bug.track === 'dev') {
     const buggyLine = typeof target === 'number' ? bug.code[target]?.trim() : undefined
@@ -52,7 +59,10 @@ function FeedbackScreen({ bug, answer, verdict, index, totalBugs, onNext }: Feed
         <span>
           Bug {index + 1}/{totalBugs} terminé
         </span>
-        <span className="text-muted">{answer.score} pts</span>
+        <span className="flex items-center gap-1 text-muted">
+          {answer.score} pts
+          <SoundToggle />
+        </span>
       </div>
 
       <div className="mt-3 flex flex-col items-center gap-2 text-center">
