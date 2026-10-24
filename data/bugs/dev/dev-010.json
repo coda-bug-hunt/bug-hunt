@@ -1,0 +1,22 @@
+{
+  "id": "dev-010",
+  "track": "dev",
+  "difficulty": 4,
+  "points": 500,
+  "title": "Le message de bienvenue ne s'affiche jamais",
+  "code": [
+    "def welcome(name):",
+    "    message = \"Bienvenue \" + name",
+    "    return message",
+    "    print(message)",
+    "welcome(\"Léa\")"
+  ],
+  "bugLine": 3,
+  "choices": [
+    "Mettre la ligne 4 avant la ligne 3",
+    "Mettre la ligne 2 après la ligne 4",
+    "Mettre la ligne 5 avant la ligne 1"
+  ],
+  "answer": 0,
+  "explanation": "return arrête la fonction : ce qui est écrit après n'est jamais lu. Il faut afficher le message avant le return."
+}

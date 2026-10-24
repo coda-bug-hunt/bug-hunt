@@ -1,0 +1,21 @@
+{
+  "id": "dev-006",
+  "track": "dev",
+  "difficulty": 0,
+  "points": 100,
+  "title": "Le message colle le prénom au Bonjour",
+  "code": [
+    "def greet(name):",
+    "    message = \"Bonjour\" + name",
+    "    return message",
+    "print(greet(\"Léa\"))"
+  ],
+  "bugLine": 1,
+  "choices": [
+    "message = \"Bonjour \" + name",
+    "message = name + \"Bonjour\"",
+    "message = \"Bonjour\" + name + \" \""
+  ],
+  "answer": 0,
+  "explanation": "Le + colle les mots sans rien entre eux. Il faut ajouter un espace à la fin de \"Bonjour \"."
+}

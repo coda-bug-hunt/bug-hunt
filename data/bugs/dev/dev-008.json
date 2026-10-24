@@ -1,0 +1,21 @@
+{
+  "id": "dev-008",
+  "track": "dev",
+  "difficulty": 2,
+  "points": 300,
+  "title": "La réduction de 5 € n'est pas appliquée",
+  "code": [
+    "def apply_discount(price):",
+    "    new_price = price - 5",
+    "    return price",
+    "print(apply_discount(20))"
+  ],
+  "bugLine": 2,
+  "choices": [
+    "return new_price",
+    "return price - new_price",
+    "return 5"
+  ],
+  "answer": 0,
+  "explanation": "Le nouveau prix est bien calculé dans new_price, mais la fonction renvoie l'ancien prix."
+}

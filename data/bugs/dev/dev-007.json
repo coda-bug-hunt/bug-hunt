@@ -1,0 +1,22 @@
+{
+  "id": "dev-007",
+  "track": "dev",
+  "difficulty": 1,
+  "points": 200,
+  "title": "Le bon code n'ouvre pas la porte",
+  "code": [
+    "def can_enter(code):",
+    "    if code != 1234:",
+    "        return True",
+    "    return False",
+    "print(can_enter(1234))"
+  ],
+  "bugLine": 1,
+  "choices": [
+    "if code == 1234:",
+    "if code < 1234:",
+    "if code > 1234:"
+  ],
+  "answer": 0,
+  "explanation": "!= veut dire « différent de » : la porte s'ouvre pour tous les codes sauf le bon. Il faut ==, qui veut dire « égal à »."
+}

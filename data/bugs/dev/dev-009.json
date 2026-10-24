@@ -1,0 +1,23 @@
+{
+  "id": "dev-009",
+  "track": "dev",
+  "difficulty": 3,
+  "points": 400,
+  "title": "Il y a 2 votes, mais on en compte 3",
+  "code": [
+    "def count_votes(votes):",
+    "    count = 1",
+    "    for v in votes:",
+    "        count = count + 1",
+    "    return count",
+    "print(count_votes([\"oui\", \"non\"]))"
+  ],
+  "bugLine": 1,
+  "choices": [
+    "count = 0",
+    "count = 2",
+    "count = -1"
+  ],
+  "answer": 0,
+  "explanation": "Le compteur commence à 1 alors qu'aucun vote n'est encore compté. La boucle ajoute 1 par vote : il faut partir de 0."
+}
