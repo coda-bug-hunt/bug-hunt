@@ -3,22 +3,21 @@
   "track": "dev",
   "difficulty": 3,
   "points": 400,
-  "title": "Le nombre de notes validées reste à 0",
+  "title": "Le panier ne compte que le dernier article",
   "code": [
-    "function countPassed(grades) {",
-    "  let passed = 0;",
-    "  for (const g of grades) {",
-    "    if (g >= 10) passed + 1;",
-    "  }",
-    "  return passed;",
-    "}"
+    "def total_cart(prices):",
+    "    total = 0",
+    "    for p in prices:",
+    "        total = p",
+    "    return total",
+    "print(total_cart([5, 10, 3]))"
   ],
   "bugLine": 3,
   "choices": [
-    "if (g >= 10) passed = passed + 1;",
-    "if (g >= 10) passed = 1;",
-    "if (g >= 10) passed = g + 1;"
+    "total = total + p",
+    "total = total + 1",
+    "total = p + 1"
   ],
   "answer": 0,
-  "explanation": "passed + 1 calcule un nombre mais ne le garde nulle part. Il faut écrire passed = passed + 1 pour que le compteur augmente."
+  "explanation": "La boucle (la ligne for) passe sur chaque prix, mais total est remplacé à chaque fois au lieu d'être augmenté. Il faut écrire total = total + p."
 }

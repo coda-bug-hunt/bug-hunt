@@ -3,20 +3,20 @@
   "track": "dev",
   "difficulty": 4,
   "points": 500,
-  "title": "Le like disparaît quand on recharge la page",
+  "title": "Après son anniversaire, on affiche encore l'ancien âge",
   "code": [
-    "function addLike(post) {",
-    "  save(post);",
-    "  post.likes = post.likes + 1;",
-    "  show(post.likes);",
-    "}"
+    "def birthday(age):",
+    "    print(\"Tu as\", age, \"ans\")",
+    "    age = age + 1",
+    "    return age",
+    "birthday(15)"
   ],
   "bugLine": 1,
   "choices": [
     "Mettre la ligne 2 après la ligne 3",
-    "Mettre la ligne 4 avant la ligne 3",
+    "Mettre la ligne 2 après la ligne 4",
     "Mettre la ligne 3 après la ligne 4"
   ],
   "answer": 0,
-  "explanation": "Le post est enregistré avant d'avoir reçu son like, donc c'est l'ancien nombre qui est sauvegardé. Il faut d'abord ajouter 1, puis enregistrer."
+  "explanation": "Le message est affiché avant d'ajouter 1 à l'âge. Il faut d'abord ajouter 1, puis afficher."
 }

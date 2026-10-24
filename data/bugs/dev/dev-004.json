@@ -3,20 +3,19 @@
   "track": "dev",
   "difficulty": 2,
   "points": 300,
-  "title": "La promo de 20 % ne change pas le prix",
+  "title": "On gagne 10 points, mais le score ne bouge pas",
   "code": [
-    "function getSalePrice(price) {",
-    "  const discount = price * 0.2;",
-    "  const newPrice = price - discount;",
-    "  return price;",
-    "}"
+    "def add_points(score):",
+    "    score + 10",
+    "    return score",
+    "print(add_points(50))"
   ],
-  "bugLine": 3,
+  "bugLine": 1,
   "choices": [
-    "return newPrice;",
-    "return discount;",
-    "return newPrice - discount;"
+    "score = score + 10",
+    "score = 10",
+    "score = score * 10"
   ],
   "answer": 0,
-  "explanation": "Le prix réduit est bien calculé dans newPrice, mais la fonction renvoie le prix de départ."
+  "explanation": "score + 10 calcule le nouveau score mais ne le garde nulle part. Il faut écrire score = score + 10."
 }

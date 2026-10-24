@@ -3,20 +3,19 @@
   "track": "dev",
   "difficulty": 0,
   "points": 100,
-  "title": "Le panier compte mal",
+  "title": "Le total affiche 15 € au lieu de 25 €",
   "code": [
-    "function getTotal(price, shipping) {",
-    "  let total = price;",
-    "  total = total - shipping;",
-    "  return total;",
-    "}"
+    "def get_total(price, shipping):",
+    "    total = price - shipping",
+    "    return total",
+    "print(get_total(20, 5))"
   ],
-  "bugLine": 2,
+  "bugLine": 1,
   "choices": [
-    "total = total + shipping;",
-    "total = total * shipping;",
-    "total = shipping - total;"
+    "total = price + shipping",
+    "total = price * shipping",
+    "total = shipping - price"
   ],
   "answer": 0,
-  "explanation": "Le prix total additionne les frais de port."
+  "explanation": "Le prix total additionne les frais de port : il faut + au lieu de -."
 }
