@@ -17,6 +17,7 @@ PHP and Composer only exist in the container: never run them on the host.
 
 ## Structure
 
+- src/Api/ - ApiException and the listener that turns every error into {"error": "<code>"}
 - src/Controller/ - one controller per resource (Game, Leaderboard, Admin, Health)
 - src/Entity/, src/Repository/ - Doctrine entities (Game, Player) and their repositories
 - src/Game/ - game flow: bug catalog, draw, scoring, timer, affinity

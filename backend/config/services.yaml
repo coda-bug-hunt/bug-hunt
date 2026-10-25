@@ -13,3 +13,6 @@ services:
             - '../src/Dto/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+
+    # Random source of the bug draw; tests can swap it for a seeded one.
+    Random\Randomizer: ~

@@ -1,0 +1,19 @@
+{
+  "id": "dev-002",
+  "track": "dev",
+  "difficulty": 1,
+  "points": 200,
+  "title": "Bug de niveau 1",
+  "code": [
+    "x = 1",
+    "y = x - 1"
+  ],
+  "bugLine": 1,
+  "choices": [
+    "y = x + 1",
+    "y = x * 1",
+    "y = 1 - x"
+  ],
+  "answer": 0,
+  "explanation": "Il faut additionner."
+}
