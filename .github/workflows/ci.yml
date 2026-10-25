@@ -95,12 +95,13 @@ jobs:
           key: composer-${{ hashFiles('backend/composer.lock') }}
           restore-keys: composer-
 
-      - name: Install dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist
-
-      # Symfony refuses to boot without a .env; the example holds harmless defaults.
+      # Symfony refuses to boot without a .env, and composer install runs cache:clear.
+      # The example holds harmless defaults.
       - name: Create .env from the example
         run: cp .env.example .env
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
 
       - name: Create and migrate the test database
         run: |
