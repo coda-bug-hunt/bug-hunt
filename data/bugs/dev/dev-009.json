@@ -19,5 +19,6 @@
     "count = -1"
   ],
   "answer": 0,
-  "explanation": "Le compteur commence à 1 alors qu'aucun vote n'est encore compté. La boucle ajoute 1 par vote : il faut partir de 0."
+  "explanation": "Le compteur commence à 1 alors qu'aucun vote n'est encore compté. La boucle ajoute 1 par vote : il faut partir de 0.",
+  "hint": "Avant d'avoir lu le moindre vote, combien de votes as-tu comptés ?"
 }

@@ -19,5 +19,6 @@
     "Débrancher le switch réseau"
   ],
   "answer": 0,
-  "explanation": "La première adresse d'un réseau, celle qui finit par 0, est réservée : elle désigne le réseau entier, comme le nom d'une rue. Aucune machine ne peut la prendre."
+  "explanation": "La première adresse d'un réseau, celle qui finit par 0, est réservée : elle désigne le réseau entier, comme le nom d'une rue. Aucune machine ne peut la prendre.",
+  "hint": "Une adresse qui finit par 0 peut-elle appartenir à une machine ?"
 }

@@ -17,5 +17,6 @@
     "message = \"Bonjour\" + name + \" \""
   ],
   "answer": 0,
-  "explanation": "Le + colle les mots sans rien entre eux. Il faut ajouter un espace à la fin de \"Bonjour \"."
+  "explanation": "Le + colle les mots sans rien entre eux. Il faut ajouter un espace à la fin de \"Bonjour \".",
+  "hint": "Regarde bien ce qu'il y a juste après « Bonjour », entre les guillemets."
 }

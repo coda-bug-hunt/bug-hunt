@@ -17,5 +17,6 @@
     "score = score * 10"
   ],
   "answer": 0,
-  "explanation": "score + 10 calcule le nouveau score mais ne le garde nulle part. Il faut écrire score = score + 10."
+  "explanation": "score + 10 calcule le nouveau score mais ne le garde nulle part. Il faut écrire score = score + 10.",
+  "hint": "Le calcul se fait bien, mais où son résultat est-il rangé ?"
 }

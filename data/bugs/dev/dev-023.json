@@ -17,5 +17,6 @@
     "money_back = paid + price"
   ],
   "answer": 0,
-  "explanation": "On rend ce que le client a donné moins le prix : 10 - 7 = 3. Ici, la soustraction est faite à l'envers."
+  "explanation": "On rend ce que le client a donné moins le prix : 10 - 7 = 3. Ici, la soustraction est faite à l'envers.",
+  "hint": "Qui donne l'argent, qui rend la monnaie : dans quel ordre fais-tu la soustraction ?"
 }
