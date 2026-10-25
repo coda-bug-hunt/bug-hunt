@@ -1,5 +1,7 @@
 # Configuration des services (les classes de src/ sont injectables automatiquement)
 parameters:
+    # No ADMIN_PIN at all: the admin view refuses every PIN instead of crashing.
+    env(ADMIN_PIN): ''
 
 services:
     _defaults:
