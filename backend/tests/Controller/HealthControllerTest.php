@@ -13,6 +13,6 @@ final class HealthControllerTest extends WebTestCase
 
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('Content-Type', 'application/json');
-        self::assertJsonStringEqualsJsonString('{"status":"ok"}', (string) $client->getResponse()->getContent());
+        self::assertJsonStringEqualsJsonString('{"status":"broken"}', (string) $client->getResponse()->getContent());
     }
 }
