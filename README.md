@@ -28,8 +28,12 @@ Front end only, against the mock API:
 ```bash
 cd frontend
 npm ci
-npm run dev        # http://localhost:5173
+npm run dev        # http://localhost:5173 (players), /leaderboard (big screen), /admin
+npm test -- --run  # tests
 ```
+
+Phone testing, mock or real API, and how to drive the big screen with fake
+players: [frontend/README.md](frontend/README.md).
 
 The back end and Docker Compose instructions are added with their issues.
 
