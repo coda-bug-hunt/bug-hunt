@@ -16,7 +16,7 @@ Team workflow and rules: see CONTRIBUTING.md. Follow them.
 | **Make**        | Des raccourcis : `make up` au lieu de `docker compose up -d --wait`.                             |
 | **React**       | Pour le front.                                                                                   |
 
-- Front end details: `frontend/CLAUDE.md`.
+- Front end details: `frontend/CLAUDE.md`. Back end details: `backend/CLAUDE.md`.
 - The API contract is the "API contract (v1)" section below. The front end codes
   against it through a mock client; never change a route or a field without
   updating that section and `frontend/src/api/types.ts`.
@@ -26,7 +26,7 @@ Team workflow and rules: see CONTRIBUTING.md. Follow them.
 - Front end (in `frontend/`): `npm ci`, `npm run dev`, `npm run lint`, `npm run build`,
   `npm test -- --run`
 - Back end (in `backend/`): `make install` (first time), `make up`, `make down`,
-  `make logs`, `make migrate`; `make help` lists every target
+  `make logs`, `make migrate`, `make test`, `make stan`; `make help` lists every target
 
 ## Project layout
 

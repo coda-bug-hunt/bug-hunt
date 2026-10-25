@@ -10,7 +10,8 @@ CONSOLE = $(PHP) php bin/console
 
 .DEFAULT_GOAL := help
 .PHONY: help install up down restart build logs ps sh composer console cc \
-        entity controller migration migrate db-reset clean
+        entity controller migration migrate db-reset clean \
+        test stan
 
 help: ## Affiche cette aide
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
@@ -64,6 +65,14 @@ entity: ## Crée ou modifie une entité (assistant interactif)
 
 controller: ## Crée un contrôleur, ex : make controller name=ProductController
 	$(CONSOLE) make:controller $(name) --no-template
+
+## ---- Qualité ----
+
+test: ## Lance les tests PHPUnit
+	$(PHP) vendor/bin/phpunit
+
+stan: ## Lance l'analyse statique PHPStan
+	$(PHP) vendor/bin/phpstan analyse --memory-limit=512M
 
 ## ---- Base de données ----
 
