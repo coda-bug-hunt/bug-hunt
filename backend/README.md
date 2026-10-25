@@ -60,6 +60,7 @@ Environment variables only, declared with harmless defaults in `.env.example`
 
 ```
 src/
+  Api/          API errors: {"error": "<code>"} for every error under /api/
   Controller/   one controller per resource (Game, Leaderboard, Admin, Health)
   Entity/       Doctrine entities: Game, Player
   Repository/   Doctrine repositories

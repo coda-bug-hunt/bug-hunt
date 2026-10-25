@@ -4,6 +4,10 @@ framework:
     handle_all_throwables: true
     php_errors:
         log: true
+    exceptions:
+        # Errors of the API contract (bad token, invalid nickname...) are expected: no alert in the logs.
+        App\Api\ApiException:
+            log_level: info
 
 when@test:
     framework:
