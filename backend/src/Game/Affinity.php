@@ -23,9 +23,10 @@ final class Affinity
         return $gap > 0 ? 'dev' : 'network';
     }
 
-    // Share of the track's maximum, rounded to a whole percentage (display only).
-    public static function percent(int $points): int
+    // Share of the track's maximum in the game, rounded to a whole percentage
+    // (display only). 1500 on a real game, 3000 for dev in dev-only mode.
+    public static function percent(int $points, int $max): int
     {
-        return (int) round($points * 100 / self::MAX_PER_TRACK);
+        return 0 === $max ? 0 : (int) round($points * 100 / $max);
     }
 }

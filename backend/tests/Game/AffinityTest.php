@@ -33,20 +33,22 @@ final class AffinityTest extends TestCase
     }
 
     #[DataProvider('percents')]
-    public function testPercentOfATrack(int $points, int $expected): void
+    public function testPercentOfATrack(int $points, int $max, int $expected): void
     {
-        self::assertSame($expected, Affinity::percent($points));
+        self::assertSame($expected, Affinity::percent($points, $max));
     }
 
     /**
-     * @return iterable<string, array{int, int}>
+     * @return iterable<string, array{int, int, int}>
      */
     public static function percents(): iterable
     {
-        yield 'nothing' => [0, 0];
-        yield 'exact' => [900, 60];
-        yield 'rounded down' => [1250, 83];
-        yield 'rounded up' => [8, 1];
-        yield 'everything' => [1500, 100];
+        yield 'nothing' => [0, 1500, 0];
+        yield 'exact' => [900, 1500, 60];
+        yield 'rounded down' => [1250, 1500, 83];
+        yield 'rounded up' => [8, 1500, 1];
+        yield 'everything' => [1500, 1500, 100];
+        yield 'dev-only maximum' => [1500, 3000, 50];
+        yield 'track not played' => [0, 0, 0];
     }
 }

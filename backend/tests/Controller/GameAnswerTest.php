@@ -205,14 +205,16 @@ final class GameAnswerTest extends ApiTestCase
 
         for ($i = 0; $i < $game['totalBugs']; ++$i) {
             $bug = $this->request('GET', "$url/next", token: $token)['bug'];
-            $this->request('POST', "$url/selection", ['bugId' => $bug['id'], 'selectedLine' => 0], $token);
+            $pick = 'dev' === $bug['track'] ? ['selectedLine' => 0] : ['selectedTarget' => 'printer'];
+            $this->request('POST', "$url/selection", ['bugId' => $bug['id'], ...$pick], $token);
             $answer = $this->request('POST', "$url/answers", ['bugId' => $bug['id'], 'choice' => 0], $token);
             self::assertSame($i === $game['totalBugs'] - 1, $answer['finished']);
         }
 
-        // Line 0 is right for dev-001 only (100), the 4 others score half: 100 + 100 + 150 + 200 + 250.
-        self::assertSame(800, $answer['score']);
-        self::assertSame(800, self::getContainer()->get(PlayerRepository::class)->findByPseudo('pixel')?->getBestScore());
+        // Dev: line 0 is right for dev-001 only (100), the 4 others score half: 100 + 100 + 150 + 200 + 250.
+        // Network: every faulty device is "printer", all right: 100 + 200 + 300 + 400 + 500.
+        self::assertSame(2300, $answer['score']);
+        self::assertSame(2300, self::getContainer()->get(PlayerRepository::class)->findByPseudo('pixel')?->getBestScore());
     }
 
     private function playFirstBug(): void

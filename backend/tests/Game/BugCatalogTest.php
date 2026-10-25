@@ -25,7 +25,7 @@ final class BugCatalogTest extends TestCase
     {
         $catalog = new BugCatalog('tests/fixtures/bugs', self::BACKEND_DIR);
 
-        self::assertSame(['dev-001', 'dev-002', 'dev-003', 'dev-004', 'dev-005', 'net-001'], array_keys($catalog->all()));
+        self::assertSame(['dev-001', 'dev-002', 'dev-003', 'dev-004', 'dev-005', 'net-001', 'net-002', 'net-003', 'net-004', 'net-005'], array_keys($catalog->all()));
         self::assertSame('Le total est faux', $catalog->get('dev-001')?->title);
         self::assertNull($catalog->get('dev-999'));
     }
@@ -35,14 +35,15 @@ final class BugCatalogTest extends TestCase
         $catalog = new BugCatalog('tests/fixtures/bugs', self::BACKEND_DIR);
 
         self::assertSame(['net-001'], $this->ids($catalog->byTrackAndLevel('network', 1)));
-        self::assertSame([], $catalog->byTrackAndLevel('network', 0));
+        self::assertSame(['net-002'], $this->ids($catalog->byTrackAndLevel('network', 0)));
+        self::assertSame([], $catalog->byTrackAndLevel('network', 5));
     }
 
     public function testAcceptsAnAbsoluteFolder(): void
     {
         $catalog = new BugCatalog(realpath(self::BACKEND_DIR.'/tests/fixtures/bugs') ?: '', '/nowhere');
 
-        self::assertCount(6, $catalog->all());
+        self::assertCount(10, $catalog->all());
     }
 
     // The real pool, as the game uses it: 5 bugs per level per track.

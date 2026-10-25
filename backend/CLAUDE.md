@@ -35,7 +35,7 @@ How to run and the environment variables: README.md.
 - The right answer never leaves the server before the player answers. Public bug
   fields are an explicit list, never "the JSON minus a few keys".
 - Bugs are read from BUGS_DIR (data/bugs/), never copied into backend/ or the database.
-- Configuration comes from environment variables only (ADMIN_PIN, BUGS_DIR,
+- Configuration comes from environment variables only (ADMIN_PIN, BUGS_DIR, GAME_TRACKS,
   DATABASE_URL), declared in .env.example with harmless defaults. Never read or commit .env.
 - Game rules live in plain classes with no database access, unit tested.
   Inject the clock (ClockInterface, MockClock in tests) and the random source.
