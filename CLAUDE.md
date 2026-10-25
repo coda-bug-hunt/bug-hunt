@@ -23,7 +23,8 @@ Team workflow and rules: see CONTRIBUTING.md. Follow them.
 
 ## Commands
 
-- Front end (in `frontend/`): `npm ci`, `npm run dev`, `npm run lint`, `npm run build`
+- Front end (in `frontend/`): `npm ci`, `npm run dev`, `npm run lint`, `npm run build`,
+  `npm test -- --run`
 - Back end (in `backend/`): `make install` (first time), `make up`, `make down`,
   `make logs`, `make migrate`; `make help` lists every target
 
