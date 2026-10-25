@@ -68,7 +68,10 @@ controller: ## Crée un contrôleur, ex : make controller name=ProductController
 
 ## ---- Qualité ----
 
-test: ## Lance les tests PHPUnit
+test: ## Lance les tests PHPUnit (crée et migre la base de test si besoin)
+	$(CONSOLE) --env=test doctrine:database:create --if-not-exists
+	$(CONSOLE) --env=test doctrine:migrations:migrate --no-interaction
+
 	$(PHP) vendor/bin/phpunit
 
 stan: ## Lance l'analyse statique PHPStan
