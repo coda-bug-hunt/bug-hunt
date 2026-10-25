@@ -73,6 +73,28 @@ config/         Symfony configuration
 
 Every route starts with `/api/`: the Vite proxy and the stand set-up depend on it.
 
+## Open day
+
+Run these from the repository root. They use the stand Compose file, whose API
+service is named `api`. In `backend/` the service is `php`, so the same
+commands do not apply there.
+
+The day before the event, and again after it, delete every game and every
+player. The command asks for confirmation and deletes nothing if you decline:
+
+```bash
+docker compose exec api bin/console app:reset-scores
+```
+
+Take a backup first. The dump is written on the host:
+
+```bash
+docker compose exec -T database sh -c 'exec mariadb-dump -u app -p"$MARIADB_PASSWORD" app' > backup.sql
+```
+
+`-T` keeps terminal bytes out of the file. `MARIADB_PASSWORD` is the one from
+the root `.env` (default `app`).
+
 ## Common problems
 
 **`port is already allocated`**: another program uses port 8000 or 8081. Change
