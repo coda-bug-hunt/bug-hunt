@@ -51,4 +51,69 @@ jobs:
       - name: Type-check and build
         run: npm run build
 
-  # back: lint and tests, to add once the stack is chosen
+  backend:
+    # The required check of the protect-main ruleset uses this exact name.
+    name: Back end - lint and test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    services:
+      # Same server as backend/compose.yaml; root:root is the one of .env.test.
+      database:
+        image: mariadb:11.4
+        env:
+          MARIADB_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd "healthcheck.sh --connect --innodb_initialized"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+    env:
+      APP_ENV: test
+      # The host "database" only exists inside Compose. A real variable wins over the .env files.
+      DATABASE_URL: mysql://root:root@127.0.0.1:3306/app_test?serverVersion=11.4.0-MariaDB&charset=utf8mb4
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          extensions: pdo_mysql, intl
+          coverage: none
+
+      - name: Find the Composer cache folder
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Composer packages
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: composer-${{ hashFiles('backend/composer.lock') }}
+          restore-keys: composer-
+
+      # Symfony refuses to boot without a .env, and composer install runs cache:clear.
+      # The example holds harmless defaults.
+      - name: Create .env from the example
+        run: cp .env.example .env
+
+      - name: Install dependencies
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Create and migrate the test database
+        run: |
+          php bin/console doctrine:database:create --if-not-exists
+          php bin/console doctrine:migrations:migrate --no-interaction
+
+      # A mapping change without its migration fails here.
+      - name: Check that the migrations match the entities
+        run: php bin/console doctrine:schema:validate
+
+      - name: Static analysis
+        run: vendor/bin/phpstan analyse --memory-limit=512M --no-progress
+
+      - name: Test
+        run: vendor/bin/phpunit
