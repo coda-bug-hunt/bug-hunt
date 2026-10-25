@@ -54,6 +54,7 @@ function GameView({ game, onLeave }: { game: ActiveGame; onLeave: () => void }) 
         verdict={state.verdict}
         index={state.current!.index}
         totalBugs={game.totalBugs}
+        streak={state.streak}
         onNext={next}
       />
     )

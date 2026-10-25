@@ -12,8 +12,13 @@ type FeedbackScreenProps = {
   verdict: Verdict | null
   index: number
   totalBugs: number
+  // Right answers in a row, this one included.
+  streak: number
   onNext: () => void
 }
+
+// A streak is celebrated from this many right answers in a row.
+const STREAK_FROM = 3
 
 function correctSelection(verdict: Verdict | null) {
   return verdict && verdict.lineCorrect !== null ? verdict.correctSelection : null
@@ -31,7 +36,7 @@ function DiffLine({ sign, label, text, className }: { sign: string; label: strin
 }
 
 // Coda mockup E5. Everything comes from the answer and the bug already loaded.
-function FeedbackScreen({ bug, answer, verdict, index, totalBugs, onNext }: FeedbackScreenProps) {
+function FeedbackScreen({ bug, answer, verdict, index, totalBugs, streak, onNext }: FeedbackScreenProps) {
   const fix = bug.choices[answer.correctChoice]
   const target = correctSelection(verdict)
 
@@ -66,13 +71,18 @@ function FeedbackScreen({ bug, answer, verdict, index, totalBugs, onNext }: Feed
       </div>
 
       <div className="mt-3 flex flex-col items-center gap-2 text-center">
-        <Duck mood={answer.correct ? 'happy' : 'sad'} size={160} />
+        <Duck mood={streak >= STREAK_FROM ? 'party' : answer.correct ? 'happy' : 'sad'} size={160} />
         <h1 className="font-display text-[32px] leading-tight font-bold">
           {answer.correct ? 'Coin-coin ! Bug écrasé.' : 'Pas grave, même les seniors se trompent.'}
         </h1>
         <span className={`font-mono text-[28px] font-semibold ${answer.points > 0 ? 'text-lime' : 'text-muted'}`}>
           {answer.points > 0 ? `+${answer.points} pts` : '+0 pt'}
         </span>
+        {streak >= STREAK_FROM && (
+          <span className="rounded-md bg-pink/14 px-3 py-1 font-display text-sm font-bold tracking-[0.04em] text-pink">
+            {streak} d'affilée !
+          </span>
+        )}
       </div>
 
       <section className="flex flex-col gap-3 rounded-[14px] border border-line bg-surface p-[18px]">

@@ -18,6 +18,8 @@ export type GameState = {
   verdict: Verdict | null
   answer: AnswerResponse | null
   score: number
+  // Right answers in a row, for the feedback screen only: no effect on the score.
+  streak: number
   // Track of every bug served so far, by index, for the progress bar.
   tracks: Track[]
   error: boolean
@@ -39,6 +41,7 @@ export const initialGameState: GameState = {
   verdict: null,
   answer: null,
   score: 0,
+  streak: 0,
   tracks: [],
   error: false,
 }
@@ -67,7 +70,14 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case 'verdict':
       return { ...state, verdict: action.verdict }
     case 'answered':
-      return { ...state, phase: 'feedback', answer: action.answer, score: action.answer.score, error: false }
+      return {
+        ...state,
+        phase: 'feedback',
+        answer: action.answer,
+        score: action.answer.score,
+        streak: action.answer.correct ? state.streak + 1 : 0,
+        error: false,
+      }
     case 'failed':
       // A selection the server never confirmed can be made again.
       return { ...state, error: true, selected: state.verdict ? state.selected : null }
