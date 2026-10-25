@@ -58,6 +58,12 @@ class Game
     #[ORM\Column(type: Types::BIGINT, nullable: true)]
     private ?int $finishedAt = null;
 
+    // Optimistic lock: of two requests saving the same game at once (a double
+    // tap), the second fails instead of scoring the bug twice.
+    #[ORM\Version]
+    #[ORM\Column(type: Types::INTEGER)]
+    private int $version = 1; // @phpstan-ignore property.onlyWritten
+
     /**
      * @param list<string> $bugIds
      */
@@ -97,6 +103,18 @@ class Game
     public function getBugIds(): array
     {
         return $this->bugIds;
+    }
+
+    // The id of the bug being played, null once the game is over.
+    public function getCurrentBugId(): ?string
+    {
+        return $this->bugIds[$this->currentIndex] ?? null;
+    }
+
+    // True if the bug was already answered in this game.
+    public function hasPlayed(string $bugId): bool
+    {
+        return \in_array($bugId, \array_slice($this->bugIds, 0, $this->currentIndex), true);
     }
 
     public function getCurrentIndex(): int

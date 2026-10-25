@@ -26,4 +26,11 @@ final class TimerTest extends TestCase
         yield 'time is up' => [60_000, 0];
         yield 'never negative' => [90_000, 0];
     }
+
+    public function testTheTimeIsOverAfterTheLimit(): void
+    {
+        self::assertFalse(Timer::isOver(10_000, 10_000 + 30_000));
+        self::assertFalse(Timer::isOver(10_000, 10_000 + 60_000));
+        self::assertTrue(Timer::isOver(10_000, 10_000 + 60_001));
+    }
 }
