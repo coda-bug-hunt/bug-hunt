@@ -51,3 +51,29 @@ describe('gameReducer', () => {
     expect(state).toMatchObject({ error: true, selected: 1 })
   })
 })
+
+describe('answer streak', () => {
+  function play(results: boolean[]) {
+    return results.reduce(
+      (state, correct, index) =>
+        gameReducer(gameReducer(state, { type: 'bugLoaded', next: nextBug(index, 'dev'), now: 0 }), {
+          type: 'answered',
+          answer: { ...answer, correct },
+        }),
+      initialGameState,
+    )
+  }
+
+  it('counts right answers in a row', () => {
+    expect(play([true, true, true]).streak).toBe(3)
+  })
+
+  it('starts again after a wrong answer or a timeout', () => {
+    expect(play([true, true, false]).streak).toBe(0)
+    expect(play([true, false, true]).streak).toBe(1)
+  })
+
+  it('does not change the score', () => {
+    expect(play([true, true, true]).score).toBe(answer.score)
+  })
+})

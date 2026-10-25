@@ -30,6 +30,7 @@ function renderFeedback(props: Partial<Parameters<typeof FeedbackScreen>[0]> = {
       verdict={{ lineCorrect: true, correctSelection: 1 }}
       index={2}
       totalBugs={10}
+      streak={0}
       onNext={() => {}}
       {...props}
     />,
@@ -104,5 +105,21 @@ describe('FeedbackScreen sounds', () => {
   it('has a mute button', () => {
     renderFeedback()
     expect(screen.getByRole('button', { name: 'Couper le son' })).toBeTruthy()
+  })
+})
+
+describe('FeedbackScreen streak', () => {
+  it('celebrates 3 right answers in a row, and more', () => {
+    const { unmount } = renderFeedback({ streak: 3 })
+    expect(screen.getByText("3 d'affilée !")).toBeTruthy()
+    expect(screen.getAllByRole('img')[0].getAttribute('aria-label')).toBe('Le canard fait la fête')
+    unmount()
+    renderFeedback({ streak: 5 })
+    expect(screen.getByText("5 d'affilée !")).toBeTruthy()
+  })
+
+  it('says nothing under 3', () => {
+    renderFeedback({ streak: 2 })
+    expect(screen.queryByText(/d'affilée/)).toBeNull()
   })
 })
