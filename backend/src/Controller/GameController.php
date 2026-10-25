@@ -5,13 +5,16 @@ namespace App\Controller;
 use App\Api\ApiException;
 use App\Entity\Game;
 use App\Entity\Player;
+use App\Game\Affinity;
 use App\Game\Bug;
 use App\Game\BugCatalog;
 use App\Game\BugDraw;
+use App\Game\Scoring;
 use App\Game\Timer;
 use App\Player\NicknamePolicy;
 use App\Repository\GameRepository;
 use App\Repository\PlayerRepository;
+use Doctrine\ORM\OptimisticLockException;
 use Psr\Clock\ClockInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -80,8 +83,7 @@ final class GameController extends AbstractController
             return new Response(status: Response::HTTP_NO_CONTENT);
         }
 
-        $bug = $this->catalog->get($bugIds[$index])
-            ?? throw new \RuntimeException(\sprintf('Bug %s of game %s is not in BUGS_DIR.', $bugIds[$index], $id));
+        $bug = $this->bugOf($bugIds[$index]);
 
         // The timer starts on the first call; reloading the page does not restart it.
         $now = $this->now();
@@ -96,6 +98,124 @@ final class GameController extends AbstractController
             'timeLimit' => Timer::TIME_LIMIT,
             'remainingSeconds' => Timer::remainingSeconds((int) $game->getCurrentSentAt(), $now),
         ]);
+    }
+
+    // POST /api/games/{id}/selection {bugId, selectedLine | selectedTarget}: the line
+    // or device the player tapped. Revealing the right one here is intended (spec 2.3).
+    #[Route('/{id}/selection', methods: ['POST'])]
+    public function select(string $id, Request $request): JsonResponse
+    {
+        $game = $this->gameFor($id, $request);
+        $data = $request->toArray();
+        $bug = $this->currentBug($game, $data['bugId'] ?? null);
+        if (null !== $game->getCurrentLineCorrect()) {
+            throw new ApiException('already_selected', Response::HTTP_CONFLICT);
+        }
+
+        if ('dev' === $bug->track) {
+            $selected = $data['selectedLine'] ?? null;
+            if (!\is_int($selected)) {
+                throw new ApiException('bad_request', Response::HTTP_BAD_REQUEST);
+            }
+            $lineCorrect = $selected === $bug->bugLine;
+            $answer = ['lineCorrect' => $lineCorrect, 'correctLine' => $bug->bugLine];
+        } else {
+            $selected = $data['selectedTarget'] ?? null;
+            if (!\is_string($selected)) {
+                throw new ApiException('bad_request', Response::HTTP_BAD_REQUEST);
+            }
+            $lineCorrect = $selected === $bug->bugTarget;
+            $answer = ['lineCorrect' => $lineCorrect, 'correctTarget' => $bug->bugTarget];
+        }
+
+        $game->setCurrentLineCorrect($lineCorrect);
+        $this->saveOnce($game, 'already_selected');
+
+        return $this->json($answer);
+    }
+
+    // POST /api/games/{id}/answers {bugId, choice}: the fix the player picked, or
+    // null when the timer ran out on screen. Scores the bug and moves to the next one.
+    #[Route('/{id}/answers', methods: ['POST'])]
+    public function answer(string $id, Request $request): JsonResponse
+    {
+        $game = $this->gameFor($id, $request);
+        $data = $request->toArray();
+        if (\is_string($data['bugId'] ?? null) && $game->hasPlayed($data['bugId'])) {
+            throw new ApiException('already_answered', Response::HTTP_CONFLICT);
+        }
+        $bug = $this->currentBug($game, $data['bugId'] ?? null);
+
+        $choice = $data['choice'] ?? null;
+        if (!\array_key_exists('choice', $data) || (null !== $choice && !\in_array($choice, [0, 1, 2], true))) {
+            throw new ApiException('bad_request', Response::HTTP_BAD_REQUEST);
+        }
+        // A timeout needs no selection: the timer can run out before it.
+        $lineCorrect = $game->getCurrentLineCorrect();
+        if (null === $lineCorrect && null !== $choice) {
+            throw new ApiException('selection_missing', Response::HTTP_CONFLICT);
+        }
+
+        $now = $this->now();
+        $sentAt = $game->getCurrentSentAt();
+        $timedOut = null === $choice || (null !== $sentAt && Timer::isOver($sentAt, $now));
+        $correct = $choice === $bug->answer;
+        $points = Scoring::points($bug->difficulty, $lineCorrect ?? false, $correct, $timedOut);
+
+        if ('dev' === $bug->track) {
+            $game->setDevPoints($game->getDevPoints() + $points);
+        } else {
+            $game->setNetworkPoints($game->getNetworkPoints() + $points);
+        }
+        $game->setCurrentIndex($game->getCurrentIndex() + 1)
+            ->setCurrentSentAt(null)
+            ->setCurrentLineCorrect(null);
+        $finished = null === $game->getCurrentBugId();
+        if ($finished) {
+            $game->finish(Affinity::of($game->getDevPoints(), $game->getNetworkPoints()), $now);
+        }
+        $this->saveOnce($game, 'already_answered');
+        if ($finished) {
+            $this->players->recordFinishedGame($game);
+        }
+
+        return $this->json([
+            'correct' => $correct,
+            'correctChoice' => $bug->answer,
+            'points' => $points,
+            'explanation' => $bug->explanation,
+            'score' => $game->getScore(),
+            'finished' => $finished,
+        ]);
+    }
+
+    // The bug being played, if the request names it.
+    private function currentBug(Game $game, mixed $bugId): Bug
+    {
+        if (!\is_string($bugId)) {
+            throw new ApiException('bad_request', Response::HTTP_BAD_REQUEST);
+        }
+        if ($bugId !== $game->getCurrentBugId()) {
+            throw new ApiException('not_current_bug', Response::HTTP_CONFLICT);
+        }
+
+        return $this->bugOf($bugId);
+    }
+
+    private function bugOf(string $bugId): Bug
+    {
+        return $this->catalog->get($bugId)
+            ?? throw new \RuntimeException(\sprintf('Bug %s is not in BUGS_DIR.', $bugId));
+    }
+
+    // Two requests on the same game at once (a double tap): only the first one counts.
+    private function saveOnce(Game $game, string $conflictCode): void
+    {
+        try {
+            $this->games->save($game);
+        } catch (OptimisticLockException) {
+            throw new ApiException($conflictCode, Response::HTTP_CONFLICT);
+        }
     }
 
     // The game of the URL, if the request carries its token (Authorization: Bearer <token>).
