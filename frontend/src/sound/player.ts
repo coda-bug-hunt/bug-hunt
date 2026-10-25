@@ -97,6 +97,8 @@ export function createSoundPlayer({ createContext, vibrate }: SoundDeps) {
         // A sound that fails never stops the game.
       }
     },
+    // Shared with the background music of the big screen (music.ts).
+    context: () => audio(),
     isMuted: () => muted,
     setMuted(value: boolean) {
       muted = value

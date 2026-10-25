@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, type Ref } from 'react'
 import { api, type GameApi, type LeaderboardEntry } from '../../api'
+import { music } from '../../sound/music'
 import { sound, useMuted } from '../../sound/player'
 import AffinityTag from './AffinityTag'
 import DayPanel from './DayPanel'
@@ -72,20 +73,24 @@ function LeaderboardScreen({ client = api }: { client?: GameApi }) {
   const rowRef = useSlidingRows(data)
   const muted = useMuted()
 
-  // The stand PC has speakers: any key or click unlocks the audio, M mutes the jingle.
+  // The stand PC has speakers: any key or click unlocks the audio and starts
+  // the background music; M mutes everything.
   useEffect(() => {
     function onKey(event: KeyboardEvent) {
       sound.unlock()
+      music.start()
       if (event.key.toLowerCase() === 'm') sound.setMuted(!sound.isMuted())
     }
     function onPointer() {
       sound.unlock()
+      music.start()
     }
     window.addEventListener('keydown', onKey)
     window.addEventListener('pointerdown', onPointer)
     return () => {
       window.removeEventListener('keydown', onKey)
       window.removeEventListener('pointerdown', onPointer)
+      music.stop()
     }
   }, [])
 
