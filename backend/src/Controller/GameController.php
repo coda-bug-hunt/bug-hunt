@@ -189,6 +189,31 @@ final class GameController extends AbstractController
         ]);
     }
 
+    // GET /api/games/{id}/result: the end screen, once the last bug is answered.
+    #[Route('/{id}/result', methods: ['GET'])]
+    public function result(string $id, Request $request): JsonResponse
+    {
+        $game = $this->gameFor($id, $request);
+        if (!$game->isFinished()) {
+            throw new ApiException('game_not_finished', Response::HTTP_CONFLICT);
+        }
+
+        $dev = $game->getDevPoints();
+        $network = $game->getNetworkPoints();
+        // 3000 on a real game; summed so a shorter draw still gets the right maximum.
+        $maxScore = array_sum(array_map(fn (string $bugId): int => $this->bugOf($bugId)->points, $game->getBugIds()));
+
+        return $this->json([
+            'score' => $game->getScore(),
+            'maxScore' => $maxScore,
+            'byTrack' => ['dev' => $dev, 'network' => $network],
+            'percentByTrack' => ['dev' => Affinity::percent($dev), 'network' => Affinity::percent($network)],
+            // The one stored at the end of the game, which the gauges count.
+            'affinity' => $game->getAffinity(),
+            ...$this->players->standing($game),
+        ]);
+    }
+
     // The bug being played, if the request names it.
     private function currentBug(Game $game, mixed $bugId): Bug
     {

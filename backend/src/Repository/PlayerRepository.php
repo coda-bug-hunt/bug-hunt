@@ -55,6 +55,37 @@ class PlayerRepository extends ServiceEntityRepository
             ->execute();
     }
 
+    /**
+     * Where a finished game stands among the best scores of the visible players,
+     * in leaderboard order: higher score first, then the score reached first.
+     * The player of the game is left out of the comparison (a replay below their
+     * own best is not ranked behind it) but always counted.
+     *
+     * @return array{rank: int, playersCount: int}
+     */
+    public function standing(Game $game): array
+    {
+        if (!$game->isFinished()) {
+            throw new \LogicException(\sprintf('Game %s is not finished.', $game->getId()));
+        }
+
+        $others = $this->createQueryBuilder('p')
+            ->select('COUNT(p.pseudoKey)')
+            ->where('p.hidden = false')
+            ->andWhere('p.bestReachedAt IS NOT NULL')
+            ->andWhere('p.pseudoKey != :key')
+            ->setParameter('key', Player::keyOf($game->getPseudo()));
+        $playersCount = 1 + (int) (clone $others)->getQuery()->getSingleScalarResult();
+        $above = (int) $others
+            ->andWhere('p.bestScore > :score OR (p.bestScore = :score AND p.bestReachedAt < :reachedAt)')
+            ->setParameter('score', $game->getScore())
+            ->setParameter('reachedAt', $game->getFinishedAt())
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return ['rank' => 1 + $above, 'playersCount' => $playersCount];
+    }
+
     // False when the nickname is unknown.
     public function setHidden(string $pseudo, bool $hidden): bool
     {

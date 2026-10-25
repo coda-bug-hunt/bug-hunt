@@ -22,4 +22,10 @@ final class Affinity
 
         return $gap > 0 ? 'dev' : 'network';
     }
+
+    // Share of the track's maximum, rounded to a whole percentage (display only).
+    public static function percent(int $points): int
+    {
+        return (int) round($points * 100 / self::MAX_PER_TRACK);
+    }
 }
