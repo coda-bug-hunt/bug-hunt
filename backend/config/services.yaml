@@ -2,6 +2,8 @@
 parameters:
     # No ADMIN_PIN at all: the admin view refuses every PIN instead of crashing.
     env(ADMIN_PIN): ''
+    # "dev,network" (a real game) or "dev" (dev-only fallback, affinity null).
+    env(GAME_TRACKS): 'dev,network'
 
 services:
     _defaults:

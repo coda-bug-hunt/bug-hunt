@@ -31,7 +31,8 @@ final class GameResultTest extends ApiTestCase
             'score' => 200,
             'maxScore' => 300,
             'byTrack' => ['dev' => 0, 'network' => 200],
-            'percentByTrack' => ['dev' => 0, 'network' => 13],
+            // Out of what this 2-bug game could earn (100 and 200); 1500 each on a real game.
+            'percentByTrack' => ['dev' => 0, 'network' => 100],
             'affinity' => 'network',
             'rank' => 1,
             'playersCount' => 1,
@@ -62,6 +63,23 @@ final class GameResultTest extends ApiTestCase
 
         self::assertSame(2, $body['rank']);
         self::assertSame(2, $body['playersCount']);
+    }
+
+    // Dev-only mode (#27): 10 dev bugs, so the dev maximum is the game's, not 1500.
+    public function testAGameWithoutNetworkBugsHasNoAffinity(): void
+    {
+        $this->saveGame(new Game('game2', 'token2', 'Neo42', 'device1', ['dev-001', 'dev-002'], 0));
+        $url = '/api/games/game2';
+        $this->request('POST', "$url/selection", ['bugId' => 'dev-001', 'selectedLine' => 0], 'token2');
+        $this->request('POST', "$url/answers", ['bugId' => 'dev-001', 'choice' => 0], 'token2');
+        $this->request('POST', "$url/selection", ['bugId' => 'dev-002', 'selectedLine' => 1], 'token2');
+        $this->request('POST', "$url/answers", ['bugId' => 'dev-002', 'choice' => 0], 'token2');
+
+        $body = $this->request('GET', "$url/result", token: 'token2');
+
+        self::assertNull($body['affinity']);
+        self::assertSame(['dev' => 100, 'network' => 0], $body['percentByTrack']);
+        self::assertNull(self::getContainer()->get(PlayerRepository::class)->findByPseudo('Neo42')?->getAffinity());
     }
 
     public function testAGameNotFinished(): void

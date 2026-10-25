@@ -15,6 +15,7 @@ x-api: &api
     # Hostname "database" is this compose file's service, not localhost.
     DATABASE_URL: mysql://app:${MARIADB_PASSWORD:-app}@database:3306/app?serverVersion=11.4.0-MariaDB&charset=utf8mb4
     ADMIN_PIN: ${ADMIN_PIN:-change-me}
+    GAME_TRACKS: ${GAME_TRACKS:-dev,network}
     # Absolute path: backend/.env's ../data/bugs only works in the dev container.
     BUGS_DIR: /data/bugs
     DEFAULT_URI: http://localhost:${WEB_PORT:-8080}

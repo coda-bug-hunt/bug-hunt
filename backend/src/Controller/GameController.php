@@ -172,7 +172,9 @@ final class GameController extends AbstractController
             ->setCurrentLineCorrect(null);
         $finished = null === $game->getCurrentBugId();
         if ($finished) {
-            $game->finish(Affinity::of($game->getDevPoints(), $game->getNetworkPoints()), $now);
+            // A game without network bugs (dev-only mode) says nothing about the track.
+            $affinity = $this->maxByTrack($game)['network'] > 0 ? Affinity::of($game->getDevPoints(), $game->getNetworkPoints()) : null;
+            $game->finish($affinity, $now);
         }
         $this->saveOnce($game, 'already_answered');
         if ($finished) {
@@ -200,18 +202,33 @@ final class GameController extends AbstractController
 
         $dev = $game->getDevPoints();
         $network = $game->getNetworkPoints();
-        // 3000 on a real game; summed so a shorter draw still gets the right maximum.
-        $maxScore = array_sum(array_map(fn (string $bugId): int => $this->bugOf($bugId)->points, $game->getBugIds()));
+        $max = $this->maxByTrack($game);
 
         return $this->json([
             'score' => $game->getScore(),
-            'maxScore' => $maxScore,
+            'maxScore' => $max['dev'] + $max['network'],
             'byTrack' => ['dev' => $dev, 'network' => $network],
-            'percentByTrack' => ['dev' => Affinity::percent($dev), 'network' => Affinity::percent($network)],
+            'percentByTrack' => ['dev' => Affinity::percent($dev, $max['dev']), 'network' => Affinity::percent($network, $max['network'])],
             // The one stored at the end of the game, which the gauges count.
             'affinity' => $game->getAffinity(),
             ...$this->players->standing($game),
         ]);
+    }
+
+    /**
+     * Points a game could earn on each track: 1500 each on a real game, 3000 and 0 in dev-only mode.
+     *
+     * @return array{dev: int, network: int}
+     */
+    private function maxByTrack(Game $game): array
+    {
+        $max = ['dev' => 0, 'network' => 0];
+        foreach ($game->getBugIds() as $bugId) {
+            $bug = $this->bugOf($bugId);
+            $max[$bug->track] += $bug->points;
+        }
+
+        return $max;
     }
 
     // The bug being played, if the request names it.

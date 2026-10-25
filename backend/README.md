@@ -55,6 +55,7 @@ Environment variables only, declared with harmless defaults in `.env.example`
 | `DATABASE_URL` | MariaDB connection |
 | `ADMIN_PIN` | PIN of the admin view (header `X-Admin-Pin`) |
 | `BUGS_DIR` | Folder of the bug JSON files, `../data/bugs` (format: [data/bugs/README.md](../data/bugs/README.md)) |
+| `GAME_TRACKS` | `dev,network` (a real game) or `dev` (fallback: 10 dev bugs, affinity `null`). Also used when a level has no network bug |
 
 ## Layout
 

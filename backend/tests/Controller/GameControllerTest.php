@@ -19,10 +19,14 @@ final class GameControllerTest extends ApiTestCase
         self::assertSame(['gameId', 'token', 'totalBugs'], array_keys($body));
         self::assertMatchesRegularExpression('/^[0-9a-f]{32}$/', $body['gameId']);
         self::assertMatchesRegularExpression('/^[0-9a-f]{32}$/', $body['token']);
-        self::assertSame(5, $body['totalBugs']);
+        self::assertSame(10, $body['totalBugs']);
 
         $game = self::getContainer()->get(GameRepository::class)->find($body['gameId']);
-        self::assertSame(['dev-001', 'dev-002', 'dev-003', 'dev-004', 'dev-005'], $game?->getBugIds());
+        // One bug per track and level in the fixtures: the draw has no choice.
+        self::assertSame(
+            ['dev-001', 'net-002', 'dev-002', 'net-001', 'dev-003', 'net-003', 'dev-004', 'net-004', 'dev-005', 'net-005'],
+            $game?->getBugIds(),
+        );
         self::assertSame('Neo42', self::getContainer()->get(PlayerRepository::class)->findByPseudo('neo42')?->getPseudo());
     }
 
