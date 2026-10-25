@@ -93,3 +93,30 @@ describe('BugScreen sounds', () => {
     expect(screen.getByRole('button', { name: 'Couper le son' })).toBeTruthy()
   })
 })
+
+describe('BugScreen hint', () => {
+  const hint = 'À 18 ans pile, on a le droit de voter ?'
+  const hinted: NextBugResponse = { ...next, bug: { ...next.bug, hint } }
+
+  it('whispers the hint when the duck is touched', () => {
+    render(<BugScreen state={stateWith(55, hinted)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(screen.queryByText(hint)).toBeNull()
+    const duck = screen.getByRole('button', { name: 'Demander un indice au canard' })
+    fireEvent.click(duck)
+    expect(screen.getByText(hint)).toBeTruthy()
+    expect(duck.getAttribute('aria-expanded')).toBe('true')
+  })
+
+  it('offers the hint after 20 seconds', () => {
+    render(<BugScreen state={stateWith(45, hinted)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(screen.queryByText(/Un indice \?/)).toBeNull()
+    act(() => vi.advanceTimersByTime(5000))
+    expect(screen.getByText(/Un indice \?/)).toBeTruthy()
+  })
+
+  it('offers nothing when the bug has no hint', () => {
+    render(<BugScreen state={stateWith(30)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(screen.queryByRole('button', { name: 'Demander un indice au canard' })).toBeNull()
+    expect(screen.queryByText(/Un indice \?/)).toBeNull()
+  })
+})

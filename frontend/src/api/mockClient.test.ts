@@ -80,6 +80,8 @@ describe('a full game', () => {
       for (const secret of ['bugLine', 'bugTarget', 'answer', 'explanation']) {
         expect(next!.bug).not.toHaveProperty(secret)
       }
+      // The duck's hint is public: it points the way, never gives the answer.
+      expect(next!.bug.hint).toBeTruthy()
       const bug = fullBug(next!.bug)
       await api.select(session, rightSelection(bug))
       await api.answer(session, { bugId: bug.id, choice: bug.answer })

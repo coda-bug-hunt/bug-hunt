@@ -55,6 +55,7 @@ function toPublic(bug: MockBug): PublicBug {
     points: bug.points,
     title: bug.title,
     choices: bug.choices,
+    ...(bug.hint && { hint: bug.hint }),
   }
   return bug.track === 'dev'
     ? { ...base, track: 'dev', code: bug.code }
