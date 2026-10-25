@@ -24,6 +24,7 @@ final class BugCatalogTest extends TestCase
     public function testReadsEveryFileUnderTheFolder(): void
     {
         $catalog = new BugCatalog('tests/fixtures/bugs', self::BACKEND_DIR);
+
         self::assertSame(['dev-001', 'dev-002', 'dev-003', 'dev-004', 'dev-005', 'net-001'], array_keys($catalog->all()));
         self::assertSame('Le total est faux', $catalog->get('dev-001')?->title);
         self::assertNull($catalog->get('dev-999'));
@@ -40,6 +41,7 @@ final class BugCatalogTest extends TestCase
     public function testAcceptsAnAbsoluteFolder(): void
     {
         $catalog = new BugCatalog(realpath(self::BACKEND_DIR.'/tests/fixtures/bugs') ?: '', '/nowhere');
+
         self::assertCount(6, $catalog->all());
     }
 

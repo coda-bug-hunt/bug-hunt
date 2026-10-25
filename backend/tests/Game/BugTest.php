@@ -31,6 +31,23 @@ final class BugTest extends TestCase
         self::assertSame(self::networkBug()['diagram'], $public['diagram']);
     }
 
+    public function testThePublicViewCarriesTheHint(): void
+    {
+        foreach ([self::devBug(), self::networkBug()] as $data) {
+            $public = Bug::fromArray([...$data, 'hint' => 'Regarde le signe.'])->toPublic();
+
+            self::assertSame('Regarde le signe.', $public['hint']);
+            foreach (['bugLine', 'bugTarget', 'answer', 'explanation'] as $secret) {
+                self::assertArrayNotHasKey($secret, $public);
+            }
+        }
+    }
+
+    public function testNoHintWhenTheFileHasNone(): void
+    {
+        self::assertArrayNotHasKey('hint', Bug::fromArray(self::devBug())->toPublic());
+    }
+
     public function testAnUnknownFieldNeverReachesThePublicView(): void
     {
         $public = Bug::fromArray([...self::devBug(), 'secret' => 'leak'])->toPublic();
@@ -80,6 +97,7 @@ final class BugTest extends TestCase
         yield 'no code' => [array_diff_key($dev, ['code' => 0]), 'code must be'];
         yield 'bugLine out of the code' => [[...$dev, 'bugLine' => 2], 'bugLine must be'];
         yield 'no diagram' => [array_diff_key($network, ['diagram' => 0]), 'diagram must hold'];
+        yield 'empty hint' => [[...$dev, 'hint' => ''], 'hint must be'];
         yield 'bugTarget not a device' => [[...$network, 'bugTarget' => 'router'], 'bugTarget must be'];
     }
 

@@ -8,5 +8,6 @@
   "bugLine": 0,
   "choices": ["total = price + shipping", "total = price * shipping", "total = shipping - price"],
   "answer": 0,
-  "explanation": "Il faut additionner les frais de port."
+  "explanation": "Il faut additionner les frais de port.",
+  "hint": "Regarde le signe entre le prix et les frais."
 }
