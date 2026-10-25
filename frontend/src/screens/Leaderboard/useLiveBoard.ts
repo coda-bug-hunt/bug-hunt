@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from 'react'
 import type { GameApi, Leaderboard, LeaderboardEntry } from '../../api'
 import { usePolling } from '../../hooks/usePolling'
+import { music } from '../../sound/music'
 import { sound } from '../../sound/player'
 import { compareBoards } from './boardChanges'
 
 const HIGHLIGHT_MS = 3000
 const BANNER_MS = 5000
+// The background music steps back while the fanfare plays.
+const FANFARE_MS = 3000
 
 // Polls the leaderboard and remembers what changed since the last answer:
 // nicknames that moved (highlighted 3 s) and a new record (banner for 5 s).
@@ -41,6 +44,7 @@ export function useLiveBoard(client: GameApi, interval: number) {
       const id = ++generation.current.record
       setRecord(changes.record)
       sound.play('fanfare')
+      music.lower(FANFARE_MS)
       later(BANNER_MS, () => {
         if (generation.current.record === id) setRecord(null)
       })

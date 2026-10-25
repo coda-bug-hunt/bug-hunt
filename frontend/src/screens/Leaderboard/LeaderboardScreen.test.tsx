@@ -2,6 +2,7 @@
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { GameApi, Leaderboard } from '../../api'
+import { music } from '../../sound/music'
 import { sound } from '../../sound/player'
 import LeaderboardScreen from './LeaderboardScreen'
 
@@ -136,5 +137,37 @@ describe('LeaderboardScreen live', () => {
     expect(screen.getByText(/M : remettre le son/)).toBeTruthy()
     fireEvent.keyDown(window, { key: 'M' })
     expect(sound.isMuted()).toBe(false)
+  })
+})
+
+describe('LeaderboardScreen music', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  it('starts the background music on the first key or click, and stops it on leaving', async () => {
+    const start = vi.spyOn(music, 'start').mockImplementation(() => {})
+    const stop = vi.spyOn(music, 'stop').mockImplementation(() => {})
+    const { unmount } = render(<LeaderboardScreen client={clientWith(board)} />)
+    await screen.findAllByRole('listitem')
+    expect(start).not.toHaveBeenCalled()
+    fireEvent.pointerDown(window)
+    expect(start).toHaveBeenCalled()
+    unmount()
+    expect(stop).toHaveBeenCalled()
+  })
+
+  it('lowers the music during the record fanfare', async () => {
+    vi.useFakeTimers()
+    const lower = vi.spyOn(music, 'lower').mockImplementation(() => {})
+    vi.spyOn(sound, 'play').mockImplementation(() => {})
+    const empty: Leaderboard = { top: [], gauges: { dev: 0, network: 0 }, gamesPlayed: 0 }
+    const getLeaderboard = vi.fn().mockResolvedValueOnce(empty).mockResolvedValue(board)
+    render(<LeaderboardScreen client={{ getLeaderboard } as unknown as GameApi} />)
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2000)
+    })
+    expect(lower).toHaveBeenCalled()
+    vi.useRealTimers()
   })
 })
