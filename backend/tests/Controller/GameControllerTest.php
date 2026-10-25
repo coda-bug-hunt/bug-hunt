@@ -100,6 +100,7 @@ final class GameControllerTest extends WebTestCase
         self::assertSame(60, $body['remainingSeconds']);
         self::assertSame('dev-001', $body['bug']['id']);
         self::assertSame(['total = price - shipping', 'print(total)'], $body['bug']['code']);
+        self::assertSame('Regarde le signe entre le prix et les frais.', $body['bug']['hint']);
         foreach (self::SECRET_FIELDS as $field) {
             self::assertArrayNotHasKey($field, $body['bug']);
         }

@@ -29,6 +29,8 @@ final readonly class Bug
         public ?int $bugLine = null,
         public ?array $diagram = null,
         public ?string $bugTarget = null,
+        // A nudge whispered by the duck: points the way, never gives the answer.
+        public ?string $hint = null,
     ) {
     }
 
@@ -63,6 +65,7 @@ final readonly class Bug
             throw new InvalidBugException('answer must be 0 to 2');
         }
         $common = [$id, $track, $difficulty, $points, self::string($data, 'title'), $choices, $answer, self::string($data, 'explanation')];
+        $hint = \array_key_exists('hint', $data) ? self::string($data, 'hint') : null;
 
         if ('dev' === $track) {
             $code = self::strings($data, 'code');
@@ -71,7 +74,7 @@ final readonly class Bug
                 throw new InvalidBugException('bugLine must be a line of code');
             }
 
-            return new self(...$common, code: $code, bugLine: $bugLine);
+            return new self(...$common, code: $code, bugLine: $bugLine, hint: $hint);
         }
 
         $diagram = $data['diagram'] ?? null;
@@ -88,7 +91,7 @@ final readonly class Bug
         }
 
         /** @var array<string, mixed> $diagram */
-        return new self(...$common, diagram: $diagram, bugTarget: $bugTarget);
+        return new self(...$common, diagram: $diagram, bugTarget: $bugTarget, hint: $hint);
     }
 
     /**
@@ -113,6 +116,9 @@ final readonly class Bug
             $public['code'] = $this->code;
         } else {
             $public['diagram'] = $this->diagram;
+        }
+        if (null !== $this->hint) {
+            $public['hint'] = $this->hint;
         }
 
         return $public;
