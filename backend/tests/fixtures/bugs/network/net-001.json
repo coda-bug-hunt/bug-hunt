@@ -1,0 +1,18 @@
+{
+  "id": "net-001",
+  "track": "network",
+  "difficulty": 1,
+  "points": 200,
+  "title": "Le PC ne trouve pas l'imprimante",
+  "diagram": {
+    "devices": [
+      { "id": "pc", "label": "PC", "ip": "192.168.1.10" },
+      { "id": "printer", "label": "Imprimante", "ip": "192.168.2.20" }
+    ],
+    "links": [["pc", "printer"]]
+  },
+  "bugTarget": "printer",
+  "choices": ["Passer l'imprimante en 192.168.1.20", "Passer le PC en 10.0.0.10", "Changer le câble"],
+  "answer": 0,
+  "explanation": "Les deux appareils doivent être sur le même réseau."
+}
