@@ -22,6 +22,7 @@ export type Choice = 0 | 1 | 2
 
 type PublicBugBase = {
   id: string
+  track: Track
   difficulty: Level
   points: number
   title: string
@@ -30,9 +31,19 @@ type PublicBugBase = {
   hint?: string
 }
 
-export type PublicDevBug = PublicBugBase & {
-  track: 'dev'
+// How a bug is drawn. Every view but `diagram` is a list of lines the player
+// touches (`code`), whatever the track: a network bug can be a terminal.
+export type LineView = 'code' | 'terminal' | 'email' | 'config' | 'rules'
+export type BugView = LineView | 'diagram'
+
+export type PublicLineBug = PublicBugBase & {
+  // Absent: `code`.
+  view?: LineView
   code: string[]
+  // Shown above the lines: "Python", "HTML/CSS", "SQL"...
+  language?: string
+  // Shown above the lines, e.g. the error message the player traces back.
+  context?: string
 }
 
 // Device fields follow the bug JSON format in data/bugs/README.md.
@@ -54,12 +65,13 @@ export type NetworkDiagram = {
   links: [string, string][]
 }
 
-export type PublicNetworkBug = PublicBugBase & {
-  track: 'network'
+export type PublicDiagramBug = PublicBugBase & {
+  view?: 'diagram'
   diagram: NetworkDiagram
 }
 
-export type PublicBug = PublicDevBug | PublicNetworkBug
+// Tell them apart with `'code' in bug`, never with the track.
+export type PublicBug = PublicLineBug | PublicDiagramBug
 
 // --- POST /api/games ---
 
@@ -86,6 +98,7 @@ export type NextBugResponse = {
 
 // --- POST /api/games/{gameId}/selection ---
 
+// selectedLine for a bug drawn as lines, selectedTarget for a diagram.
 export type SelectionRequest =
   | { bugId: string; selectedLine: number }
   | { bugId: string; selectedTarget: string }

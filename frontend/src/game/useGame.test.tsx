@@ -2,6 +2,7 @@
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
 import type { GameApi, GameSession } from '../api'
+import { mockBugs, type MockBug } from '../api/mockBugs'
 import { createMockClient } from '../api/mockClient'
 import { useGame } from './useGame'
 
@@ -65,5 +66,26 @@ describe('useGame', () => {
     const onLost = vi.fn()
     renderGame(client, { gameId: 'nope', token: 'nope' }, onLost)
     await waitFor(() => expect(onLost).toHaveBeenCalledTimes(1))
+  })
+})
+
+describe('useGame with a network bug drawn as lines', () => {
+  it('sends the touched line, not a device', async () => {
+    const terminal: MockBug = {
+      id: 'mock-net-0', track: 'network', difficulty: 0, points: 100, view: 'terminal', title: 'Les sites ne répondent plus',
+      code: ['$ ping google.fr', 'ping: google.fr : nom inconnu'], bugLine: 1,
+      choices: ['Corriger le DNS du PC', 'Changer de câble', 'Redémarrer google.fr'], answer: 0, explanation: 'C’est le DNS.',
+    }
+    const client = createMockClient({ random: () => 0, bugs: mockBugs.map((bug) => (bug.id === terminal.id ? terminal : bug)) })
+    const { gameId, token } = await client.createGame({ pseudo: 'Neo42', deviceId: 'device-a' })
+    const { result } = renderGame(client, { gameId, token })
+    await waitFor(() => expect(result.current.state.phase).toBe('playing'))
+    await act(() => result.current.select(1))
+    await act(() => result.current.answer(0))
+    act(() => result.current.next())
+    await waitFor(() => expect(result.current.state.current?.bug.id).toBe('mock-net-0'))
+
+    await act(() => result.current.select(1))
+    expect(result.current.state.verdict).toEqual({ lineCorrect: true, correctSelection: 1 })
   })
 })

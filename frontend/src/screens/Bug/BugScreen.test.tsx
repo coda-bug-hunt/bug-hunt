@@ -132,3 +132,35 @@ describe('BugScreen ring', () => {
     expect(screen.getByRole('timer').textContent).toBe('0:15')
   })
 })
+
+describe('BugScreen views', () => {
+  const lines: NextBugResponse = {
+    ...next,
+    bug: {
+      id: 'net-t', track: 'network', difficulty: 1, points: 200, view: 'terminal', title: 'Les sites ne répondent plus',
+      context: 'Le PC joint 8.8.8.8, mais aucun site.',
+      code: ['$ ping google.fr', 'ping: google.fr : nom inconnu'], choices: ['a', 'b', 'c'],
+    },
+  }
+
+  it('draws a network bug as lines the player touches', () => {
+    const onSelect = vi.fn()
+    render(<BugScreen state={stateWith(42, lines)} totalBugs={10} onSelect={onSelect} onAnswer={() => {}} />)
+    expect(screen.getByText(/SR · NIVEAU 1/)).toBeTruthy()
+    expect(screen.getByText('Le PC joint 8.8.8.8, mais aucun site.')).toBeTruthy()
+    fireEvent.click(screen.getByRole('button', { name: /nom inconnu/ }))
+    expect(onSelect).toHaveBeenCalledWith(1)
+  })
+
+  it('names the language of the code when the bug gives one', () => {
+    const sql: NextBugResponse = { ...next, bug: { ...next.bug, language: 'SQL' } }
+    render(<BugScreen state={stateWith(42, sql)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(screen.getByText('SQL')).toBeTruthy()
+  })
+
+  it('names the right line after a pick on a line view', () => {
+    const state = { ...stateWith(42, lines), selected: 0, verdict: { lineCorrect: false, correctSelection: 1 } }
+    render(<BugScreen state={state} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(screen.getByRole('heading', { name: 'Raté : le bug est ligne 2. Quelle correction ?' })).toBeTruthy()
+  })
+})

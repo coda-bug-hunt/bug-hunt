@@ -7,7 +7,8 @@ import type { GameState, Selection } from '../../game/gameReducer'
 import { useCountdown } from '../../game/useCountdown'
 import { sound } from '../../sound/player'
 import SoundToggle from '../../sound/SoundToggle'
-import CodeLines from './CodeLines'
+import BugLines from './BugLines'
+import { instructions, viewOf } from './bugView'
 import NetworkDiagram from './NetworkDiagram'
 import FixSheet from './FixSheet'
 import TimerRing from './TimerRing'
@@ -52,7 +53,7 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
   const [hintShown, setHintShown] = useState(false)
   const hintOffered = Boolean(bug.hint) && current.timeLimit - left >= HINT_AFTER_SECONDS
   let bubble =
-    bug.track === 'dev'
+    'code' in bug
       ? "Coin… Lis chaque ligne à voix haute, comme si tu me l'expliquais."
       : 'Coin… Compare bien les réglages de chaque appareil.'
   if (hintShown) bubble = bug.hint!
@@ -76,7 +77,7 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
   let correctLabel: string | null = null
   if (verdict && verdict.lineCorrect !== null) {
     correctLabel =
-      bug.track === 'dev'
+      'code' in bug
         ? `ligne ${Number(verdict.correctSelection) + 1}`
         : (bug.diagram.devices.find((device) => device.id === verdict.correctSelection)?.label ?? null)
   }
@@ -119,13 +120,11 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
         <h1 ref={heading} tabIndex={-1} className="font-display text-[26px] leading-tight font-bold outline-none">
           {bug.title}
         </h1>
-        <p className="text-[15px] text-ink-soft">
-          {bug.track === 'dev' ? 'Touche la ligne qui contient le bug.' : "Touche l'appareil mal configuré."}
-        </p>
+        <p className="text-[15px] text-ink-soft">{instructions[viewOf(bug)]}</p>
       </div>
 
-      {bug.track === 'dev' ? (
-        <CodeLines code={bug.code} selected={state.selected} verdict={verdict} onSelect={select} />
+      {'code' in bug ? (
+        <BugLines bug={bug} selected={state.selected} verdict={verdict} onSelect={select} />
       ) : (
         <NetworkDiagram diagram={bug.diagram} selected={state.selected} verdict={verdict} onSelect={select} />
       )}

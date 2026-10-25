@@ -46,7 +46,7 @@ export function useGame(session: GameSession, onLost: () => void, client: GameAp
     dispatch({ type: 'selected', selection })
     try {
       const request =
-        bug.track === 'dev'
+        'code' in bug
           ? { bugId: bug.id, selectedLine: Number(selection) }
           : { bugId: bug.id, selectedTarget: String(selection) }
       const response = await client.select(session, request)

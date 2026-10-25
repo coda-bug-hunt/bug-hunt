@@ -49,9 +49,9 @@ describe('NetworkDiagram', () => {
     for (const button of screen.getAllByRole('button')) expect((button as HTMLButtonElement).disabled).toBe(true)
   })
 
-  it('displays every network bug of the mock', () => {
+  it('displays every diagram bug of the mock', () => {
     for (const bug of mockBugs) {
-      if (bug.track !== 'network') continue
+      if (!('diagram' in bug)) continue
       const { unmount } = render(<NetworkDiagram diagram={bug.diagram} selected={null} verdict={null} onSelect={() => {}} />)
       expect(screen.getAllByRole('button')).toHaveLength(bug.diagram.devices.length)
       unmount()
