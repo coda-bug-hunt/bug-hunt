@@ -78,6 +78,19 @@ final class GameRepositoryTest extends DatabaseTestCase
         self::assertSame(['gauges' => ['dev' => 0, 'network' => 0], 'gamesPlayed' => 0], $this->games->stats());
     }
 
+    public function testStoreTheChoiceOrders(): void
+    {
+        $this->games->save(new Game('game1', 'token1', 'Neo42', 'device1', ['dev-001', 'net-001'], 1_000, ['dev-001' => [2, 0, 1]]));
+        $this->reload();
+
+        $game = $this->games->find('game1');
+
+        self::assertNotNull($game);
+        self::assertSame([2, 0, 1], $game->getChoiceOrder('dev-001'));
+        // No stored order (a game created before #102): the order of the file.
+        self::assertSame([0, 1, 2], $game->getChoiceOrder('net-001'));
+    }
+
     public function testUnknownGameIsNull(): void
     {
         self::assertNull($this->games->find('nope'));

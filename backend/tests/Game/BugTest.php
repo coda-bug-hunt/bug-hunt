@@ -48,6 +48,16 @@ final class BugTest extends TestCase
         self::assertArrayNotHasKey('hint', Bug::fromArray(self::devBug())->toPublic());
     }
 
+    public function testThePublicChoicesFollowTheOrderOfTheGame(): void
+    {
+        $choices = self::devBug()['choices'];
+
+        $public = Bug::fromArray(self::devBug())->toPublic([2, 0, 1]);
+
+        self::assertSame([$choices[2], $choices[0], $choices[1]], $public['choices']);
+        self::assertSame($choices, Bug::fromArray(self::devBug())->toPublic()['choices'], 'file order by default');
+    }
+
     public function testAnUnknownFieldNeverReachesThePublicView(): void
     {
         $public = Bug::fromArray([...self::devBug(), 'secret' => 'leak'])->toPublic();

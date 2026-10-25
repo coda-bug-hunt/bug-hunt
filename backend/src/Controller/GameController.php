@@ -9,6 +9,7 @@ use App\Game\Affinity;
 use App\Game\Bug;
 use App\Game\BugCatalog;
 use App\Game\BugDraw;
+use App\Game\ChoiceOrder;
 use App\Game\Scoring;
 use App\Game\Timer;
 use App\Player\NicknamePolicy;
@@ -34,6 +35,7 @@ final class GameController extends AbstractController
         private readonly PlayerRepository $players,
         private readonly BugCatalog $catalog,
         private readonly BugDraw $draw,
+        private readonly ChoiceOrder $choiceOrder,
         private readonly NicknamePolicy $nicknames,
         private readonly ClockInterface $clock,
     ) {
@@ -62,8 +64,9 @@ final class GameController extends AbstractController
         }
         $this->players->save($player);
 
-        $bugIds = array_map(static fn (Bug $bug): string => $bug->id, $this->draw->draw());
-        $game = new Game(bin2hex(random_bytes(16)), bin2hex(random_bytes(16)), $pseudo, $deviceId, $bugIds, $now);
+        $bugs = $this->draw->draw();
+        $bugIds = array_map(static fn (Bug $bug): string => $bug->id, $bugs);
+        $game = new Game(bin2hex(random_bytes(16)), bin2hex(random_bytes(16)), $pseudo, $deviceId, $bugIds, $now, $this->choiceOrder->draw($bugs));
         $this->games->save($game);
 
         return $this->json(
@@ -94,7 +97,7 @@ final class GameController extends AbstractController
 
         return $this->json([
             'index' => $index,
-            'bug' => $bug->toPublic(),
+            'bug' => $bug->toPublic($game->getChoiceOrder($bug->id)),
             'timeLimit' => Timer::TIME_LIMIT,
             'remainingSeconds' => Timer::remainingSeconds((int) $game->getCurrentSentAt(), $now),
         ]);
@@ -159,7 +162,9 @@ final class GameController extends AbstractController
         $now = $this->now();
         $sentAt = $game->getCurrentSentAt();
         $timedOut = null === $choice || (null !== $sentAt && Timer::isOver($sentAt, $now));
-        $correct = $choice === $bug->answer;
+        // choice is a position on screen; the answer is an index in the file.
+        $order = $game->getChoiceOrder($bug->id);
+        $correct = null !== $choice && ChoiceOrder::choiceAt($order, $choice) === $bug->answer;
         $points = Scoring::points($bug->difficulty, $lineCorrect ?? false, $correct, $timedOut);
 
         if ('dev' === $bug->track) {
@@ -183,7 +188,7 @@ final class GameController extends AbstractController
 
         return $this->json([
             'correct' => $correct,
-            'correctChoice' => $bug->answer,
+            'correctChoice' => ChoiceOrder::positionOf($order, $bug->answer),
             'points' => $points,
             'explanation' => $bug->explanation,
             'score' => $game->getScore(),

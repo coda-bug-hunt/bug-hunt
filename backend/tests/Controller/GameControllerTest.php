@@ -28,6 +28,24 @@ final class GameControllerTest extends ApiTestCase
             $game?->getBugIds(),
         );
         self::assertSame('Neo42', self::getContainer()->get(PlayerRepository::class)->findByPseudo('neo42')?->getPseudo());
+        self::assertNotNull($game);
+        foreach ($game->getBugIds() as $bugId) {
+            $order = $game->getChoiceOrder($bugId);
+            sort($order);
+            self::assertSame([0, 1, 2], $order, "a choice order for $bugId");
+        }
+    }
+
+    public function testServesTheChoicesInTheOrderOfTheGame(): void
+    {
+        $this->saveGame(new Game('game1', 'token1', 'Neo42', 'device1', ['dev-001'], 0, ['dev-001' => [2, 0, 1]]));
+
+        $first = $this->request('GET', '/api/games/game1/next', token: 'token1');
+        $second = $this->request('GET', '/api/games/game1/next', token: 'token1');
+
+        // dev-001.json: "total = price + shipping" (the right fix), then two wrong ones.
+        self::assertSame('total = price + shipping', $first['bug']['choices'][1]);
+        self::assertSame($first['bug']['choices'], $second['bug']['choices'], 'reloading keeps the order');
     }
 
     public function testReplayingKeepsOnePlayer(): void

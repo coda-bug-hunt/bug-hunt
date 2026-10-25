@@ -88,6 +88,31 @@ final class GameAnswerTest extends ApiTestCase
         ], $body);
     }
 
+    public function testTheChoiceIsAPositionOnScreen(): void
+    {
+        // On screen: choice 2 of the file, then 0 (the right fix), then 1.
+        $this->saveGame(new Game('game2', 'token2', 'Neo42', 'device1', ['dev-001'], 0, ['dev-001' => [2, 0, 1]]));
+        $this->request('POST', '/api/games/game2/selection', ['bugId' => 'dev-001', 'selectedLine' => 0], 'token2');
+
+        $body = $this->request('POST', '/api/games/game2/answers', ['bugId' => 'dev-001', 'choice' => 1], 'token2');
+
+        self::assertTrue($body['correct']);
+        self::assertSame(1, $body['correctChoice']);
+        self::assertSame(100, $body['points']);
+    }
+
+    public function testTheFirstPositionIsNoLongerAlwaysRight(): void
+    {
+        $this->saveGame(new Game('game2', 'token2', 'Neo42', 'device1', ['dev-001'], 0, ['dev-001' => [2, 0, 1]]));
+        $this->request('POST', '/api/games/game2/selection', ['bugId' => 'dev-001', 'selectedLine' => 0], 'token2');
+
+        $body = $this->request('POST', '/api/games/game2/answers', ['bugId' => 'dev-001', 'choice' => 0], 'token2');
+
+        self::assertFalse($body['correct']);
+        self::assertSame(1, $body['correctChoice'], 'the right fix in the order on screen');
+        self::assertSame(0, $body['points']);
+    }
+
     public function testWrongLineThenRightFixScoresHalf(): void
     {
         $this->select(['bugId' => 'dev-001', 'selectedLine' => 1]);
@@ -207,7 +232,9 @@ final class GameAnswerTest extends ApiTestCase
             $bug = $this->request('GET', "$url/next", token: $token)['bug'];
             $pick = 'dev' === $bug['track'] ? ['selectedLine' => 0] : ['selectedTarget' => 'printer'];
             $this->request('POST', "$url/selection", ['bugId' => $bug['id'], ...$pick], $token);
-            $answer = $this->request('POST', "$url/answers", ['bugId' => $bug['id'], 'choice' => 0], $token);
+            // The right fix is choice 0 of every fixture file: find where this game shows it.
+            $order = self::getContainer()->get(GameRepository::class)->find($game['gameId'])?->getChoiceOrder($bug['id']) ?? [];
+            $answer = $this->request('POST', "$url/answers", ['bugId' => $bug['id'], 'choice' => array_search(0, $order, true)], $token);
             self::assertSame($i === $game['totalBugs'] - 1, $answer['finished']);
         }
 
