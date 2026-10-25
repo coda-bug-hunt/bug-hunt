@@ -120,3 +120,15 @@ describe('BugScreen hint', () => {
     expect(screen.queryByText(/Un indice \?/)).toBeNull()
   })
 })
+
+describe('BugScreen ring', () => {
+  it('empties the ring around the duck with the end time of the bug', () => {
+    const { container } = render(<BugScreen state={stateWith(30)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    const circle = container.querySelector('[data-ring]')!
+    const emptied = () => Number(circle.getAttribute('stroke-dashoffset')) / Number(circle.getAttribute('stroke-dasharray'))
+    expect(emptied()).toBeCloseTo(0.5)
+    act(() => vi.advanceTimersByTime(15000))
+    expect(emptied()).toBeCloseTo(0.75)
+    expect(screen.getByRole('timer').textContent).toBe('0:15')
+  })
+})

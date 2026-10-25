@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useReducer, useRef } from 'react'
 import { ApiRequestError, api, type Choice, type GameApi, type GameSession } from '../api'
 import { gameReducer, initialGameState, type Selection } from './gameReducer'
+import { withViewTransition } from './viewTransition'
 
 // Drives a game: calls the API and keeps the current step. Screens only
 // display it. `onLost` is called when the server no longer knows the game.
@@ -25,8 +26,11 @@ export function useGame(session: GameSession, onLost: () => void, client: GameAp
     try {
       const next = await client.nextBug(session)
       answering.current = false
-      if (next) dispatch({ type: 'bugLoaded', next, now: Date.now() })
-      else dispatch({ type: 'gameOver' })
+      // Screen changes (bug, feedback, end) are animated where the browser can.
+      withViewTransition(() => {
+        if (next) dispatch({ type: 'bugLoaded', next, now: Date.now() })
+        else dispatch({ type: 'gameOver' })
+      })
     } catch (error) {
       fail(error)
     }
@@ -64,7 +68,8 @@ export function useGame(session: GameSession, onLost: () => void, client: GameAp
     if (!bug || answering.current) return
     answering.current = true
     try {
-      dispatch({ type: 'answered', answer: await client.answer(session, { bugId: bug.id, choice }) })
+      const response = await client.answer(session, { bugId: bug.id, choice })
+      withViewTransition(() => dispatch({ type: 'answered', answer: response }))
     } catch (error) {
       if (error instanceof ApiRequestError && error.code === 'already_answered') {
         void loadNext()
@@ -76,7 +81,7 @@ export function useGame(session: GameSession, onLost: () => void, client: GameAp
   }
 
   function next() {
-    if (state.answer?.finished) dispatch({ type: 'gameOver' })
+    if (state.answer?.finished) withViewTransition(() => dispatch({ type: 'gameOver' }))
     else void loadNext()
   }
 
