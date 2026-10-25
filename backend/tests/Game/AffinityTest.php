@@ -31,4 +31,22 @@ final class AffinityTest extends TestCase
         yield 'dev only' => [1500, 0, 'dev'];
         yield 'network only' => [0, 1500, 'network'];
     }
+
+    #[DataProvider('percents')]
+    public function testPercentOfATrack(int $points, int $expected): void
+    {
+        self::assertSame($expected, Affinity::percent($points));
+    }
+
+    /**
+     * @return iterable<string, array{int, int}>
+     */
+    public static function percents(): iterable
+    {
+        yield 'nothing' => [0, 0];
+        yield 'exact' => [900, 60];
+        yield 'rounded down' => [1250, 83];
+        yield 'rounded up' => [8, 1];
+        yield 'everything' => [1500, 100];
+    }
 }

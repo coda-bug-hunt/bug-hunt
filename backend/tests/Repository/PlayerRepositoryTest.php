@@ -131,6 +131,82 @@ final class PlayerRepositoryTest extends DatabaseTestCase
         self::assertSame(['Newest', 'Middle'], array_map(fn (Player $player) => $player->getPseudo(), $latest));
     }
 
+    public function testTheFirstPlayerRanksFirst(): void
+    {
+        $game = $this->play('Neo42', 900, 5_000);
+
+        self::assertSame(['rank' => 1, 'playersCount' => 1], $this->players->standing($game));
+    }
+
+    public function testRankAmongTheBestScores(): void
+    {
+        $this->play('Better', 1200, 1_000);
+        $this->play('Worse', 300, 2_000);
+        $game = $this->play('Neo42', 900, 5_000);
+
+        self::assertSame(['rank' => 2, 'playersCount' => 3], $this->players->standing($game));
+    }
+
+    // Same order as the leaderboard: on a tie, the score reached first ranks higher.
+    public function testATieGoesToTheScoreReachedFirst(): void
+    {
+        $this->play('Early', 900, 1_000);
+        $this->play('Late', 900, 9_000);
+        $game = $this->play('Neo42', 900, 5_000);
+
+        self::assertSame(['rank' => 2, 'playersCount' => 3], $this->players->standing($game));
+    }
+
+    public function testHiddenPlayersAreLeftOut(): void
+    {
+        $this->play('Rude', 1200, 1_000);
+        $this->players->setHidden('Rude', true);
+        $game = $this->play('Neo42', 900, 5_000);
+
+        self::assertSame(['rank' => 1, 'playersCount' => 1], $this->players->standing($game));
+    }
+
+    public function testPlayersWithoutAFinishedGameAreLeftOut(): void
+    {
+        $this->players->save(new Player('Starter', 'device2', 1_000));
+        $game = $this->play('Neo42', 900, 5_000);
+
+        self::assertSame(['rank' => 1, 'playersCount' => 1], $this->players->standing($game));
+    }
+
+    // A replay below the player's own best is not ranked behind that best.
+    public function testAWorseReplayIsRankedAgainstTheOthersOnly(): void
+    {
+        $this->play('Other', 600, 1_000);
+        $this->play('Neo42', 1200, 2_000);
+        $replay = $this->play('Neo42', 300, 5_000);
+
+        self::assertSame(['rank' => 2, 'playersCount' => 2], $this->players->standing($replay));
+    }
+
+    // A hidden player still sees a rank, and is counted so the rank never exceeds the count.
+    public function testAHiddenPlayerStillGetsARank(): void
+    {
+        $this->play('Other', 1200, 1_000);
+        $this->play('Neo42', 300, 2_000);
+        $this->players->setHidden('Neo42', true);
+        $replay = $this->play('Neo42', 900, 5_000);
+
+        self::assertSame(['rank' => 2, 'playersCount' => 2], $this->players->standing($replay));
+    }
+
+    // Saves the player if needed, then records a finished game (all points in dev).
+    private function play(string $pseudo, int $score, int $finishedAt): Game
+    {
+        if (null === $this->players->findByPseudo($pseudo)) {
+            $this->players->save(new Player($pseudo, 'device1', 1_000));
+        }
+        $game = $this->finishedGame($pseudo, $score, 0, 'dev', $finishedAt);
+        $this->players->recordFinishedGame($game);
+
+        return $game;
+    }
+
     private function finishedGame(string $pseudo, int $dev, int $network, string $affinity, int $finishedAt): Game
     {
         return (new Game(bin2hex(random_bytes(16)), 'token', $pseudo, 'device1', [], 1_000))
