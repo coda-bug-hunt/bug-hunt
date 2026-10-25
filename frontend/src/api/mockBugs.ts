@@ -13,6 +13,7 @@ const devBugs: MockDevBug[] = [
   {
     id: 'mock-dev-0', track: 'dev', difficulty: 0, points: 100,
     title: 'Le panier compte mal',
+    hint: 'Que doit faire un total avec chaque prix ?',
     code: ['function getTotal(price, shipping) {', '  return price - shipping;', '}'],
     bugLine: 1,
     choices: ['return price + shipping;', 'return price * shipping;', 'return shipping - price;'],
@@ -22,6 +23,7 @@ const devBugs: MockDevBug[] = [
   {
     id: 'mock-dev-1', track: 'dev', difficulty: 1, points: 200,
     title: 'Les 18 ans sont refusés',
+    hint: 'À 18 ans pile, on a le droit de voter ?',
     code: ['function canVote(age) {', '  return age > 18;', '}'],
     bugLine: 1,
     choices: ['return age >= 18;', 'return age < 18;', 'return age > 17.9;'],
@@ -31,6 +33,7 @@ const devBugs: MockDevBug[] = [
   {
     id: 'mock-dev-2', track: 'dev', difficulty: 2, points: 300,
     title: 'Le compteur reste à zéro',
+    hint: 'Une ligne calcule un résultat… mais le garde-t-elle quelque part ?',
     code: ['let count = 0;', 'for (const item of cart) {', '  count + 1;', '}'],
     bugLine: 2,
     choices: ['count = 1;', 'count = count + 1;', 'count - 1;'],
@@ -40,6 +43,7 @@ const devBugs: MockDevBug[] = [
   {
     id: 'mock-dev-3', track: 'dev', difficulty: 3, points: 400,
     title: 'Le dernier élève est oublié',
+    hint: 'Compte combien de tours fait la boucle.',
     code: ['const names = ["Léa", "Tom", "Sam"];', 'for (let i = 0; i < names.length - 1; i++) {', '  show(names[i]);', '}'],
     bugLine: 1,
     choices: ['for (let i = 1; i < names.length; i++) {', 'for (let i = 0; i < names.length; i++) {', 'for (let i = 0; i <= names.length; i++) {'],
@@ -49,6 +53,7 @@ const devBugs: MockDevBug[] = [
   {
     id: 'mock-dev-4', track: 'dev', difficulty: 4, points: 500,
     title: 'La remise ne s’applique jamais',
+    hint: 'Lis dans l’ordre : chaque valeur existe-t-elle déjà quand on s’en sert ?',
     code: ['let price = 50;', 'const total = price * (1 - discount);', 'const discount = 0.2;'],
     bugLine: 1,
     choices: ['const total = price * discount;', 'Déplacer cette ligne après discount', 'const total = price - 1;'],
@@ -61,6 +66,7 @@ const networkBugs: MockNetworkBug[] = [
   {
     id: 'mock-net-0', track: 'network', difficulty: 0, points: 100,
     title: 'Le PC n’a pas Internet',
+    hint: 'Par quelle porte le PC sort-il de son réseau ?',
     diagram: {
       devices: [
         { id: 'pc', label: 'PC', ip: '192.168.1.10', mask: '255.255.255.0', gateway: '192.168.1.254' },
@@ -76,6 +82,7 @@ const networkBugs: MockNetworkBug[] = [
   {
     id: 'mock-net-1', track: 'network', difficulty: 1, points: 200,
     title: 'Deux PC se disputent',
+    hint: 'Deux appareils peuvent-ils porter la même adresse ?',
     diagram: {
       devices: [
         { id: 'pc1', label: 'PC 1', ip: '192.168.1.20', mask: '255.255.255.0' },
@@ -92,6 +99,7 @@ const networkBugs: MockNetworkBug[] = [
   {
     id: 'mock-net-2', track: 'network', difficulty: 2, points: 300,
     title: 'Le site ne répond pas par son nom',
+    hint: 'Qui traduit le nom d’un site en adresse IP ?',
     diagram: {
       devices: [
         { id: 'pc', label: 'PC', ip: '192.168.1.10', mask: '255.255.255.0', gateway: '192.168.1.1', dns: '192.168.1.99' },
@@ -107,6 +115,7 @@ const networkBugs: MockNetworkBug[] = [
   {
     id: 'mock-net-3', track: 'network', difficulty: 3, points: 400,
     title: 'Le PC ne voit pas l’imprimante',
+    hint: 'Compare le début des adresses : sont-elles dans le même réseau ?',
     diagram: {
       devices: [
         { id: 'pc', label: 'PC', ip: '192.168.1.10', mask: '255.255.255.0' },
@@ -123,6 +132,7 @@ const networkBugs: MockNetworkBug[] = [
   {
     id: 'mock-net-4', track: 'network', difficulty: 4, points: 500,
     title: 'Le site web est injoignable',
+    hint: 'Le chemin est bon jusqu’au serveur : regarde ce qu’il laisse entrer.',
     diagram: {
       devices: [
         { id: 'pc', label: 'PC', ip: '192.168.1.10', mask: '255.255.255.0', gateway: '192.168.1.1' },

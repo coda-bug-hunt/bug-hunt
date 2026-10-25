@@ -13,6 +13,9 @@ import FixSheet from './FixSheet'
 import TutorialTip from './TutorialTip'
 import { markTutorialSeen, tutorialSeen } from './tutorial'
 
+// The duck offers its hint once this much of the bug has gone by.
+const HINT_AFTER_SECONDS = 20
+
 // First-bug tutorial: one duck bubble per gesture, then the usual tips.
 type TutorialStep = 'line' | 'fix' | 'done'
 
@@ -44,6 +47,15 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
   useEffect(() => {
     if (step === 'line') markTutorialSeen()
   }, [step])
+
+  const [hintShown, setHintShown] = useState(false)
+  const hintOffered = Boolean(bug.hint) && current.timeLimit - left >= HINT_AFTER_SECONDS
+  let bubble =
+    bug.track === 'dev'
+      ? "Coin… Lis chaque ligne à voix haute, comme si tu me l'expliquais."
+      : 'Coin… Compare bien les réglages de chaque appareil.'
+  if (hintShown) bubble = bug.hint!
+  else if (hintOffered) bubble = 'Un indice ? Touche-moi !'
 
   function lineTipDone() {
     setStep('fix')
@@ -125,14 +137,29 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
 
       {!verdict && (
         <div className="mt-auto flex items-center gap-2.5">
-          <Duck mood="think" size={72} />
+          {bug.hint ? (
+            <button
+              type="button"
+              onClick={() => setHintShown(true)}
+              aria-label="Demander un indice au canard"
+              aria-expanded={hintShown}
+              aria-controls="duck-bubble"
+              className="flex-none cursor-pointer rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime"
+            >
+              <Duck mood={hintShown ? 'happy' : 'think'} size={72} />
+            </button>
+          ) : (
+            <Duck mood="think" size={72} />
+          )}
           {step === 'line' ? (
             <TutorialTip text="Touche la ligne où se cache le bug." onDone={lineTipDone} />
           ) : (
-            <p className="flex-1 rounded-2xl rounded-bl-sm border border-line bg-surface px-3.5 py-2.5 text-sm leading-snug text-ink-soft">
-              {bug.track === 'dev'
-                ? "Coin… Lis chaque ligne à voix haute, comme si tu me l'expliquais."
-                : 'Coin… Compare bien les réglages de chaque appareil.'}
+            <p
+              id="duck-bubble"
+              aria-live="polite"
+              className={`flex-1 rounded-2xl rounded-bl-sm border bg-surface px-3.5 py-2.5 text-sm leading-snug ${hintShown || hintOffered ? 'border-lime text-ink' : 'border-line text-ink-soft'}`}
+            >
+              {bubble}
             </p>
           )}
         </div>
