@@ -10,6 +10,7 @@ import SoundToggle from '../../sound/SoundToggle'
 import CodeLines from './CodeLines'
 import NetworkDiagram from './NetworkDiagram'
 import FixSheet from './FixSheet'
+import TimerRing from './TimerRing'
 import TutorialTip from './TutorialTip'
 import { markTutorialSeen, tutorialSeen } from './tutorial'
 
@@ -137,20 +138,22 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
 
       {!verdict && (
         <div className="mt-auto flex items-center gap-2.5">
-          {bug.hint ? (
-            <button
-              type="button"
-              onClick={() => setHintShown(true)}
-              aria-label="Demander un indice au canard"
-              aria-expanded={hintShown}
-              aria-controls="duck-bubble"
-              className="flex-none cursor-pointer rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime"
-            >
-              <Duck mood={hintShown ? 'happy' : 'think'} size={72} />
-            </button>
-          ) : (
-            <Duck mood="think" size={72} />
-          )}
+          <TimerRing left={left} total={current.timeLimit}>
+            {bug.hint ? (
+              <button
+                type="button"
+                onClick={() => setHintShown(true)}
+                aria-label="Demander un indice au canard"
+                aria-expanded={hintShown}
+                aria-controls="duck-bubble"
+                className="flex-none cursor-pointer rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime"
+              >
+                <Duck mood={hintShown ? 'happy' : 'think'} size={72} />
+              </button>
+            ) : (
+              <Duck mood="think" size={72} />
+            )}
+          </TimerRing>
           {step === 'line' ? (
             <TutorialTip text="Touche la ligne où se cache le bug." onDone={lineTipDone} />
           ) : (
