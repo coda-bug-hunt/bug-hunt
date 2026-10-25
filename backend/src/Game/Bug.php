@@ -99,9 +99,11 @@ final readonly class Bug
      * secret field added to the JSON later cannot leak. bugLine, bugTarget, answer
      * and explanation are never in it.
      *
+     * @param list<int> $choiceOrder The order of the game (ChoiceOrder)
+     *
      * @return array<string, mixed>
      */
-    public function toPublic(): array
+    public function toPublic(array $choiceOrder = ChoiceOrder::FILE_ORDER): array
     {
         $public = [
             'id' => $this->id,
@@ -109,7 +111,7 @@ final readonly class Bug
             'difficulty' => $this->difficulty,
             'points' => $this->points,
             'title' => $this->title,
-            'choices' => $this->choices,
+            'choices' => array_map(fn (int $choice): string => $this->choices[$choice], $choiceOrder),
         ];
 
         if ('dev' === $this->track) {

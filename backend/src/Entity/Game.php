@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Game\ChoiceOrder;
 use App\Repository\GameRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -29,6 +30,10 @@ class Game
     /** @var list<string> The bug ids, in game order. */
     #[ORM\Column(type: Types::JSON)]
     private array $bugIds;
+
+    /** @var array<string, list<int>> The order of the choices on screen, by bug id (ChoiceOrder). */
+    #[ORM\Column(type: Types::JSON)]
+    private array $choiceOrders;
 
     // Index of the current bug; equals count($bugIds) once the game is over.
     #[ORM\Column]
@@ -65,10 +70,12 @@ class Game
     private int $version = 1; // @phpstan-ignore property.onlyWritten
 
     /**
-     * @param list<string> $bugIds
+     * @param list<string>              $bugIds
+     * @param array<string, list<int>> $choiceOrders
      */
-    public function __construct(string $id, string $token, string $pseudo, string $deviceId, array $bugIds, int $createdAt)
+    public function __construct(string $id, string $token, string $pseudo, string $deviceId, array $bugIds, int $createdAt, array $choiceOrders = [])
     {
+        $this->choiceOrders = $choiceOrders;
         $this->id = $id;
         $this->token = $token;
         $this->pseudo = $pseudo;
@@ -106,6 +113,14 @@ class Game
     }
 
     // The id of the bug being played, null once the game is over.
+    /**
+     * @return list<int> The order of the file when none is stored (a game created before the shuffle).
+     */
+    public function getChoiceOrder(string $bugId): array
+    {
+        return $this->choiceOrders[$bugId] ?? ChoiceOrder::FILE_ORDER;
+    }
+
     public function getCurrentBugId(): ?string
     {
         return $this->bugIds[$this->currentIndex] ?? null;
