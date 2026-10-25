@@ -86,6 +86,26 @@ class PlayerRepository extends ServiceEntityRepository
         return ['rank' => 1 + $above, 'playersCount' => $playersCount];
     }
 
+    /**
+     * The best visible players, one row per nickname, in the same order as
+     * standing(): higher score first, then the score reached first.
+     *
+     * @return list<Player>
+     */
+    public function top(int $limit): array
+    {
+        /** @var list<Player> */
+        return $this->createQueryBuilder('p')
+            ->where('p.hidden = false')
+            ->andWhere('p.bestReachedAt IS NOT NULL')
+            ->orderBy('p.bestScore', 'DESC')
+            ->addOrderBy('p.bestReachedAt', 'ASC')
+            ->addOrderBy('p.pseudoKey', 'ASC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
     // False when the nickname is unknown.
     public function setHidden(string $pseudo, bool $hidden): bool
     {

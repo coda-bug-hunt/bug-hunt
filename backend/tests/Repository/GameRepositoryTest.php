@@ -62,6 +62,22 @@ final class GameRepositoryTest extends DatabaseTestCase
         self::assertSame(1_761_400_060_000, $game->getFinishedAt());
     }
 
+    public function testStatsCountFinishedGamesOnly(): void
+    {
+        foreach (['dev', 'dev', 'network', 'both', null] as $i => $affinity) {
+            $this->games->save((new Game("game$i", 'token', 'Neo42', 'device1', [], 1_000))->finish($affinity, 2_000));
+        }
+        $this->games->save(new Game('abandoned', 'token', 'Neo42', 'device1', [], 1_000));
+
+        // "both" adds 1 to each gauge; null (dev-only mode) to none.
+        self::assertSame(['gauges' => ['dev' => 3, 'network' => 2], 'gamesPlayed' => 5], $this->games->stats());
+    }
+
+    public function testStatsOfAnEmptyDay(): void
+    {
+        self::assertSame(['gauges' => ['dev' => 0, 'network' => 0], 'gamesPlayed' => 0], $this->games->stats());
+    }
+
     public function testUnknownGameIsNull(): void
     {
         self::assertNull($this->games->find('nope'));
