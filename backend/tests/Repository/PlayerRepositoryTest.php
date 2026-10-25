@@ -195,6 +195,74 @@ final class PlayerRepositoryTest extends DatabaseTestCase
         self::assertSame(['rank' => 2, 'playersCount' => 2], $this->players->standing($replay));
     }
 
+    public function testTopIsInLeaderboardOrder(): void
+    {
+        $this->play('Middle', 900, 1_000);
+        $this->play('Best', 1200, 2_000);
+        $this->play('Late', 900, 3_000);
+
+        self::assertSame(['Best', 'Middle', 'Late'], $this->pseudos($this->players->top(10)));
+    }
+
+    public function testTopLeavesOutHiddenPlayersAndPlayersWithoutAFinishedGame(): void
+    {
+        $this->play('Neo42', 900, 1_000);
+        $this->play('Rude', 1200, 2_000);
+        $this->players->setHidden('Rude', true);
+        $this->players->save(new Player('Starter', 'device2', 1_000));
+
+        self::assertSame(['Neo42'], $this->pseudos($this->players->top(10)));
+    }
+
+    public function testAReplayAppearsOnceWithTheBestScore(): void
+    {
+        $this->play('Neo42', 1200, 1_000);
+        $this->play('Neo42', 300, 2_000);
+        $this->reload();
+
+        $top = $this->players->top(10);
+
+        self::assertSame(['Neo42'], $this->pseudos($top));
+        self::assertSame(1200, $top[0]->getBestScore());
+    }
+
+    public function testTopIsLimited(): void
+    {
+        for ($i = 1; $i <= 12; ++$i) {
+            $this->play("Player$i", $i * 100, 1_000);
+        }
+
+        $top = $this->players->top(10);
+
+        self::assertCount(10, $top);
+        self::assertSame('Player12', $top[0]->getPseudo());
+        self::assertSame('Player3', $top[9]->getPseudo());
+    }
+
+    // The end screen and the big screen show the same rank.
+    public function testTopAgreesWithTheStanding(): void
+    {
+        $games = [
+            'Middle' => $this->play('Middle', 900, 1_000),
+            'Best' => $this->play('Best', 1200, 2_000),
+            'Late' => $this->play('Late', 900, 3_000),
+        ];
+
+        foreach ($this->players->top(10) as $index => $player) {
+            self::assertSame($index + 1, $this->players->standing($games[$player->getPseudo()])['rank']);
+        }
+    }
+
+    /**
+     * @param list<Player> $players
+     *
+     * @return list<string>
+     */
+    private function pseudos(array $players): array
+    {
+        return array_map(fn (Player $player): string => $player->getPseudo(), $players);
+    }
+
     // Saves the player if needed, then records a finished game (all points in dev).
     private function play(string $pseudo, int $score, int $finishedAt): Game
     {
