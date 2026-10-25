@@ -35,7 +35,18 @@ npm test -- --run  # tests
 Phone testing, mock or real API, and how to drive the big screen with fake
 players: [frontend/README.md](frontend/README.md).
 
-The back end and Docker Compose instructions are added with their issues.
+The stand (phones and big screen on one address):
+
+```bash
+docker compose up --build -d   # http://localhost:8080  (API also on :8000)
+docker compose down            # stop; the database volume is kept
+```
+
+Copy `.env.example` to `.env` and change `APP_SECRET` and `ADMIN_PIN` before
+the open day. Defaults in `compose.yaml` are enough to boot.
+
+The API alone, with Adminer, stays in `backend/` (`make install`, `make up`).
+Stop that stack before the stand one: both want port 8000.
 
 ## Where things are
 

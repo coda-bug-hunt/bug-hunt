@@ -1,0 +1,95 @@
+# Stand stack: one address for the phones and the big screen.
+# The dev stack (source mounted as your user, Adminer) stays in backend/.
+
+x-api: &api
+  build:
+    context: ./backend
+    dockerfile: docker/php/Dockerfile
+  environment:
+    SERVER_NAME: ":8080"
+    HOME: /tmp
+    COMPOSER_HOME: /tmp/composer
+    APP_ENV: ${APP_ENV:-prod}
+    APP_DEBUG: ${APP_DEBUG:-0}
+    APP_SECRET: ${APP_SECRET:-change-me}
+    # Hostname "database" is this compose file's service, not localhost.
+    DATABASE_URL: mysql://app:${MARIADB_PASSWORD:-app}@database:3306/app?serverVersion=11.4.0-MariaDB&charset=utf8mb4
+    ADMIN_PIN: ${ADMIN_PIN:-change-me}
+    # Absolute path: backend/.env's ../data/bugs only works in the dev container.
+    BUGS_DIR: /data/bugs
+    DEFAULT_URI: http://localhost:${WEB_PORT:-8080}
+  volumes:
+    - ./backend:/app
+    # vendor and var stay in volumes so a prod install does not replace
+    # the dependencies used by backend/ (make test, make stan).
+    - api_vendor:/app/vendor
+    - api_var:/app/var
+    - ./data/bugs:/data/bugs:ro
+
+services:
+  # The only address visitors open. nginx serves the built front end
+  # and forwards /api/ to the API.
+  web:
+    build:
+      context: ./frontend
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    environment:
+      API_UPSTREAM: http://api:8080
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # FrankenPHP. Also published on APP_PORT so Vite can proxy /api here
+  # while you work (issue: switch the front to the real API).
+  api:
+    <<: *api
+    ports:
+      - "${APP_PORT:-8000}:8080"
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "php", "-r", "exit((@file_get_contents('http://127.0.0.1:8080/api/health') ?: '') === '{\"status\":\"ok\"}' ? 0 : 1);"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    restart: unless-stopped
+
+  # One-shot: install PHP dependencies into the volume, then migrate.
+  # `docker compose restart api` does not run this again.
+  setup:
+    <<: *api
+    entrypoint: ["sh", "-c"]
+    command:
+      - "composer install --no-interaction --prefer-dist --no-dev && php bin/console doctrine:migrations:migrate --no-interaction"
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: "no"
+
+  database:
+    image: mariadb:11.4
+    environment:
+      MARIADB_DATABASE: app
+      MARIADB_USER: app
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:-app}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-root}
+    volumes:
+      - database_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  database_data:
+  api_vendor:
+  api_var:
