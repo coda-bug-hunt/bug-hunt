@@ -35,8 +35,9 @@ The client is picked once, at start-up, from two variables:
 - The mock follows the real rules (points, 60 s, affinity) with 10 demo bugs.
   Its data lives in the browser tab: a game played on a phone does not show
   on the big screen of another device. Use the console snippet below.
-- `/api` is not proxied to the back end yet (#15): until then, `http` mode
-  needs `VITE_API_URL` pointing to the API.
+- In dev, Vite proxies `/api` to `http://localhost:8000`. `http` mode can
+  keep the default `VITE_API_URL` (`/api`). The stand image does the same
+  with nginx (`frontend/Dockerfile`).
 
 ## Routes
 
