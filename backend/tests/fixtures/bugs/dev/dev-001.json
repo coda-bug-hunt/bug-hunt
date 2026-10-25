@@ -1,0 +1,12 @@
+{
+  "id": "dev-001",
+  "track": "dev",
+  "difficulty": 0,
+  "points": 100,
+  "title": "Le total est faux",
+  "code": ["total = price - shipping", "print(total)"],
+  "bugLine": 0,
+  "choices": ["total = price + shipping", "total = price * shipping", "total = shipping - price"],
+  "answer": 0,
+  "explanation": "Il faut additionner les frais de port."
+}

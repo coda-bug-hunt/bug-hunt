@@ -12,6 +12,8 @@ services:
       COMPOSER_HOME: /tmp/composer
     volumes:
       - ./:/app
+      # The bug files (BUGS_DIR=../data/bugs), read only
+      - ../data/bugs:/data/bugs:ro
     ports:
       - "${APP_PORT:-8000}:8080"
     depends_on:
