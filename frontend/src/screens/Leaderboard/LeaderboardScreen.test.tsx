@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
-import { render, screen, waitFor, within } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import type { GameApi, Leaderboard } from '../../api'
+import { sound } from '../../sound/player'
 import LeaderboardScreen from './LeaderboardScreen'
 
 // The QR code itself is drawn by qrcode.react: check only what it encodes.
@@ -68,5 +69,72 @@ describe('LeaderboardScreen', () => {
     const qr = await screen.findByRole('img', { name: 'QR code pour jouer' })
     expect(qr.getAttribute('data-value')).toBe(`${window.location.origin}/`)
     expect(screen.getByText('Scanne pour jouer')).toBeTruthy()
+  })
+})
+
+describe('LeaderboardScreen live', () => {
+  const entry = (rank: number, pseudo: string, score: number) => ({
+    rank, pseudo, score, affinity: 'dev' as const, byTrack: { dev: score, network: 0 },
+  })
+  const before: Leaderboard = { top: [entry(1, 'Neo', 900), entry(2, 'Zed', 400)], gauges: { dev: 2, network: 0 }, gamesPlayed: 2 }
+  const after: Leaderboard = {
+    top: [entry(1, 'Lyra', 1200), entry(2, 'Neo', 900), entry(3, 'Zed', 400)],
+    gauges: { dev: 3, network: 0 },
+    gamesPlayed: 3,
+  }
+
+  async function wait(ms: number) {
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(ms)
+    })
+  }
+
+  async function renderLive() {
+    vi.useFakeTimers()
+    const getLeaderboard = vi.fn().mockResolvedValueOnce(before).mockResolvedValue(after)
+    render(<LeaderboardScreen client={{ getLeaderboard } as unknown as GameApi} />)
+    await wait(0)
+  }
+
+  afterEach(() => {
+    vi.useRealTimers()
+    vi.restoreAllMocks()
+    sound.setMuted(false)
+  })
+
+  it('celebrates nothing on the first load', async () => {
+    await renderLive()
+    expect(screen.queryByText('Nouveau record !')).toBeNull()
+    expect(document.querySelectorAll('[data-moved]')).toHaveLength(0)
+  })
+
+  it('highlights a nickname that enters or climbs, for 3 seconds', async () => {
+    await renderLive()
+    await wait(2000)
+    const highlighted = [...document.querySelectorAll('[data-moved]')].map((row) => row.textContent)
+    expect(highlighted).toHaveLength(1)
+    expect(highlighted[0]).toContain('Lyra')
+    await wait(3000)
+    expect(document.querySelectorAll('[data-moved]')).toHaveLength(0)
+  })
+
+  it('celebrates a new record with a banner and a jingle', async () => {
+    const play = vi.spyOn(sound, 'play').mockImplementation(() => {})
+    await renderLive()
+    await wait(2000)
+    expect(screen.getByText('Nouveau record !')).toBeTruthy()
+    expect(screen.getByRole('status').textContent).toContain('Lyra')
+    expect(play).toHaveBeenCalledWith('fanfare')
+    await wait(5000)
+    expect(screen.queryByText('Nouveau record !')).toBeNull()
+  })
+
+  it('mutes the jingle with the M key', async () => {
+    await renderLive()
+    fireEvent.keyDown(window, { key: 'm' })
+    expect(sound.isMuted()).toBe(true)
+    expect(screen.getByText(/M : remettre le son/)).toBeTruthy()
+    fireEvent.keyDown(window, { key: 'M' })
+    expect(sound.isMuted()).toBe(false)
   })
 })

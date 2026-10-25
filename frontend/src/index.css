@@ -18,7 +18,7 @@
   --color-duck-dark: #6A35F0;
   --color-tear: #7FD0FF;
 
-  /* Duck moves, always used behind motion-safe: (components/Duck.tsx) */
+  /* Duck and big-screen moves, always used behind motion-safe: */
   --animate-duck-pop: duck-pop 0.45s ease-out both;
   --animate-duck-breathe: duck-breathe 3.2s ease-in-out infinite;
   --animate-duck-blink: duck-blink 4.5s ease-in-out infinite;
@@ -35,6 +35,7 @@
   --animate-duck-shake: duck-shake 3s ease-in-out infinite;
   --animate-duck-tear: duck-tear 2s ease-in infinite;
   --animate-duck-confetti: duck-confetti 1.8s linear infinite;
+  --animate-board-confetti: board-confetti 2.6s linear infinite;
 
   @keyframes duck-pop {
     0% { transform: scale(0.85); }
@@ -103,6 +104,10 @@
     0% { transform: translateY(0); opacity: 0; }
     15%, 80% { opacity: 1; }
     100% { transform: translateY(14px); opacity: 0; }
+  }
+  @keyframes board-confetti {
+    from { transform: translateY(0) rotate(0); }
+    to { transform: translateY(110vh) rotate(540deg); }
   }
   @keyframes duck-confetti {
     0% { transform: translateY(-8px) rotate(0); opacity: 0; }

@@ -1,15 +1,22 @@
+import { useEffect, useLayoutEffect, useRef, type Ref } from 'react'
 import { api, type GameApi, type LeaderboardEntry } from '../../api'
-import { usePolling } from '../../hooks/usePolling'
+import { sound, useMuted } from '../../sound/player'
 import AffinityTag from './AffinityTag'
 import DayPanel from './DayPanel'
+import RecordBanner from './RecordBanner'
+import { useLiveBoard } from './useLiveBoard'
 
 const REFRESH_MS = 2000
 
-function Row({ entry }: { entry: LeaderboardEntry }) {
+function Row({ entry, moved, ref }: { entry: LeaderboardEntry; moved: boolean; ref: Ref<HTMLLIElement> }) {
   const first = entry.rank === 1
+  let frame = first ? 'border-lime bg-lime/10' : 'border-line bg-surface'
+  if (moved) frame = 'border-pink bg-pink/14'
   return (
     <li
-      className={`grid h-13 grid-cols-[64px_minmax(0,1fr)_140px_190px] items-center gap-x-6 rounded-[10px] border px-5 ${first ? 'border-lime bg-lime/10' : 'border-line bg-surface'}`}
+      ref={ref}
+      data-moved={moved || undefined}
+      className={`grid h-13 grid-cols-[64px_minmax(0,1fr)_140px_190px] items-center gap-x-6 rounded-[10px] border px-5 transition-colors duration-700 ${frame}`}
     >
       <span className={`font-mono text-[22px] font-semibold ${first ? 'text-lime' : 'text-muted'}`}>{entry.rank}</span>
       <span className="truncate text-2xl font-medium">{entry.pseudo}</span>
@@ -19,25 +26,92 @@ function Row({ entry }: { entry: LeaderboardEntry }) {
   )
 }
 
+// Rows slide from their old place to the new one (FLIP), with the Web
+// Animations API where it exists; nothing moves with reduced motion.
+function useSlidingRows(data: unknown) {
+  const rows = useRef(new Map<string, HTMLLIElement>())
+  const tops = useRef(new Map<string, number>())
+
+  useLayoutEffect(() => {
+    const still = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches
+    const next = new Map<string, number>()
+    const firstLoad = tops.current.size === 0
+    rows.current.forEach((row, pseudo) => {
+      const top = row.getBoundingClientRect().top
+      next.set(pseudo, top)
+      if (still || firstLoad || typeof row.animate !== 'function') return
+      const old = tops.current.get(pseudo)
+      if (old === undefined) {
+        row.animate([{ opacity: 0, transform: 'translateX(-32px)' }, { opacity: 1, transform: 'none' }], {
+          duration: 500,
+          easing: 'ease-out',
+        })
+      } else if (old !== top) {
+        row.animate([{ transform: `translateY(${old - top}px)` }, { transform: 'none' }], {
+          duration: 600,
+          easing: 'ease-in-out',
+        })
+      }
+    })
+    tops.current = next
+  }, [data])
+
+  return (pseudo: string) => (row: HTMLLIElement | null) => {
+    if (!row) return
+    rows.current.set(pseudo, row)
+    return () => {
+      rows.current.delete(pseudo)
+    }
+  }
+}
+
 // Big screen of the stand (Coda mockup E7), landscape, read from 3 metres.
 // `client` is only passed by tests.
 function LeaderboardScreen({ client = api }: { client?: GameApi }) {
-  const { data } = usePolling(() => client.getLeaderboard(), REFRESH_MS)
+  const { data, moved, record } = useLiveBoard(client, REFRESH_MS)
+  const rowRef = useSlidingRows(data)
+  const muted = useMuted()
+
+  // The stand PC has speakers: any key or click unlocks the audio, M mutes the jingle.
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      sound.unlock()
+      if (event.key.toLowerCase() === 'm') sound.setMuted(!sound.isMuted())
+    }
+    function onPointer() {
+      sound.unlock()
+    }
+    window.addEventListener('keydown', onKey)
+    window.addEventListener('pointerdown', onPointer)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('pointerdown', onPointer)
+    }
+  }, [])
 
   return (
     <main className="grid min-h-dvh grid-cols-[minmax(0,1fr)_440px] gap-12 px-14 py-11">
-      <section className="flex min-w-0 flex-col gap-[22px]">
+      <section className="relative flex min-w-0 flex-col gap-[22px]">
         <div className="flex items-baseline justify-between">
           <h1 className="font-display text-5xl font-bold">
             Chasse aux <span className="text-lime">bugs</span>
           </h1>
-          <span className="font-mono text-lg text-muted">CODA · JPO · Top 10 en direct</span>
+          <span className="flex flex-col items-end gap-1 font-mono text-lg text-muted">
+            CODA · JPO · Top 10 en direct
+            <span className="text-sm">{muted ? 'M : remettre le son' : 'M : couper le son'}</span>
+          </span>
         </div>
         <ol className="flex flex-col gap-1.5">
-          {data?.top.map((entry) => <Row key={entry.pseudo} entry={entry} />)}
+          {data?.top.map((entry) => (
+            <Row key={entry.pseudo} ref={rowRef(entry.pseudo)} entry={entry} moved={moved.includes(entry.pseudo)} />
+          ))}
         </ol>
+        {record && <RecordBanner record={record} />}
       </section>
       {data && <DayPanel leaderboard={data} />}
+      <p role="status" className="sr-only">
+        {record ? `Nouveau record : ${record.pseudo}, ${record.score} points` : ''}
+      </p>
     </main>
   )
 }
