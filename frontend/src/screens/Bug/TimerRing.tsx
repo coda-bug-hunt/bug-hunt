@@ -13,7 +13,8 @@ function TimerRing({ left, total, children }: TimerRingProps) {
   const emptied = total > 0 ? 1 - Math.min(Math.max(left / total, 0), 1) : 1
   return (
     <div className="relative flex size-23 flex-none items-center justify-center">
-      <svg aria-hidden="true" viewBox="0 0 92 92" className="absolute inset-0 -rotate-90">
+      {/* Drawn over the duck: taps must go through to the hint button. */}
+      <svg aria-hidden="true" viewBox="0 0 92 92" className="pointer-events-none absolute inset-0 -rotate-90">
         <circle cx="46" cy="46" r={RADIUS} strokeWidth="4" className="fill-none stroke-line" />
         <circle
           data-ring
