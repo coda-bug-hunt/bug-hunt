@@ -3,21 +3,21 @@
   "track": "dev",
   "difficulty": 1,
   "points": 200,
-  "title": "Il fait 35 °C, mais l'appli dit qu'il ne fait pas chaud",
+  "title": "La photo du chat ne s'affiche pas",
+  "language": "HTML",
+  "context": "Fichiers du site :\nindex.html\nimages/chat.png",
   "code": [
-    "def is_hot(temp):",
-    "    if temp < 30:",
-    "        return True",
-    "    return False",
-    "print(is_hot(35))"
+    "<h1>Mon chat</h1>",
+    "<img src=\"image/chat.png\">",
+    "<p>Il s'appelle Pixel.</p>"
   ],
   "bugLine": 1,
   "choices": [
-    "if temp > 30:",
-    "if temp == 30:",
-    "if temp < 35:"
+    "<img src=\"images/chat.png\">",
+    "<img src=\"image/chat.jpg\">",
+    "<img src=\"chat.png\">"
   ],
   "answer": 0,
-  "explanation": "< veut dire « plus petit que » : l'appli dit qu'il fait chaud quand il fait moins de 30 °C. Il faut > (« plus grand que »).",
-  "hint": "Il fait chaud quand la température est au-dessus ou en dessous de 30 ?"
+  "explanation": "Le dossier s'appelle images, avec un s. Avec image/, le navigateur cherche un dossier qui n'existe pas.",
+  "hint": "Compare le chemin de l'image avec les noms des fichiers du site."
 }

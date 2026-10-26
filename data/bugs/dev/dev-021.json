@@ -3,20 +3,21 @@
   "track": "dev",
   "difficulty": 0,
   "points": 100,
-  "title": "4 places de ciné à 8 € coûteraient 24 €",
+  "title": "Le prof de 3B reçoit la liste de la 3A",
+  "language": "SQL",
+  "context": "Le prof de la 3B demande la liste de ses élèves.",
   "code": [
-    "def price_for(seats):",
-    "    total = seats * 8",
-    "    return total",
-    "print(price_for(3))"
+    "SELECT prenom",
+    "FROM eleves",
+    "WHERE classe = '3A';"
   ],
-  "bugLine": 3,
+  "bugLine": 2,
   "choices": [
-    "print(price_for(4))",
-    "print(price_for(8))",
-    "print(price_for(3 + 4))"
+    "WHERE classe = '3B';",
+    "WHERE prenom = '3B';",
+    "WHERE classe = '3A' AND '3B';"
   ],
   "answer": 0,
-  "explanation": "Le calcul est juste, mais on demande le prix de 3 places au lieu de 4.",
-  "hint": "Le calcul est peut-être juste… mais combien de places demande-t-on vraiment ?"
+  "explanation": "WHERE ne garde que les élèves qui correspondent. Ici, on demande la classe 3A, alors que le prof veut la 3B.",
+  "hint": "Quelle classe la requête demande-t-elle vraiment ?"
 }

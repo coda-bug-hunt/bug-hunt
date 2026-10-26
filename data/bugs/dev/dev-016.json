@@ -3,20 +3,23 @@
   "track": "dev",
   "difficulty": 0,
   "points": 100,
-  "title": "Le message dit \"Salut name\" au lieu du prénom",
+  "title": "Le titre « Bienvenue » est invisible",
+  "language": "HTML/CSS",
+  "context": "Le fond de la page doit rester blanc.",
   "code": [
-    "def greet(name):",
-    "    message = \"Salut \" + \"name\"",
-    "    return message",
-    "print(greet(\"Léa\"))"
+    "<style>",
+    "  body { background: white; }",
+    "  h1 { color: white; }",
+    "</style>",
+    "<h1>Bienvenue !</h1>"
   ],
-  "bugLine": 1,
+  "bugLine": 2,
   "choices": [
-    "message = \"Salut \" + name",
-    "message = \"Salut \" + \"Léa\"",
-    "message = \"Salut name\""
+    "h1 { color: black; }",
+    "h1 { background: white; }",
+    "h1 { color: white; font-size: 40px; }"
   ],
   "answer": 0,
-  "explanation": "Entre guillemets, name est juste un mot. Sans guillemets, Python utilise le prénom reçu.",
-  "hint": "Entre guillemets, un mot reste ce mot, tel quel : est-ce bien ce qu'on veut ici ?"
+  "explanation": "Le titre est écrit en blanc sur une page blanche : on ne le voit pas. Il faut une couleur foncée, comme le noir.",
+  "hint": "De quelle couleur est le texte, et de quelle couleur est la page ?"
 }

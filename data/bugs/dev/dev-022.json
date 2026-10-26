@@ -3,21 +3,21 @@
   "track": "dev",
   "difficulty": 1,
   "points": 200,
-  "title": "On répond \"oui\", mais l'appli comprend non",
+  "title": "La boutique ne propose que des jeux épuisés",
+  "language": "SQL",
+  "context": "La page doit montrer les jeux qu'on peut acheter.",
   "code": [
-    "def is_yes(answer):",
-    "    if answer == \"OUI\":",
-    "        return True",
-    "    return False",
-    "print(is_yes(\"oui\"))"
+    "SELECT nom, prix",
+    "FROM jeux",
+    "WHERE stock = 0;"
   ],
-  "bugLine": 1,
+  "bugLine": 2,
   "choices": [
-    "if answer == \"oui\":",
-    "if answer == \"Oui\":",
-    "if answer == \" oui\":"
+    "WHERE stock > 0;",
+    "WHERE stock < 0;",
+    "WHERE prix > 0;"
   ],
   "answer": 0,
-  "explanation": "Pour Python, une majuscule n'est pas la même lettre qu'une minuscule : \"OUI\" et \"oui\" sont différents.",
-  "hint": "Pour l'ordinateur, une majuscule et une minuscule sont-elles la même lettre ?"
+  "explanation": "stock = 0 garde les jeux dont il ne reste aucun exemplaire. Pour pouvoir acheter, il en faut au moins un : stock > 0.",
+  "hint": "Combien d'exemplaires faut-il en stock pour pouvoir acheter un jeu ?"
 }
