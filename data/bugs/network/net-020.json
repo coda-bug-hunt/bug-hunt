@@ -3,22 +3,24 @@
   "track": "network",
   "difficulty": 4,
   "points": 500,
-  "title": "Le nouveau serveur joue à cache-cache",
-  "diagram": {
-    "devices": [
-      { "id": "pc", "label": "PC de Sarah", "ip": "192.168.1.10", "mask": "255.255.255.128" },
-      { "id": "switch", "label": "Switch réseau" },
-      { "id": "server", "label": "Nouveau serveur", "ip": "192.168.1.140", "mask": "255.255.255.128" }
-    ],
-    "links": [["pc", "switch"], ["switch", "server"]]
-  },
-  "bugTarget": "server",
+  "title": "Le virus de lundi est aussi dans la sauvegarde",
+  "view": "config",
+  "language": "Serveur · Sauvegarde",
+  "context": "Le virus a été découvert mercredi. Il était là depuis lundi.",
+  "code": [
+    "[sauvegarde]",
+    "dossier = /sauv",
+    "frequence = chaque nuit",
+    "copies_gardees = 1",
+    "chiffrement = oui"
+  ],
+  "bugLine": 3,
   "choices": [
-    "Donner au nouveau serveur l'adresse 192.168.1.40",
-    "Donner au PC de Sarah l'adresse 192.168.1.140",
-    "Donner au nouveau serveur le masque /26"
+    "copies_gardees = 30",
+    "frequence = chaque heure",
+    "chiffrement = non"
   ],
   "answer": 0,
-  "explanation": "Le masque /25 coupe le réseau en deux moitiés, comme deux équipes : de 0 à 127, et de 128 à 255. Sarah est dans la première, le nouveau serveur s'est caché dans la deuxième. Il faut le ramener dans l'équipe de Sarah.",
-  "hint": "Avec /25, le réseau est coupé en deux moitiés : de quel côté est chacun ?"
+  "explanation": "Avec une seule copie, chaque nuit écrase la précédente : il ne reste que celle de mardi soir, déjà infectée. En gardant 30 copies, on peut revenir à dimanche, avant le virus.",
+  "hint": "Pour revenir à avant lundi, combien de sauvegardes faut-il garder ?"
 }
