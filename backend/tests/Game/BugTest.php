@@ -31,6 +31,36 @@ final class BugTest extends TestCase
         self::assertSame(self::networkBug()['diagram'], $public['diagram']);
     }
 
+    public function testANetworkBugCanBeDrawnAsLines(): void
+    {
+        $bug = Bug::fromArray(self::terminalBug());
+        $public = $bug->toPublic();
+
+        self::assertTrue($bug->isDrawnAsLines());
+        self::assertSame(
+            ['id', 'track', 'difficulty', 'points', 'title', 'choices', 'view', 'code', 'context'],
+            array_keys($public),
+        );
+        self::assertSame('network', $public['track']);
+        self::assertSame('terminal', $public['view']);
+        self::assertSame(1, $bug->bugLine);
+    }
+
+    public function testTheShapeFollowsTheViewNotTheTrack(): void
+    {
+        self::assertTrue(Bug::fromArray(self::devBug())->isDrawnAsLines(), 'dev without a view: code');
+        self::assertFalse(Bug::fromArray(self::networkBug())->isDrawnAsLines(), 'network without a view: diagram');
+        self::assertFalse(Bug::fromArray([...self::networkBug(), 'view' => 'diagram'])->isDrawnAsLines());
+    }
+
+    public function testTheLinesCarryTheirLanguage(): void
+    {
+        $public = Bug::fromArray([...self::devBug(), 'language' => 'SQL'])->toPublic();
+
+        self::assertSame('SQL', $public['language']);
+        self::assertArrayNotHasKey('view', $public, 'no view in the file, none sent');
+    }
+
     public function testThePublicViewCarriesTheHint(): void
     {
         foreach ([self::devBug(), self::networkBug()] as $data) {
@@ -109,6 +139,11 @@ final class BugTest extends TestCase
         yield 'no diagram' => [array_diff_key($network, ['diagram' => 0]), 'diagram must hold'];
         yield 'empty hint' => [[...$dev, 'hint' => ''], 'hint must be'];
         yield 'bugTarget not a device' => [[...$network, 'bugTarget' => 'router'], 'bugTarget must be'];
+        yield 'unknown view' => [[...$dev, 'view' => 'video'], 'view must be'];
+        yield 'terminal without lines' => [[...$network, 'view' => 'terminal'], 'code must be'];
+        yield 'dev diagram without a diagram' => [[...$dev, 'view' => 'diagram'], 'diagram must hold'];
+        yield 'empty language' => [[...$dev, 'language' => ''], 'language must be'];
+        yield 'empty context' => [[...self::terminalBug(), 'context' => ''], 'context must be'];
     }
 
     public function testRejectsSomethingElseThanAnObject(): void
@@ -134,6 +169,27 @@ final class BugTest extends TestCase
             'choices' => ['total = price + shipping', 'total = price * shipping', 'total = shipping - price'],
             'answer' => 0,
             'explanation' => 'Il faut additionner.',
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private static function terminalBug(): array
+    {
+        return [
+            'id' => 'net-006',
+            'track' => 'network',
+            'difficulty' => 0,
+            'points' => 100,
+            'view' => 'terminal',
+            'title' => 'Les sites ne répondent plus',
+            'context' => 'Le PC joint 8.8.8.8, mais aucun site.',
+            'code' => ['$ ping exemple.fr', 'ping: exemple.fr : nom inconnu'],
+            'bugLine' => 1,
+            'choices' => ['Corriger le DNS', 'Changer le câble', 'Redémarrer'],
+            'answer' => 0,
+            'explanation' => 'C\'est le DNS.',
         ];
     }
 

@@ -3,33 +3,21 @@
   "track": "network",
   "difficulty": 4,
   "points": 500,
+  "view": "terminal",
   "title": "Panne réseau de niveau 4",
-  "diagram": {
-    "devices": [
-      {
-        "id": "pc",
-        "label": "PC",
-        "ip": "192.168.1.10"
-      },
-      {
-        "id": "printer",
-        "label": "Imprimante",
-        "ip": "192.168.2.20"
-      }
-    ],
-    "links": [
-      [
-        "pc",
-        "printer"
-      ]
-    ]
-  },
-  "bugTarget": "printer",
+  "context": "Le PC joint 8.8.8.8, mais aucun site.",
+  "code": [
+    "$ ping exemple.fr",
+    "ping: exemple.fr : nom inconnu",
+    "$ ping 8.8.8.8",
+    "64 octets de 8.8.8.8 : temps=12 ms"
+  ],
+  "bugLine": 0,
   "choices": [
-    "Passer l'imprimante en 192.168.1.20",
-    "Passer le PC en 10.0.0.10",
-    "Changer le câble"
+    "Corriger le DNS du PC",
+    "Changer le câble",
+    "Redémarrer exemple.fr"
   ],
   "answer": 0,
-  "explanation": "Les deux appareils doivent être sur le même réseau."
+  "explanation": "Le PC joint Internet, mais ne traduit plus les noms : c'est le DNS."
 }

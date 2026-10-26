@@ -10,11 +10,14 @@ final readonly class Bug
 {
     public const TRACKS = ['dev', 'network'];
     public const LEVELS = [0, 1, 2, 3, 4];
+    // How a bug is drawn. Every view but diagram is a list of lines (code,
+    // bugLine), whatever the track: a network bug can be a terminal.
+    public const VIEWS = ['code', 'terminal', 'email', 'config', 'rules', 'diagram'];
 
     /**
      * @param list<string>              $choices
-     * @param list<string>|null         $code    dev bugs only
-     * @param array<string, mixed>|null $diagram network bugs only
+     * @param list<string>|null         $code    bugs drawn as lines
+     * @param array<string, mixed>|null $diagram bugs drawn as a diagram
      */
     private function __construct(
         public string $id,
@@ -31,6 +34,12 @@ final readonly class Bug
         public ?string $bugTarget = null,
         // A nudge whispered by the duck: points the way, never gives the answer.
         public ?string $hint = null,
+        // As written in the file; null: code for dev, diagram for network.
+        public ?string $view = null,
+        // Shown above the lines: "Python", "SQL"...
+        public ?string $language = null,
+        // Shown above the lines, e.g. an error message to trace back.
+        public ?string $context = null,
     ) {
     }
 
@@ -65,16 +74,28 @@ final readonly class Bug
             throw new InvalidBugException('answer must be 0 to 2');
         }
         $common = [$id, $track, $difficulty, $points, self::string($data, 'title'), $choices, $answer, self::string($data, 'explanation')];
-        $hint = \array_key_exists('hint', $data) ? self::string($data, 'hint') : null;
+        $hint = self::optionalString($data, 'hint');
+        $view = self::optionalString($data, 'view');
+        if (null !== $view && !\in_array($view, self::VIEWS, true)) {
+            throw new InvalidBugException('view must be one of '.implode(', ', self::VIEWS));
+        }
 
-        if ('dev' === $track) {
+        if ('diagram' !== ($view ?? ('dev' === $track ? 'code' : 'diagram'))) {
             $code = self::strings($data, 'code');
             $bugLine = self::int($data, 'bugLine');
             if ($bugLine < 0 || $bugLine >= \count($code)) {
                 throw new InvalidBugException('bugLine must be a line of code');
             }
 
-            return new self(...$common, code: $code, bugLine: $bugLine, hint: $hint);
+            return new self(
+                ...$common,
+                code: $code,
+                bugLine: $bugLine,
+                hint: $hint,
+                view: $view,
+                language: self::optionalString($data, 'language'),
+                context: self::optionalString($data, 'context'),
+            );
         }
 
         $diagram = $data['diagram'] ?? null;
@@ -91,7 +112,13 @@ final readonly class Bug
         }
 
         /** @var array<string, mixed> $diagram */
-        return new self(...$common, diagram: $diagram, bugTarget: $bugTarget, hint: $hint);
+        return new self(...$common, diagram: $diagram, bugTarget: $bugTarget, hint: $hint, view: $view);
+    }
+
+    // Lines are selected with selectedLine, a diagram with selectedTarget.
+    public function isDrawnAsLines(): bool
+    {
+        return null !== $this->code;
     }
 
     /**
@@ -114,8 +141,16 @@ final readonly class Bug
             'choices' => array_map(fn (int $choice): string => $this->choices[$choice], $choiceOrder),
         ];
 
-        if ('dev' === $this->track) {
+        if (null !== $this->view) {
+            $public['view'] = $this->view;
+        }
+        if ($this->isDrawnAsLines()) {
             $public['code'] = $this->code;
+            foreach (['language' => $this->language, 'context' => $this->context] as $key => $value) {
+                if (null !== $value) {
+                    $public[$key] = $value;
+                }
+            }
         } else {
             $public['diagram'] = $this->diagram;
         }
@@ -136,6 +171,14 @@ final readonly class Bug
         }
 
         return $data[$key];
+    }
+
+    /**
+     * @param array<mixed> $data
+     */
+    private static function optionalString(array $data, string $key): ?string
+    {
+        return \array_key_exists($key, $data) ? self::string($data, $key) : null;
     }
 
     /**

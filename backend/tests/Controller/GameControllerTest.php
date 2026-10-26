@@ -121,6 +121,22 @@ final class GameControllerTest extends ApiTestCase
         }
     }
 
+    public function testServesANetworkBugDrawnAsLinesWithItsView(): void
+    {
+        $this->saveGame(new Game('game1', 'token1', 'Neo42', 'device1', ['net-005'], 0));
+
+        $bug = $this->request('GET', '/api/games/game1/next', token: 'token1')['bug'];
+
+        self::assertSame('network', $bug['track']);
+        self::assertSame('terminal', $bug['view']);
+        self::assertSame('Le PC joint 8.8.8.8, mais aucun site.', $bug['context']);
+        self::assertCount(4, $bug['code']);
+        self::assertArrayNotHasKey('diagram', $bug);
+        foreach (self::SECRET_FIELDS as $secret) {
+            self::assertArrayNotHasKey($secret, $bug);
+        }
+    }
+
     public function testCallingNextAgainDoesNotRestartTheTimer(): void
     {
         $game = $this->request('POST', '/api/games', ['pseudo' => 'Neo42', 'deviceId' => 'device1']);

@@ -11,7 +11,8 @@ use App\Tests\ApiTestCase;
 /**
  * Selection and answer of a bug. Fixtures (tests/fixtures/bugs): dev-001 is
  * level 0, faulty line 0, right fix 0; net-001 is level 1, faulty device
- * "printer", right fix 0.
+ * "printer", right fix 0; net-005 is a network bug drawn as a terminal,
+ * faulty line 0, right fix 0.
  */
 final class GameAnswerTest extends ApiTestCase
 {
@@ -44,6 +45,18 @@ final class GameAnswerTest extends ApiTestCase
         $body = $this->select(['bugId' => 'net-001', 'selectedTarget' => 'pc']);
 
         self::assertSame(['lineCorrect' => false, 'correctTarget' => 'printer'], $body);
+    }
+
+    public function testSelectALineOfANetworkBugDrawnAsLines(): void
+    {
+        $this->saveGame(new Game('game2', 'token2', 'Neo42', 'device1', ['net-005'], 0));
+
+        $wrongField = $this->request('POST', '/api/games/game2/selection', ['bugId' => 'net-005', 'selectedTarget' => 'pc'], 'token2');
+        self::assertResponseStatusCodeSame(400);
+        self::assertSame(['error' => 'bad_request'], $wrongField);
+
+        $body = $this->request('POST', '/api/games/game2/selection', ['bugId' => 'net-005', 'selectedLine' => 1], 'token2');
+        self::assertSame(['lineCorrect' => false, 'correctLine' => 0], $body);
     }
 
     public function testOnlyOneSelectionPerBug(): void
@@ -230,7 +243,8 @@ final class GameAnswerTest extends ApiTestCase
 
         for ($i = 0; $i < $game['totalBugs']; ++$i) {
             $bug = $this->request('GET', "$url/next", token: $token)['bug'];
-            $pick = 'dev' === $bug['track'] ? ['selectedLine' => 0] : ['selectedTarget' => 'printer'];
+            // The shape of the bug, not its track, says what to send: net-005 is a terminal.
+            $pick = \array_key_exists('code', $bug) ? ['selectedLine' => 0] : ['selectedTarget' => 'printer'];
             $this->request('POST', "$url/selection", ['bugId' => $bug['id'], ...$pick], $token);
             // The right fix is choice 0 of every fixture file: find where this game shows it.
             $order = self::getContainer()->get(GameRepository::class)->find($game['gameId'])?->getChoiceOrder($bug['id']) ?? [];
@@ -239,7 +253,7 @@ final class GameAnswerTest extends ApiTestCase
         }
 
         // Dev: line 0 is right for dev-001 only (100), the 4 others score half: 100 + 100 + 150 + 200 + 250.
-        // Network: every faulty device is "printer", all right: 100 + 200 + 300 + 400 + 500.
+        // Network: every faulty device is "printer", and line 0 of net-005, all right: 100 + 200 + 300 + 400 + 500.
         self::assertSame(2300, $answer['score']);
         self::assertSame(2300, self::getContainer()->get(PlayerRepository::class)->findByPseudo('pixel')?->getBestScore());
     }

@@ -115,7 +115,7 @@ final class GameController extends AbstractController
             throw new ApiException('already_selected', Response::HTTP_CONFLICT);
         }
 
-        if ('dev' === $bug->track) {
+        if ($bug->isDrawnAsLines()) {
             $selected = $data['selectedLine'] ?? null;
             if (!\is_int($selected)) {
                 throw new ApiException('bad_request', Response::HTTP_BAD_REQUEST);
