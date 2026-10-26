@@ -162,6 +162,42 @@ final readonly class Bug
     }
 
     /**
+     * One row of the admin list: the view is named even when the file has none.
+     *
+     * @return array{id: string, track: string, difficulty: int, title: string, view: string}
+     */
+    public function toSummary(): array
+    {
+        return [
+            'id' => $this->id,
+            'track' => $this->track,
+            'difficulty' => $this->difficulty,
+            'title' => $this->title,
+            'view' => $this->view ?? ($this->isDrawnAsLines() ? 'code' : 'diagram'),
+        ];
+    }
+
+    /**
+     * The whole bug, answer included, choices in file order. Admin only, behind
+     * the PIN: the test tool plays the bug in the page and keeps no score.
+     *
+     * @return array<string, mixed>
+     */
+    public function toFull(): array
+    {
+        $full = $this->toPublic();
+        if ($this->isDrawnAsLines()) {
+            $full['bugLine'] = $this->bugLine;
+        } else {
+            $full['bugTarget'] = $this->bugTarget;
+        }
+        $full['answer'] = $this->answer;
+        $full['explanation'] = $this->explanation;
+
+        return $full;
+    }
+
+    /**
      * @param array<mixed> $data
      */
     private static function string(array $data, string $key): string

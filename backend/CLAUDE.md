@@ -33,7 +33,8 @@ How to run and the environment variables: README.md.
 - The server is the only judge: scores, timer and affinity are computed here,
   never trusted from the client.
 - The right answer never leaves the server before the player answers. Public bug
-  fields are an explicit list, never "the JSON minus a few keys".
+  fields are an explicit list, never "the JSON minus a few keys". Only exception:
+  GET /api/admin/bugs/{id}, behind the PIN, for the test tool (Bug::toFull).
 - Bugs are read from BUGS_DIR (data/bugs/), never copied into backend/ or the database.
 - Configuration comes from environment variables only (ADMIN_PIN, BUGS_DIR, GAME_TRACKS,
   DATABASE_URL), declared in .env.example with harmless defaults. Never read or commit .env.

@@ -31,6 +31,30 @@ final class BugTest extends TestCase
         self::assertSame(self::networkBug()['diagram'], $public['diagram']);
     }
 
+    public function testTheSummaryNamesTheViewEvenWhenTheFileHasNone(): void
+    {
+        self::assertSame(
+            ['id' => 'dev-001', 'track' => 'dev', 'difficulty' => 0, 'title' => 'Le total est faux', 'view' => 'code'],
+            Bug::fromArray(self::devBug())->toSummary(),
+        );
+        self::assertSame('diagram', Bug::fromArray(self::networkBug())->toSummary()['view']);
+        self::assertSame('terminal', Bug::fromArray(self::terminalBug())->toSummary()['view']);
+    }
+
+    // Admin only: the test tool plays the bug in the page, so it needs the answer.
+    public function testTheFullViewCarriesTheAnswer(): void
+    {
+        $dev = Bug::fromArray(self::devBug())->toFull();
+        self::assertSame(['bugLine' => 0, 'answer' => 0, 'explanation' => 'Il faut additionner.'], array_intersect_key($dev, array_flip(['bugLine', 'answer', 'explanation'])));
+        self::assertSame(self::devBug()['choices'], $dev['choices']);
+        self::assertArrayNotHasKey('bugTarget', $dev);
+
+        $network = Bug::fromArray(self::networkBug())->toFull();
+        self::assertSame('printer', $network['bugTarget']);
+        self::assertSame(1, $network['answer']);
+        self::assertArrayNotHasKey('bugLine', $network);
+    }
+
     public function testANetworkBugCanBeDrawnAsLines(): void
     {
         $bug = Bug::fromArray(self::terminalBug());
