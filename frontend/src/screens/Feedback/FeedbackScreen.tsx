@@ -91,7 +91,9 @@ function FeedbackScreen({ bug, answer, verdict, index, totalBugs, streak, onNext
       </div>
 
       <section className="flex flex-col gap-3 rounded-[14px] border border-line bg-surface p-[18px]">
-        <h2 className="text-xs font-bold tracking-[0.08em] text-muted">LA CORRECTION, COMME DANS UNE REVUE DE CODE</h2>
+        <h2 className="text-xs font-bold tracking-[0.08em] text-muted">
+          {viewOf(bug) === 'code' ? 'LA CORRECTION, COMME DANS UNE REVUE DE CODE' : 'LA CORRECTION'}
+        </h2>
         {correction}
         <p className="text-[15px] leading-normal">{answer.explanation}</p>
       </section>

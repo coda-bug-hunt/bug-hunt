@@ -136,4 +136,12 @@ describe('FeedbackScreen views', () => {
     expect(screen.queryByRole('list', { name: 'La correction' })).toBeNull()
     expect(screen.getByText('Ligne 1 : Ne pas cliquer, et le signaler')).toBeTruthy()
   })
+
+  it('speaks of a code review only for code', () => {
+    const { unmount } = renderFeedback({ bug: email, verdict: { lineCorrect: true, correctSelection: 0 } })
+    expect(screen.getByRole('heading', { level: 2 }).textContent).toBe('LA CORRECTION')
+    unmount()
+    renderFeedback()
+    expect(screen.getByRole('heading', { level: 2 }).textContent).toBe('LA CORRECTION, COMME DANS UNE REVUE DE CODE')
+  })
 })
