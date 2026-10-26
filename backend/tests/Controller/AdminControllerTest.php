@@ -117,6 +117,47 @@ final class AdminControllerTest extends ApiTestCase
         self::assertFalse($this->players->findByPseudo('Neo42')?->isHidden());
     }
 
+    public function testListsEveryBug(): void
+    {
+        $body = $this->admin('GET', '/api/admin/bugs');
+
+        self::assertResponseIsSuccessful();
+        self::assertCount(10, $body['bugs']);
+        self::assertSame(['id' => 'dev-001', 'track' => 'dev', 'difficulty' => 0, 'title' => 'Le total est faux', 'view' => 'code'], $body['bugs'][0]);
+        self::assertSame(['net-001', 'diagram'], [$body['bugs'][5]['id'], $body['bugs'][5]['view']]);
+        self::assertSame(['net-005', 'terminal'], [$body['bugs'][9]['id'], $body['bugs'][9]['view']]);
+    }
+
+    public function testServesAWholeBugWithItsAnswer(): void
+    {
+        $dev = $this->admin('GET', '/api/admin/bugs/dev-001');
+        self::assertResponseIsSuccessful();
+        self::assertSame(['dev-001', 0, 0, 'Il faut additionner les frais de port.'], [$dev['bug']['id'], $dev['bug']['bugLine'], $dev['bug']['answer'], $dev['bug']['explanation']]);
+
+        $network = $this->admin('GET', '/api/admin/bugs/net-001');
+        self::assertSame('printer', $network['bug']['bugTarget']);
+    }
+
+    public function testAnUnknownBug(): void
+    {
+        $body = $this->admin('GET', '/api/admin/bugs/dev-999');
+
+        self::assertResponseStatusCodeSame(404);
+        self::assertSame(['error' => 'unknown_bug'], $body);
+    }
+
+    // The answers stay behind the PIN, checked before the bug is looked up.
+    public function testTheBugsNeedThePin(): void
+    {
+        foreach (['/api/admin/bugs', '/api/admin/bugs/dev-001', '/api/admin/bugs/dev-999'] as $uri) {
+            foreach (['wrong', null] as $pin) {
+                $body = $this->admin('GET', $uri, pin: $pin);
+                self::assertResponseStatusCodeSame(401);
+                self::assertSame(['error' => 'bad_pin'], $body);
+            }
+        }
+    }
+
     // The PIN is checked first: without it, nobody learns which nicknames exist.
     public function testThePinIsCheckedBeforeThePlayer(): void
     {

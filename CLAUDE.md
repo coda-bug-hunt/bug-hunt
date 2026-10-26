@@ -44,6 +44,7 @@ Team workflow and rules: see CONTRIBUTING.md. Follow them.
 - Points: 100 x (level + 1). Wrong line then right fix: 50%. Wrong fix or timeout: 0.
 - 60 seconds per bug, enforced by the server, never by the client.
 - The right answer is never sent to the client before the player answers.
+  Only exception: the admin test tool, behind the PIN, which keeps no score.
 - Affinity: dev % = dev points / max dev points, same for network.
   A gap of 10 points or less is "both".
 
@@ -71,6 +72,8 @@ Types: `frontend/src/api/types.ts`. Game routes need `Authorization: Bearer <tok
 | GET | `/api/leaderboard` | – | 200 `top` (10: `rank`, `pseudo`, `score`, `affinity`, `byTrack`), `gauges` (`dev`, `network`), `gamesPlayed` |
 | GET | `/api/admin/players` | header `X-Admin-Pin` | 200 `players` (50 latest: `pseudo`, `bestScore`, `affinity`, `hidden`, `lastPlayedAt`) · 401 `bad_pin` |
 | PATCH | `/api/admin/players/{pseudo}` | `hidden`, header `X-Admin-Pin` | 204 · 401 `bad_pin` · 404 `unknown_player` |
+| GET | `/api/admin/bugs` | header `X-Admin-Pin` | 200 `bugs` (all, by id: `id`, `track`, `difficulty`, `title`, `view`) · 401 `bad_pin` |
+| GET | `/api/admin/bugs/{id}` | header `X-Admin-Pin` | 200 `bug`, whole, answer included (test tool, no score) · 401 `bad_pin` · 404 `unknown_bug` |
 
 ## Working rules
 

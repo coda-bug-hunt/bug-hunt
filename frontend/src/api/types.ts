@@ -173,6 +173,30 @@ export type SetHiddenRequest = {
   hidden: boolean
 }
 
+// GET /api/admin/bugs: every bug, sorted by id. `view` is always named.
+export type AdminBugSummary = {
+  id: string
+  track: Track
+  difficulty: Level
+  title: string
+  view: BugView
+}
+
+export type AdminBugsResponse = {
+  bugs: AdminBugSummary[]
+}
+
+// GET /api/admin/bugs/{id}: the whole bug, answer included, choices in file
+// order. Admin only, behind the PIN, for the test tool that keeps no score.
+type Answer = { answer: Choice; explanation: string }
+export type FullLineBug = PublicLineBug & Answer & { bugLine: number }
+export type FullDiagramBug = PublicDiagramBug & Answer & { bugTarget: string }
+export type FullBug = FullLineBug | FullDiagramBug
+
+export type AdminBugResponse = {
+  bug: FullBug
+}
+
 // --- Errors ---
 // Every error body is { "error": "<code>" }; the front maps codes to French messages.
 
@@ -188,6 +212,7 @@ export type ApiErrorCode =
   | 'game_not_finished'
   | 'bad_pin'
   | 'unknown_player'
+  | 'unknown_bug'
 
 export type ApiError = {
   error: ApiErrorCode

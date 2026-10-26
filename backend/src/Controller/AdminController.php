@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Api\ApiException;
+use App\Game\Bug;
+use App\Game\BugCatalog;
 use App\Repository\PlayerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -12,23 +14,25 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * Admin view: a team member hides a nickname from the big screen, from a phone.
- * Every route needs the X-Admin-Pin header, checked before anything else.
+ * Admin view: a team member hides a nickname from the big screen, from a phone,
+ * or plays any bug to test it. Every route needs the X-Admin-Pin header, checked
+ * before anything else.
  */
-#[Route('/api/admin/players', format: 'json')]
+#[Route('/api/admin', format: 'json')]
 final class AdminController extends AbstractController
 {
     private const LIST_SIZE = 50;
 
     public function __construct(
         private readonly PlayerRepository $players,
+        private readonly BugCatalog $catalog,
         #[Autowire('%env(ADMIN_PIN)%')]
         private readonly string $adminPin,
     ) {
     }
 
     // GET /api/admin/players: the latest players, most recent first.
-    #[Route('', methods: ['GET'])]
+    #[Route('/players', methods: ['GET'])]
     public function list(Request $request): JsonResponse
     {
         $this->checkPin($request);
@@ -48,7 +52,7 @@ final class AdminController extends AbstractController
     }
 
     // PATCH /api/admin/players/{pseudo} {hidden}: hides or shows a nickname. Their games still count in the gauges.
-    #[Route('/{pseudo}', methods: ['PATCH'])]
+    #[Route('/players/{pseudo}', methods: ['PATCH'])]
     public function setHidden(string $pseudo, Request $request): Response
     {
         $this->checkPin($request);
@@ -62,6 +66,29 @@ final class AdminController extends AbstractController
         }
 
         return new Response(status: Response::HTTP_NO_CONTENT);
+    }
+
+    // GET /api/admin/bugs: every bug, sorted by id, to pick one to test.
+    #[Route('/bugs', methods: ['GET'])]
+    public function bugs(Request $request): JsonResponse
+    {
+        $this->checkPin($request);
+
+        return $this->json(['bugs' => array_values(array_map(
+            static fn (Bug $bug): array => $bug->toSummary(),
+            $this->catalog->all(),
+        ))]);
+    }
+
+    // GET /api/admin/bugs/{id}: the whole bug, its answer included, for the test tool. No game, no score.
+    #[Route('/bugs/{id}', methods: ['GET'])]
+    public function bug(string $id, Request $request): JsonResponse
+    {
+        $this->checkPin($request);
+
+        $bug = $this->catalog->get($id) ?? throw new ApiException('unknown_bug', Response::HTTP_NOT_FOUND);
+
+        return $this->json(['bug' => $bug->toFull()]);
     }
 
     // An empty ADMIN_PIN refuses every PIN, the empty one included.
