@@ -19,5 +19,6 @@
     "Donner au serveur l'adresse 192.168.1.127"
   ],
   "answer": 0,
-  "explanation": "Avec /25, le réseau s'arrête à 127. Cette dernière adresse est réservée pour parler à tout le monde en même temps, comme un haut-parleur. Personne ne peut la prendre : il faut donner à Liam une adresse libre avant 127."
+  "explanation": "Avec /25, le réseau s'arrête à 127. Cette dernière adresse est réservée pour parler à tout le monde en même temps, comme un haut-parleur. Personne ne peut la prendre : il faut donner à Liam une adresse libre avant 127.",
+  "hint": "Avec /25, quelle est la dernière adresse du réseau, et qui l'a prise ?"
 }

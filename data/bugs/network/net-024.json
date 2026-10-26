@@ -19,5 +19,6 @@
     "Donner au PC de Sarah l'adresse 192.168.1.20"
   ],
   "answer": 0,
-  "explanation": "Le masque dit la taille du réseau. Avec /30, le réseau de Sarah ne compte que 2 places, comme un placard : le serveur n'y rentre pas. Il faut donner au PC de Sarah le même masque /24 que le serveur."
+  "explanation": "Le masque dit la taille du réseau. Avec /30, le réseau de Sarah ne compte que 2 places, comme un placard : le serveur n'y rentre pas. Il faut donner au PC de Sarah le même masque /24 que le serveur.",
+  "hint": "Avec ce masque, combien d'appareils tiennent dans le réseau de Sarah ?"
 }

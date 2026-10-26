@@ -17,5 +17,6 @@
     "minutes = hours + 60"
   ],
   "answer": 0,
-  "explanation": "Une heure dure 60 minutes, pas 100. Il faut multiplier par 60."
+  "explanation": "Une heure dure 60 minutes, pas 100. Il faut multiplier par 60.",
+  "hint": "Combien de minutes y a-t-il dans une heure ?"
 }

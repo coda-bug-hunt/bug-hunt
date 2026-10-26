@@ -17,5 +17,6 @@
     "return 5"
   ],
   "answer": 0,
-  "explanation": "Le nouveau prix est bien calculé dans new_price, mais la fonction renvoie l'ancien prix."
+  "explanation": "Le nouveau prix est bien calculé dans new_price, mais la fonction renvoie l'ancien prix.",
+  "hint": "Le nouveau prix est calculé… mais lequel des deux prix la fonction renvoie-t-elle ?"
 }

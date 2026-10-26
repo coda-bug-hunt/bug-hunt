@@ -12,13 +12,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check that every bug file is valid JSON
+      - name: Check that every bug file is valid JSON and has a hint
         run: |
           shopt -s globstar nullglob
           status=0
           for file in data/bugs/**/*.json; do
             if ! jq empty "$file"; then
               echo "::error file=$file::Invalid JSON"
+              status=1
+            elif ! jq -e '.hint | type == "string" and length > 0' "$file" > /dev/null; then
+              echo "::error file=$file::Missing hint (one sentence the duck whispers, see data/bugs/README.md)"
               status=1
             fi
           done

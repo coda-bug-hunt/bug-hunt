@@ -19,5 +19,6 @@
     "Mettre la ligne 3 après la ligne 4"
   ],
   "answer": 0,
-  "explanation": "total = 0 est dans la boucle, donc le score repart de 0 à chaque manche. Il faut le sortir de la boucle pour ne le mettre à 0 qu'une fois, au début."
+  "explanation": "total = 0 est dans la boucle, donc le score repart de 0 à chaque manche. Il faut le sortir de la boucle pour ne le mettre à 0 qu'une fois, au début.",
+  "hint": "Combien de fois le score est-il remis à 0 pendant la partie ?"
 }

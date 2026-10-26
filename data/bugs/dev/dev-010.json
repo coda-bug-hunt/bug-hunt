@@ -18,5 +18,6 @@
     "Mettre la ligne 5 avant la ligne 1"
   ],
   "answer": 0,
-  "explanation": "return arrête la fonction : ce qui est écrit après n'est jamais lu. Il faut afficher le message avant le return."
+  "explanation": "return arrête la fonction : ce qui est écrit après n'est jamais lu. Il faut afficher le message avant le return.",
+  "hint": "Que devient une ligne écrite après un return ?"
 }

@@ -17,5 +17,6 @@
     "for i in range(2, 11):"
   ],
   "answer": 0,
-  "explanation": "range(1, 10) compte de 1 à 9 : le dernier nombre n'est jamais compris. Pour aller jusqu'à 10, il faut range(1, 11)."
+  "explanation": "range(1, 10) compte de 1 à 9 : le dernier nombre n'est jamais compris. Pour aller jusqu'à 10, il faut range(1, 11).",
+  "hint": "range s'arrête-t-il sur le dernier nombre, ou juste avant ?"
 }

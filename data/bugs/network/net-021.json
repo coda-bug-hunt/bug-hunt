@@ -19,5 +19,6 @@
     "Débrancher le switch réseau"
   ],
   "answer": 0,
-  "explanation": "Inès a pris exactement la même adresse que Léo. Le réseau ne sait plus à qui envoyer les messages, alors ils sautent chacun leur tour. Il faut donner à Inès une adresse libre, du même réseau."
+  "explanation": "Inès a pris exactement la même adresse que Léo. Le réseau ne sait plus à qui envoyer les messages, alors ils sautent chacun leur tour. Il faut donner à Inès une adresse libre, du même réseau.",
+  "hint": "Compare les adresses des deux PC, chiffre par chiffre."
 }

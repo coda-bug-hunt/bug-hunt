@@ -18,5 +18,6 @@
     "if answer == \" oui\":"
   ],
   "answer": 0,
-  "explanation": "Pour Python, une majuscule n'est pas la même lettre qu'une minuscule : \"OUI\" et \"oui\" sont différents."
+  "explanation": "Pour Python, une majuscule n'est pas la même lettre qu'une minuscule : \"OUI\" et \"oui\" sont différents.",
+  "hint": "Pour l'ordinateur, une majuscule et une minuscule sont-elles la même lettre ?"
 }

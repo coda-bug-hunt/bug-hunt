@@ -19,5 +19,6 @@
     "Donner à l'imprimante l'adresse 192.168.1.255"
   ],
   "answer": 0,
-  "explanation": "La dernière adresse d'un réseau, ici celle qui finit par 255, est réservée : elle sert à parler à toutes les machines en même temps. Aucune machine ne peut la prendre."
+  "explanation": "La dernière adresse d'un réseau, ici celle qui finit par 255, est réservée : elle sert à parler à toutes les machines en même temps. Aucune machine ne peut la prendre.",
+  "hint": "Une adresse qui finit par 255 a un rôle spécial : lequel ?"
 }

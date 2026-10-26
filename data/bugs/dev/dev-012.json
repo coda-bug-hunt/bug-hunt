@@ -18,5 +18,6 @@
     "if temp < 35:"
   ],
   "answer": 0,
-  "explanation": "< veut dire « plus petit que » : l'appli dit qu'il fait chaud quand il fait moins de 30 °C. Il faut > (« plus grand que »)."
+  "explanation": "< veut dire « plus petit que » : l'appli dit qu'il fait chaud quand il fait moins de 30 °C. Il faut > (« plus grand que »).",
+  "hint": "Il fait chaud quand la température est au-dessus ou en dessous de 30 ?"
 }

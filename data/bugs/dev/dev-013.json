@@ -17,5 +17,6 @@
     "result = width + height"
   ],
   "answer": 0,
-  "explanation": "La surface, c'est la largeur fois la hauteur. Ici, la largeur est utilisée deux fois."
+  "explanation": "La surface, c'est la largeur fois la hauteur. Ici, la largeur est utilisée deux fois.",
+  "hint": "Une surface, c'est quelle mesure fois quelle mesure ?"
 }

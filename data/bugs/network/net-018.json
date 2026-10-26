@@ -19,5 +19,6 @@
     "Fermer la porte 25566 du serveur"
   ],
   "answer": 0,
-  "explanation": "Une machine a plusieurs portes d'entrée, appelées ports. Le jeu frappe à la porte 25565, mais le serveur a ouvert la 25566 : la porte du voisin. Il faut ouvrir la bonne porte sur le serveur."
+  "explanation": "Une machine a plusieurs portes d'entrée, appelées ports. Le jeu frappe à la porte 25565, mais le serveur a ouvert la 25566 : la porte du voisin. Il faut ouvrir la bonne porte sur le serveur.",
+  "hint": "À quelle porte le jeu frappe-t-il, et laquelle est ouverte ?"
 }

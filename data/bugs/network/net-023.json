@@ -19,5 +19,6 @@
     "Débrancher le switch réseau"
   ],
   "answer": 0,
-  "explanation": "8.8.8.8, c'est l'adresse d'un serveur de Google sur Internet. Dans une LAN, on utilise des adresses privées, comme 192.168.1. Il faut redonner à Yanis une adresse du réseau de la LAN."
+  "explanation": "8.8.8.8, c'est l'adresse d'un serveur de Google sur Internet. Dans une LAN, on utilise des adresses privées, comme 192.168.1. Il faut redonner à Yanis une adresse du réseau de la LAN.",
+  "hint": "Cette adresse ressemble-t-elle à celles d'un réseau à la maison ?"
 }

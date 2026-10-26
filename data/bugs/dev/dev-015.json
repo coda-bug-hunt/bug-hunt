@@ -18,5 +18,6 @@
     "Mettre la ligne 3 après la ligne 4"
   ],
   "answer": 0,
-  "explanation": "Les frais de port sont ajoutés avant la réduction, donc ils sont coupés en deux aussi. Il faut d'abord réduire le prix, puis ajouter les frais."
+  "explanation": "Les frais de port sont ajoutés avant la réduction, donc ils sont coupés en deux aussi. Il faut d'abord réduire le prix, puis ajouter les frais.",
+  "hint": "La réduction doit-elle aussi toucher les frais de port ? Regarde l'ordre des calculs."
 }

@@ -18,5 +18,6 @@
     "Fermer la porte 22 du serveur"
   ],
   "answer": 0,
-  "explanation": "Une machine a plusieurs portes d'entrée, appelées ports, et les sites web passent par la porte 443. Sur le serveur, elle est fermée, donc personne ne peut entrer."
+  "explanation": "Une machine a plusieurs portes d'entrée, appelées ports, et les sites web passent par la porte 443. Sur le serveur, elle est fermée, donc personne ne peut entrer.",
+  "hint": "Les sites web arrivent toujours par la même porte : est-elle ouverte ?"
 }

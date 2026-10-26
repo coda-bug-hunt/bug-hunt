@@ -2,8 +2,8 @@
 
 One JSON file per bug, named after its `id`, in the folder of its track:
 `dev/dev-001.json`, `network/net-001.json`.
-Keys in English; game texts (`title`, `choices`, `explanation`, device
-`label`) in French.
+Keys in English; game texts (`title`, `choices`, `explanation`, `hint`,
+device `label`) in French.
 
 ## Common fields
 
@@ -17,9 +17,14 @@ Keys in English; game texts (`title`, `choices`, `explanation`, device
 | `choices` | array of 3 strings | The possible fixes |
 | `answer` | integer 0 to 2 | Index of the right fix in `choices` |
 | `explanation` | string | In French, shown after the answer |
+| `hint` | string | In French, one sentence the duck whispers during the bug: it points the way, **never gives the answer** (no line number, no fix) |
 
 `bugLine`, `bugTarget`, `answer` and `explanation` are never sent to the
-client before the player answers.
+client before the player answers. `hint` is sent with the bug: it must not
+give the answer away.
+
+A good hint asks a question that sends the player to the right place:
+"Combien de minutes y a-t-il dans une heure ?", not "Il faut multiplier par 60".
 
 ## Views
 
@@ -79,6 +84,7 @@ Example: `network/net-001.json`.
 
 ```bash
 jq empty data/bugs/**/*.json
+jq -e '.hint | type == "string" and length > 0' data/bugs/**/*.json > /dev/null
 ```
 
 Then play the bug once in the game.

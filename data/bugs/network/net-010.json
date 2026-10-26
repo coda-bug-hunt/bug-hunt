@@ -18,5 +18,6 @@
     "Fermer la porte 22 du serveur"
   ],
   "answer": 0,
-  "explanation": "Une machine a plusieurs portes d'entrée, appelées ports, et Minecraft utilise la porte 25565. Sur le serveur, elle est fermée, donc aucun joueur ne peut entrer."
+  "explanation": "Une machine a plusieurs portes d'entrée, appelées ports, et Minecraft utilise la porte 25565. Sur le serveur, elle est fermée, donc aucun joueur ne peut entrer.",
+  "hint": "Minecraft frappe à une porte précise du serveur : est-elle ouverte ?"
 }

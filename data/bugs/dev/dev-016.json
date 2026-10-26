@@ -17,5 +17,6 @@
     "message = \"Salut name\""
   ],
   "answer": 0,
-  "explanation": "Entre guillemets, name est juste un mot. Sans guillemets, Python utilise le prénom reçu."
+  "explanation": "Entre guillemets, name est juste un mot. Sans guillemets, Python utilise le prénom reçu.",
+  "hint": "Entre guillemets, un mot reste ce mot, tel quel : est-ce bien ce qu'on veut ici ?"
 }

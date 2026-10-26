@@ -18,5 +18,6 @@
     "Mettre la ligne 3 après la ligne 4"
   ],
   "answer": 0,
-  "explanation": "Le message est affiché avant d'ajouter 1 à l'âge. Il faut d'abord ajouter 1, puis afficher."
+  "explanation": "Le message est affiché avant d'ajouter 1 à l'âge. Il faut d'abord ajouter 1, puis afficher.",
+  "hint": "Lis dans l'ordre : l'âge est-il augmenté avant ou après le message ?"
 }

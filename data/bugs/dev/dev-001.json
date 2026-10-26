@@ -17,5 +17,6 @@
     "total = shipping - price"
   ],
   "answer": 0,
-  "explanation": "Le prix total additionne les frais de port : il faut + au lieu de -."
+  "explanation": "Le prix total additionne les frais de port : il faut + au lieu de -.",
+  "hint": "Calcule à la main : un article à 20 € et 5 € de port, ça fait combien ?"
 }
