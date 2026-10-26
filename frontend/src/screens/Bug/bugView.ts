@@ -14,3 +14,13 @@ export const instructions: Record<BugView, string> = {
   rules: 'Touche la règle qui pose problème.',
   diagram: "Touche l'appareil mal configuré.",
 }
+
+// The name of a style, for the admin list of bugs.
+export const viewLabels: Record<BugView, string> = {
+  code: 'Code',
+  terminal: 'Terminal',
+  email: 'E-mail',
+  config: 'Réglages',
+  rules: 'Pare-feu',
+  diagram: 'Schéma',
+}

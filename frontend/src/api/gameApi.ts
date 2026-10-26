@@ -1,4 +1,6 @@
 import type {
+  AdminBugResponse,
+  AdminBugsResponse,
   AdminPlayersResponse,
   AnswerRequest,
   AnswerResponse,
@@ -30,6 +32,9 @@ export interface GameApi {
   getLeaderboard(): Promise<Leaderboard>
   getAdminPlayers(pin: string): Promise<AdminPlayersResponse>
   setHidden(pin: string, pseudo: string, hidden: boolean): Promise<void>
+  getAdminBugs(pin: string): Promise<AdminBugsResponse>
+  // The whole bug, answer included: only for the admin test tool.
+  getAdminBug(pin: string, id: string): Promise<AdminBugResponse>
 }
 
 // Thrown for every { "error": "<code>" } answer.

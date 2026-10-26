@@ -67,6 +67,15 @@ describe('httpClient routes', () => {
     expect(sent(fetch, 1)).toMatchObject({ url: '/api/admin/players/Neo%2042', method: 'PATCH', body: { hidden: true } })
     expect(sent(fetch, 1).headers.get('X-Admin-Pin')).toBe('1234')
   })
+
+  it('asks for the bugs to test with the admin PIN', async () => {
+    const { fetch, client } = clientWith(json({ bugs: [] }), json({ bug: { id: 'net 1' } }))
+    await client.getAdminBugs('1234')
+    await client.getAdminBug('1234', 'net 1')
+    expect(sent(fetch, 0)).toMatchObject({ url: '/api/admin/bugs', method: 'GET' })
+    expect(sent(fetch, 1)).toMatchObject({ url: '/api/admin/bugs/net%201', method: 'GET' })
+    expect(sent(fetch, 1).headers.get('X-Admin-Pin')).toBe('1234')
+  })
 })
 
 describe('httpClient errors', () => {

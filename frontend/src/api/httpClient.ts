@@ -67,5 +67,7 @@ export function createHttpClient({ baseUrl, fetch = globalThis.fetch.bind(global
     getAdminPlayers: (pin) => request('/admin/players', { pin }),
     setHidden: (pin, pseudo, hidden) =>
       request(`/admin/players/${encodeURIComponent(pseudo)}`, { method: 'PATCH', body: { hidden }, pin }),
+    getAdminBugs: (pin) => request('/admin/bugs', { pin }),
+    getAdminBug: (pin, id) => request(`/admin/bugs/${encodeURIComponent(id)}`, { pin }),
   }
 }

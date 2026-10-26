@@ -5,8 +5,9 @@ import { ApiRequestError, type GameApi, type GameSession } from './gameApi'
 import { randomId } from './deviceId'
 import { isValidPseudo } from './pseudo'
 import { mockBugs, type MockBug } from './mockBugs'
+import { publicBugOf } from './publicBug'
 import { LEVELS, MAX_PER_TRACK, TIME_LIMIT, affinityOf, percentOf, pointsFor } from './mockRules'
-import type { Affinity, ByTrack, LeaderboardEntry, PublicBug } from './types'
+import type { Affinity, ByTrack, LeaderboardEntry } from './types'
 
 const TOP_SIZE = 10
 const ADMIN_LIST_SIZE = 50
@@ -48,27 +49,6 @@ export type MockClientOptions = {
 }
 
 // Explicit list of public fields: a secret field added later cannot leak.
-function toPublic(bug: MockBug): PublicBug {
-  const base = {
-    id: bug.id,
-    track: bug.track,
-    difficulty: bug.difficulty,
-    points: bug.points,
-    title: bug.title,
-    choices: bug.choices,
-    ...(bug.hint && { hint: bug.hint }),
-  }
-  if ('bugLine' in bug) {
-    return {
-      ...base,
-      ...(bug.view && { view: bug.view }),
-      code: bug.code,
-      ...(bug.language && { language: bug.language }),
-      ...(bug.context && { context: bug.context }),
-    }
-  }
-  return { ...base, ...(bug.view && { view: bug.view }), diagram: bug.diagram }
-}
 
 export function createMockClient(options: MockClientOptions = {}): GameApi {
   const now = options.now ?? Date.now
@@ -165,7 +145,7 @@ export function createMockClient(options: MockClientOptions = {}): GameApi {
       const elapsed = (now() - game.sentAt) / 1000
       return {
         index: game.index,
-        bug: toPublic(bug),
+        bug: publicBugOf(bug),
         timeLimit: TIME_LIMIT,
         remainingSeconds: Math.max(0, Math.ceil(TIME_LIMIT - elapsed)),
       }
@@ -271,6 +251,27 @@ export function createMockClient(options: MockClientOptions = {}): GameApi {
       const player = players.get(pseudo.toLowerCase())
       if (!player) throw new ApiRequestError('unknown_player')
       player.hidden = hidden
+    },
+
+    async getAdminBugs(pin) {
+      checkPin(pin)
+      const bugs = [...catalog].sort((a, b) => a.id.localeCompare(b.id))
+      return {
+        bugs: bugs.map((bug) => ({
+          id: bug.id,
+          track: bug.track,
+          difficulty: bug.difficulty,
+          title: bug.title,
+          view: bug.view ?? ('bugLine' in bug ? 'code' : 'diagram'),
+        })),
+      }
+    },
+
+    async getAdminBug(pin, id) {
+      checkPin(pin)
+      const bug = catalog.find((candidate) => candidate.id === id)
+      if (!bug) throw new ApiRequestError('unknown_bug')
+      return { bug }
     },
   }
 }
