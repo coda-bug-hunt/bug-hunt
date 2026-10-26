@@ -2,8 +2,25 @@
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import { ApiRequestError, type AdminPlayer, type GameApi } from '../../api'
+import { ApiRequestError, type AdminBugSummary, type AdminPlayer, type FullBug, type GameApi } from '../../api'
 import AdminScreen from './AdminScreen'
+
+const bugs: AdminBugSummary[] = [
+  { id: 'dev-001', track: 'dev', difficulty: 0, title: 'Le total est faux', view: 'code' },
+  { id: 'net-006', track: 'network', difficulty: 0, title: 'Plus de réseau', view: 'terminal' },
+]
+const fullBugs: Record<string, FullBug> = {
+  'dev-001': {
+    id: 'dev-001', track: 'dev', difficulty: 0, points: 100, title: 'Le total est faux',
+    code: ['total = price - shipping', 'print(total)'], bugLine: 0,
+    choices: ['total = price + shipping', 'total = price * 2', 'total = 0'], answer: 0, explanation: 'Il faut additionner.',
+  },
+  'net-006': {
+    id: 'net-006', track: 'network', difficulty: 0, points: 100, view: 'terminal', title: 'Plus de réseau',
+    code: ['$ ip link', 'eth0 : câble débranché'], bugLine: 1,
+    choices: ['Rebrancher le câble', 'Redémarrer', 'Changer de box'], answer: 0, explanation: 'Le câble est débranché.',
+  },
+}
 
 const playedAt = new Date().toISOString()
 const players: AdminPlayer[] = [
@@ -19,6 +36,8 @@ function fakeClient(overrides: Partial<GameApi> = {}) {
       return { players }
     }),
     setHidden: vi.fn().mockResolvedValue(undefined),
+    getAdminBugs: vi.fn(async () => ({ bugs })),
+    getAdminBug: vi.fn(async (_pin: string, id: string) => ({ bug: fullBugs[id] })),
     ...overrides,
   } as unknown as GameApi
 }
@@ -30,6 +49,7 @@ async function signIn(pin = '1234') {
 
 beforeEach(() => {
   sessionStorage.clear()
+  localStorage.setItem('bug-hunt:tutorial-seen', '1')
 })
 
 describe('AdminScreen', () => {
@@ -88,5 +108,45 @@ describe('AdminScreen', () => {
     await userEvent.type(screen.getByLabelText('Rechercher un pseudo'), 'ne')
     expect(screen.getByText('Neo42')).toBeTruthy()
     expect(screen.queryByText('Zed')).toBeNull()
+  })
+})
+
+describe('AdminScreen bugs to test', () => {
+  async function openBugs(client: GameApi) {
+    render(<AdminScreen client={client} />)
+    await signIn()
+    await userEvent.click(await screen.findByRole('button', { name: 'Bugs' }))
+  }
+
+  it('lists every bug by track and level, with its style', async () => {
+    const client = fakeClient()
+    await openBugs(client)
+    expect(await screen.findByRole('heading', { name: 'Dev · niveau 0' })).toBeTruthy()
+    expect(screen.getByRole('heading', { name: 'SR · niveau 0' })).toBeTruthy()
+    expect(screen.getByRole('button', { name: 'Jouer net-006 : Plus de réseau' }).textContent).toContain('Terminal')
+    expect(client.getAdminBugs).toHaveBeenCalledWith('1234')
+  })
+
+  it('plays a bug in the real screens, without score, then goes to the next one', async () => {
+    const client = fakeClient()
+    await openBugs(client)
+    await userEvent.click(await screen.findByRole('button', { name: 'Jouer dev-001 : Le total est faux' }))
+
+    expect(await screen.findByRole('heading', { name: 'Le total est faux' })).toBeTruthy()
+    expect(screen.getByText(/aucun score/i)).toBeTruthy()
+    await userEvent.click(screen.getByRole('button', { name: /^Ligne 1/ }))
+    await userEvent.click(await screen.findByRole('button', { name: /total = price \+ shipping/ }))
+    expect(await screen.findByText('Il faut additionner.')).toBeTruthy()
+
+    await userEvent.click(screen.getByRole('button', { name: 'Bug suivant' }))
+    expect(await screen.findByRole('heading', { name: 'Plus de réseau' })).toBeTruthy()
+    expect(client.getAdminBug).toHaveBeenLastCalledWith('1234', 'net-006')
+  })
+
+  it('goes back to the list', async () => {
+    await openBugs(fakeClient())
+    await userEvent.click(await screen.findByRole('button', { name: 'Jouer dev-001 : Le total est faux' }))
+    await userEvent.click(await screen.findByRole('button', { name: 'Retour à la liste' }))
+    expect(await screen.findByRole('heading', { name: 'Dev · niveau 0' })).toBeTruthy()
   })
 })

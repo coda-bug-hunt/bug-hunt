@@ -201,6 +201,21 @@ describe('leaderboard and admin', () => {
     await expect(api.setHidden('0000', 'Neo42', true)).rejects.toMatchObject({ code: 'bad_pin' })
     await expect(api.setHidden('1234', 'Ghost', true)).rejects.toMatchObject({ code: 'unknown_player' })
   })
+
+  it('lists every bug with its view, and serves one whole for the test tool', async () => {
+    const api = createMockClient({ adminPin: '1234' })
+    const { bugs } = await api.getAdminBugs('1234')
+    expect(bugs).toHaveLength(mockBugs.length)
+    expect(bugs.find((bug) => bug.id === 'mock-dev-0')).toEqual({ id: 'mock-dev-0', track: 'dev', difficulty: 0, title: 'Le panier compte mal', view: 'code' })
+    expect(bugs.find((bug) => bug.id === 'mock-net-0')?.view).toBe('diagram')
+    expect(bugs.find((bug) => bug.id === 'mock-net-email')?.view).toBe('email')
+
+    const { bug } = await api.getAdminBug('1234', 'mock-dev-0')
+    expect(bug).toMatchObject({ id: 'mock-dev-0', bugLine: 1, answer: 0 })
+    await expect(api.getAdminBug('1234', 'ghost')).rejects.toMatchObject({ code: 'unknown_bug' })
+    await expect(api.getAdminBugs('0000')).rejects.toMatchObject({ code: 'bad_pin' })
+    await expect(api.getAdminBug('0000', 'mock-dev-0')).rejects.toMatchObject({ code: 'bad_pin' })
+  })
 })
 
 describe('bug views', () => {

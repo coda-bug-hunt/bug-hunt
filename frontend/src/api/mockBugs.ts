@@ -1,13 +1,11 @@
 // Demo bugs for the mock client: one per level and track. Full versions, with
 // the answer, as the server stores them. Real content lives in data/bugs/.
 
-import type { Choice, PublicDiagramBug, PublicLineBug } from './types'
+import type { FullBug, FullDiagramBug, FullLineBug } from './types'
 
-type Secret = { answer: Choice; explanation: string }
-
-export type MockLineBug = PublicLineBug & Secret & { bugLine: number }
-export type MockDiagramBug = PublicDiagramBug & Secret & { bugTarget: string }
-export type MockBug = MockLineBug | MockDiagramBug
+export type MockLineBug = FullLineBug
+export type MockDiagramBug = FullDiagramBug
+export type MockBug = FullBug
 
 const devBugs: MockLineBug[] = [
   {
