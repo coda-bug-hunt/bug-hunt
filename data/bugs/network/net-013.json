@@ -3,22 +3,24 @@
   "track": "network",
   "difficulty": 2,
   "points": 300,
-  "title": "Le PC de Yanis est invisible en LAN",
-  "diagram": {
-    "devices": [
-      { "id": "pc1", "label": "PC de Léo", "ip": "192.168.1.10", "mask": "255.255.255.0" },
-      { "id": "switch", "label": "Switch réseau" },
-      { "id": "pc2", "label": "PC de Yanis", "ip": "192.168.1.0", "mask": "255.255.255.0" }
-    ],
-    "links": [["pc1", "switch"], ["switch", "pc2"]]
-  },
-  "bugTarget": "pc2",
+  "title": "Le 21e joueur de la LAN n'obtient pas d'adresse",
+  "view": "config",
+  "language": "Box · DHCP",
+  "context": "30 joueurs sont attendus à la LAN party.",
+  "code": [
+    "[dhcp]",
+    "actif = oui",
+    "premiere_adresse = 192.168.1.10",
+    "derniere_adresse = 192.168.1.29",
+    "duree = 24h"
+  ],
+  "bugLine": 3,
   "choices": [
-    "Donner au PC de Yanis l'adresse 192.168.1.20",
-    "Donner au PC de Léo l'adresse 192.168.1.0",
-    "Débrancher le switch réseau"
+    "derniere_adresse = 192.168.1.60",
+    "premiere_adresse = 192.168.1.29",
+    "duree = 48h"
   ],
   "answer": 0,
-  "explanation": "La première adresse d'un réseau, celle qui finit par 0, est réservée : elle désigne le réseau entier, comme le nom d'une rue. Aucune machine ne peut la prendre.",
-  "hint": "Une adresse qui finit par 0 peut-elle appartenir à une machine ?"
+  "explanation": "La box donne les adresses de .10 à .29 : 20 adresses seulement, donc le 21e joueur n'en reçoit plus. En allant jusqu'à .60, il y en a assez pour 30 joueurs.",
+  "hint": "Combien d'adresses la box peut-elle donner, entre la première et la dernière ?"
 }

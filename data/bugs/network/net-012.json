@@ -3,22 +3,21 @@
   "track": "network",
   "difficulty": 1,
   "points": 200,
-  "title": "La tablette de ta sœur coupe Fortnite",
-  "diagram": {
-    "devices": [
-      { "id": "pc", "label": "Ton PC gamer", "ip": "192.168.1.10" },
-      { "id": "box", "label": "Box", "ip": "192.168.1.1" },
-      { "id": "tablet", "label": "Tablette de ta sœur", "ip": "192.168.1.1" }
-    ],
-    "links": [["pc", "box"], ["box", "tablet"]]
-  },
-  "bugTarget": "tablet",
+  "title": "Le PC voit la box, mais pas Internet",
+  "view": "terminal",
+  "code": [
+    "$ ping 192.168.1.1",
+    "Réponse de 192.168.1.1 : temps=2 ms",
+    "$ ping 8.8.8.8",
+    "Délai d'attente dépassé."
+  ],
+  "bugLine": 3,
   "choices": [
-    "Donner à la tablette l'adresse 192.168.1.30",
-    "Donner à ton PC l'adresse 192.168.1.1",
-    "Débrancher ton PC"
+    "Vérifier la connexion Internet de la box",
+    "Changer l'adresse du PC",
+    "Rebrancher le câble du PC"
   ],
   "answer": 0,
-  "explanation": "Dès que la tablette se connecte, tout le monde est éjecté du jeu. Elle a pris la même adresse que la box : les messages qui devaient passer par la box se perdent.",
-  "hint": "Une adresse est prise par deux appareils à la fois : laquelle ?"
+  "explanation": "Le PC parle bien à la box : son câble et son adresse marchent. C'est après la box que ça bloque : il faut vérifier sa connexion à Internet.",
+  "hint": "Jusqu'où les messages du PC arrivent-ils ?"
 }

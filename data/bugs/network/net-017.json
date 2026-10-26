@@ -3,22 +3,23 @@
   "track": "network",
   "difficulty": 1,
   "points": 200,
-  "title": "Hugo s'est perdu en route vers le tournoi",
-  "diagram": {
-    "devices": [
-      { "id": "pc", "label": "PC de Hugo", "ip": "192.168.11.30" },
-      { "id": "switch", "label": "Switch réseau" },
-      { "id": "server", "label": "Serveur du tournoi", "ip": "192.168.1.20" }
-    ],
-    "links": [["pc", "switch"], ["switch", "server"]]
-  },
-  "bugTarget": "pc",
+  "title": "La console ne voit pas le Wi-Fi de la maison",
+  "view": "config",
+  "language": "Box · Wi-Fi",
+  "context": "La console ne capte que le Wi-Fi 2,4 GHz.",
+  "code": [
+    "[wifi]",
+    "nom = Maison",
+    "bande = 5GHz",
+    "mot_de_passe = ********"
+  ],
+  "bugLine": 2,
   "choices": [
-    "Donner au PC de Hugo l'adresse 192.168.1.30",
-    "Donner au serveur l'adresse 192.168.1.30",
-    "Débrancher le switch réseau"
+    "bande = 2.4GHz",
+    "nom = Console",
+    "bande = 6GHz"
   ],
   "answer": 0,
-  "explanation": "Hugo a tapé 11 au lieu de 1, comme une faute de frappe dans un pseudo. Un seul chiffre en trop, et il atterrit dans un autre réseau que le tournoi. Il faut corriger son adresse en 192.168.1.",
-  "hint": "Compare l'adresse de Hugo à celle du serveur : un chiffre n'est pas à sa place."
+  "explanation": "La box n'émet qu'en 5 GHz, une fréquence que la console ne capte pas. En 2,4 GHz, la console verra le réseau.",
+  "hint": "Sur quelle fréquence la box émet-elle, et laquelle la console capte-t-elle ?"
 }

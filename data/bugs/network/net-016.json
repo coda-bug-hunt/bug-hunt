@@ -3,22 +3,23 @@
   "track": "network",
   "difficulty": 0,
   "points": 100,
-  "title": "Inès est seule dans le lobby",
-  "diagram": {
-    "devices": [
-      { "id": "pc1", "label": "PC de Léo", "ip": "192.168.1.10" },
-      { "id": "switch", "label": "Switch réseau" },
-      { "id": "pc2", "label": "PC d'Inès", "ip": "10.0.0.12" }
-    ],
-    "links": [["pc1", "switch"], ["switch", "pc2"]]
-  },
-  "bugTarget": "pc2",
+  "title": "PayPal a remarqué une connexion bizarre",
+  "view": "email",
+  "code": [
+    "De : PayPal <service@paypa1.com>",
+    "Objet : Connexion inhabituelle",
+    "",
+    "Bonjour,",
+    "Nous avons remarqué une connexion inhabituelle.",
+    "Réponds à ce mail si ce n'était pas toi."
+  ],
+  "bugLine": 0,
   "choices": [
-    "Donner au PC d'Inès l'adresse 192.168.1.12",
-    "Donner au PC de Léo l'adresse 10.0.0.12",
-    "Débrancher le switch réseau"
+    "Supprimer le mail : il ne vient pas de PayPal",
+    "Répondre pour dire que ce n'était pas toi",
+    "Transférer le mail à tes amis"
   ],
   "answer": 0,
-  "explanation": "Léo a lancé la partie en 192.168.1, mais Inès attend en 10.0.0 : ils ne sont pas dans le même réseau, donc pas dans le même lobby. Même début d'adresse = même partie.",
-  "hint": "Pour jouer ensemble, les deux PC doivent être dans le même réseau : est-ce le cas ?"
+  "explanation": "L'adresse s'écrit paypa1, avec le chiffre 1 à la place du l : ce n'est pas PayPal. C'est un piège pour te faire répondre.",
+  "hint": "Lis lettre par lettre qui t'envoie ce mail."
 }
