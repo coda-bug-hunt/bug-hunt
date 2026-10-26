@@ -4,6 +4,7 @@
   "difficulty": 3,
   "points": 400,
   "title": "Il y a 3 \"a\" dans banana, mais on en compte 0",
+  "context": "À l'écran : 0",
   "code": [
     "def count_a(word):",
     "    count = 0",
