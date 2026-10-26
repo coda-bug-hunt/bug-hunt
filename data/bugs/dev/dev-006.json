@@ -4,6 +4,7 @@
   "difficulty": 0,
   "points": 100,
   "title": "Le message colle le prénom au Bonjour",
+  "context": "À l'écran : BonjourLéa",
   "code": [
     "def greet(name):",
     "    message = \"Bonjour\" + name",

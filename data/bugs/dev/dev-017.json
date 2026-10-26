@@ -4,6 +4,7 @@
   "difficulty": 1,
   "points": 200,
   "title": "Un enfant de 8 ans doit payer le musée",
+  "context": "À l'écran, pour 8 ans : False",
   "code": [
     "def is_free(age):",
     "    if age < 12 and age > 65:",

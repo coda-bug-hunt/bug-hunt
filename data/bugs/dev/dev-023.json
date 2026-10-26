@@ -4,6 +4,7 @@
   "difficulty": 2,
   "points": 300,
   "title": "Le rendu de monnaie est de -3 €",
+  "context": "À l'écran : -3",
   "code": [
     "def change(price, paid):",
     "    money_back = price - paid",

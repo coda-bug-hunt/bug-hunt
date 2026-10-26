@@ -3,21 +3,24 @@
   "track": "dev",
   "difficulty": 2,
   "points": 300,
-  "title": "Le nombre devrait doubler, mais il reste à 5",
+  "title": "Le menu a disparu du site",
+  "language": "HTML/CSS",
   "code": [
-    "def double(n):",
-    "    return n * 2",
-    "x = 5",
-    "double(x)",
-    "print(x)"
+    "<nav class=\"menu\">",
+    "  <a href=\"/\">Accueil</a>",
+    "  <a href=\"/jeux\">Jeux</a>",
+    "</nav>",
+    "<style>",
+    "  .menu { display: none; }",
+    "</style>"
   ],
-  "bugLine": 3,
+  "bugLine": 5,
   "choices": [
-    "x = double(x)",
-    "double(x * 2)",
-    "x == double(x)"
+    ".menu { display: block; }",
+    ".menu { color: none; }",
+    ".menu { display: hidden; }"
   ],
   "answer": 0,
-  "explanation": "double(x) calcule 10, mais le résultat n'est rangé nulle part. Il faut le mettre dans x : x = double(x).",
-  "hint": "double(x) calcule bien 10 : mais qui garde ce résultat ?"
+  "explanation": "display: none cache complètement un élément : le menu est bien dans la page, mais il ne s'affiche pas. display: block le montre.",
+  "hint": "Le menu est bien écrit dans la page : qu'est-ce qui pourrait le cacher ?"
 }
