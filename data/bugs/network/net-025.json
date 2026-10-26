@@ -3,22 +3,22 @@
   "track": "network",
   "difficulty": 4,
   "points": 500,
-  "title": "Liam hurle dans le vide",
-  "diagram": {
-    "devices": [
-      { "id": "pc", "label": "PC de Liam", "ip": "192.168.1.127", "mask": "255.255.255.128" },
-      { "id": "switch", "label": "Switch réseau" },
-      { "id": "server", "label": "Serveur du tournoi", "ip": "192.168.1.20", "mask": "255.255.255.128" }
-    ],
-    "links": [["pc", "switch"], ["switch", "server"]]
-  },
-  "bugTarget": "pc",
+  "title": "Le site de l'école est injoignable depuis la maison",
+  "view": "rules",
+  "language": "Pare-feu de l'école",
+  "context": "Depuis l'école, le site marche.",
+  "code": [
+    "Bloquer tout depuis Internet",
+    "Autoriser le port 443 depuis Internet",
+    "Autoriser tout depuis le réseau de l'école"
+  ],
+  "bugLine": 0,
   "choices": [
-    "Donner au PC de Liam l'adresse 192.168.1.27",
-    "Donner au PC de Liam l'adresse 192.168.1.128",
-    "Donner au serveur l'adresse 192.168.1.127"
+    "Mettre « Bloquer tout » en dernier",
+    "Supprimer la règle 2",
+    "Bloquer le port 443"
   ],
   "answer": 0,
-  "explanation": "Avec /25, le réseau s'arrête à 127. Cette dernière adresse est réservée pour parler à tout le monde en même temps, comme un haut-parleur. Personne ne peut la prendre : il faut donner à Liam une adresse libre avant 127.",
-  "hint": "Avec /25, quelle est la dernière adresse du réseau, et qui l'a prise ?"
+  "explanation": "Le pare-feu lit les règles dans l'ordre et s'arrête à la première qui correspond. Depuis Internet, la règle 1 bloque tout : la règle 2 n'est jamais lue. « Bloquer tout » doit venir en dernier.",
+  "hint": "Le pare-feu lit les règles de haut en bas, et s'arrête à la première qui correspond."
 }

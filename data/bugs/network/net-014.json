@@ -3,22 +3,21 @@
   "track": "network",
   "difficulty": 3,
   "points": 400,
-  "title": "Ta console : « Échec de la connexion »",
-  "diagram": {
-    "devices": [
-      { "id": "console", "label": "Ta console", "ip": "169.254.12.7" },
-      { "id": "box", "label": "Box", "ip": "192.168.1.1" },
-      { "id": "internet", "label": "Internet" }
-    ],
-    "links": [["console", "box"], ["box", "internet"]]
-  },
-  "bugTarget": "console",
+  "title": "Le site de l'école affiche « Service indisponible »",
+  "view": "terminal",
+  "code": [
+    "$ ping serveur-web",
+    "Réponse de 192.168.1.80 : temps=1 ms",
+    "$ systemctl status apache2",
+    "apache2 : inactif (arrêté)"
+  ],
+  "bugLine": 3,
   "choices": [
-    "Faire redemander une adresse à la box par ta console",
-    "Donner à la box l'adresse 169.254.12.7",
-    "Débrancher la box d'Internet"
+    "Redémarrer le service apache2",
+    "Changer l'adresse du serveur",
+    "Rebrancher le câble du serveur"
   ],
   "answer": 0,
-  "explanation": "Normalement, la box donne une adresse à chaque appareil. Quand ta console n'en reçoit pas, elle s'en invente une qui commence par 169.254. Avec elle, elle ne parle à personne : il faut redemander une vraie adresse à la box.",
-  "hint": "Qui distribue les adresses à la maison ? La console en a-t-elle vraiment reçu une ?"
+  "explanation": "Le serveur répond au ping : il est allumé et branché. Mais apache2, le programme qui sert le site, est arrêté. Il faut le relancer.",
+  "hint": "Le serveur répond : mais le programme qui affiche le site tourne-t-il ?"
 }

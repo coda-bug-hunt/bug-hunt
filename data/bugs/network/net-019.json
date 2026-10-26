@@ -3,22 +3,22 @@
   "track": "network",
   "difficulty": 3,
   "points": 400,
-  "title": "Hugo ne parle qu'à lui-même",
-  "diagram": {
-    "devices": [
-      { "id": "pc", "label": "PC de Hugo", "ip": "127.0.0.1" },
-      { "id": "switch", "label": "Switch réseau" },
-      { "id": "server", "label": "Serveur de la LAN", "ip": "192.168.1.20" }
-    ],
-    "links": [["pc", "switch"], ["switch", "server"]]
-  },
-  "bugTarget": "pc",
+  "title": "Un invité a changé le nom du Wi-Fi de la box",
+  "view": "config",
+  "language": "Box · Administration",
+  "code": [
+    "[administration]",
+    "utilisateur = admin",
+    "mot_de_passe = admin",
+    "acces_distant = non"
+  ],
+  "bugLine": 2,
   "choices": [
-    "Donner au PC de Hugo l'adresse 192.168.1.30",
-    "Donner au serveur l'adresse 127.0.0.1",
-    "Débrancher le serveur de la LAN"
+    "mot_de_passe = un long mot de passe unique",
+    "utilisateur = root",
+    "acces_distant = oui"
   ],
   "answer": 0,
-  "explanation": "L'adresse 127.0.0.1 veut dire « moi-même ». Avec elle, Hugo s'envoie ses messages à lui-même, comme s'il jouait en ligne… tout seul. Il faut lui donner une vraie adresse du réseau de la LAN.",
-  "hint": "127.0.0.1 désigne une machine bien particulière : laquelle ?"
+  "explanation": "admin / admin est le mot de passe d'usine, connu de tout le monde : n'importe qui sur le Wi-Fi peut changer les réglages de la box. Il faut un mot de passe long et unique.",
+  "hint": "Un mot de passe que tout le monde connaît protège-t-il vraiment ?"
 }
