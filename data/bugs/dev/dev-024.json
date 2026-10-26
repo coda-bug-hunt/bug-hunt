@@ -20,5 +20,6 @@
     "if count == \"a\":"
   ],
   "answer": 0,
-  "explanation": "La boucle passe sur chaque lettre, mais on compare le mot entier à \"a\". Il faut comparer la lettre : letter."
+  "explanation": "La boucle passe sur chaque lettre, mais on compare le mot entier à \"a\". Il faut comparer la lettre : letter.",
+  "hint": "Dans la boucle, compare-t-on chaque lettre, ou autre chose ?"
 }

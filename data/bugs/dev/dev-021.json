@@ -17,5 +17,6 @@
     "print(price_for(3 + 4))"
   ],
   "answer": 0,
-  "explanation": "Le calcul est juste, mais on demande le prix de 3 places au lieu de 4."
+  "explanation": "Le calcul est juste, mais on demande le prix de 3 places au lieu de 4.",
+  "hint": "Le calcul est peut-être juste… mais combien de places demande-t-on vraiment ?"
 }

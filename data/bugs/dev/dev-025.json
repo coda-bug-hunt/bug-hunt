@@ -17,5 +17,6 @@
     "Mettre la ligne 3 avant la ligne 2"
   ],
   "answer": 0,
-  "explanation": "Python lit le programme de haut en bas : à la ligne 1, la fonction greet n'existe pas encore. Il faut l'utiliser après l'avoir écrite."
+  "explanation": "Python lit le programme de haut en bas : à la ligne 1, la fonction greet n'existe pas encore. Il faut l'utiliser après l'avoir écrite.",
+  "hint": "Python lit de haut en bas : que connaît-il déjà à la toute première ligne ?"
 }

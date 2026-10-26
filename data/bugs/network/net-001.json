@@ -18,5 +18,6 @@
     "Passer l'imprimante en 192.168.3.20"
   ],
   "answer": 0,
-  "explanation": "Pour se parler directement, deux appareils doivent avoir le même début d'adresse. Ici, le PC est en 192.168.1… et l'imprimante en 192.168.2…."
+  "explanation": "Pour se parler directement, deux appareils doivent avoir le même début d'adresse. Ici, le PC est en 192.168.1… et l'imprimante en 192.168.2….",
+  "hint": "Compare le début des deux adresses : est-il le même ?"
 }

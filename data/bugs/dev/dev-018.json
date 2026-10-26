@@ -18,5 +18,6 @@
     "x == double(x)"
   ],
   "answer": 0,
-  "explanation": "double(x) calcule 10, mais le résultat n'est rangé nulle part. Il faut le mettre dans x : x = double(x)."
+  "explanation": "double(x) calcule 10, mais le résultat n'est rangé nulle part. Il faut le mettre dans x : x = double(x).",
+  "hint": "double(x) calcule bien 10 : mais qui garde ce résultat ?"
 }

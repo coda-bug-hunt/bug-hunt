@@ -20,5 +20,6 @@
     "if best > s:"
   ],
   "answer": 0,
-  "explanation": "La boucle doit garder un score quand il est plus grand que le meilleur trouvé. Avec <, aucun score ne bat 0."
+  "explanation": "La boucle doit garder un score quand il est plus grand que le meilleur trouvé. Avec <, aucun score ne bat 0.",
+  "hint": "Pour garder le meilleur score, on garde un score quand il est plus grand ou plus petit ?"
 }

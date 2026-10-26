@@ -18,5 +18,6 @@
     "if age <= 18:"
   ],
   "answer": 0,
-  "explanation": "18 n'est pas plus grand que 18, donc il est refusé. Le signe >= veut dire « plus grand ou égal »."
+  "explanation": "18 n'est pas plus grand que 18, donc il est refusé. Le signe >= veut dire « plus grand ou égal ».",
+  "hint": "Teste avec 18 pile : 18 est-il plus grand que 18 ?"
 }

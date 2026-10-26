@@ -19,5 +19,6 @@
     "Passer le nouveau PC en 192.168.1.10"
   ],
   "answer": 0,
-  "explanation": "Le nouveau PC a pris la même adresse que l'imprimante. Deux machines d'un même réseau doivent avoir des adresses différentes."
+  "explanation": "Le nouveau PC a pris la même adresse que l'imprimante. Deux machines d'un même réseau doivent avoir des adresses différentes.",
+  "hint": "Deux appareils peuvent-ils porter la même adresse ?"
 }

@@ -18,5 +18,6 @@
     "if age == 12 or age == 65:"
   ],
   "answer": 0,
-  "explanation": "and veut dire « et » : personne n'a à la fois moins de 12 ans et plus de 65 ans. Il faut or, qui veut dire « ou »."
+  "explanation": "and veut dire « et » : personne n'a à la fois moins de 12 ans et plus de 65 ans. Il faut or, qui veut dire « ou ».",
+  "hint": "Un visiteur peut-il avoir à la fois moins de 12 ans et plus de 65 ans ?"
 }

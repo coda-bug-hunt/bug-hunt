@@ -19,5 +19,6 @@
     "Débrancher le switch réseau"
   ],
   "answer": 0,
-  "explanation": "Hugo a tapé 11 au lieu de 1, comme une faute de frappe dans un pseudo. Un seul chiffre en trop, et il atterrit dans un autre réseau que le tournoi. Il faut corriger son adresse en 192.168.1."
+  "explanation": "Hugo a tapé 11 au lieu de 1, comme une faute de frappe dans un pseudo. Un seul chiffre en trop, et il atterrit dans un autre réseau que le tournoi. Il faut corriger son adresse en 192.168.1.",
+  "hint": "Compare l'adresse de Hugo à celle du serveur : un chiffre n'est pas à sa place."
 }

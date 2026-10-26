@@ -19,5 +19,6 @@
     "Corriger l'adresse de l'imprimante en 192.168.1.10"
   ],
   "answer": 0,
-  "explanation": "En retapant l'adresse de l'imprimante, deux chiffres ont été inversés : 186 au lieu de 168. L'imprimante se retrouve dans un autre réseau que le PC."
+  "explanation": "En retapant l'adresse de l'imprimante, deux chiffres ont été inversés : 186 au lieu de 168. L'imprimante se retrouve dans un autre réseau que le PC.",
+  "hint": "Relis l'adresse de l'imprimante très lentement, chiffre par chiffre."
 }

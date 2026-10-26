@@ -19,5 +19,6 @@
     "Changer l'adresse de la box en 192.168.1.50"
   ],
   "answer": 0,
-  "explanation": "Le DNS est un annuaire qui traduit le nom d'un site en adresse : ici, il est dans la box, en 192.168.1.1. Le PC le cherche en 192.168.1.50, où il n'y a personne."
+  "explanation": "Le DNS est un annuaire qui traduit le nom d'un site en adresse : ici, il est dans la box, en 192.168.1.1. Le PC le cherche en 192.168.1.50, où il n'y a personne.",
+  "hint": "Qui traduit le nom d'un site en adresse, et où le PC le cherche-t-il ?"
 }

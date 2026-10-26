@@ -18,5 +18,6 @@
     "if code > 1234:"
   ],
   "answer": 0,
-  "explanation": "!= veut dire « différent de » : la porte s'ouvre pour tous les codes sauf le bon. Il faut ==, qui veut dire « égal à »."
+  "explanation": "!= veut dire « différent de » : la porte s'ouvre pour tous les codes sauf le bon. Il faut ==, qui veut dire « égal à ».",
+  "hint": "Lis le signe de comparaison à voix haute : que veut dire != ?"
 }

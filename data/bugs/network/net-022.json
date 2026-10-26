@@ -19,5 +19,6 @@
     "Débrancher le switch réseau"
   ],
   "answer": 0,
-  "explanation": "Le serveur de la LAN n'a qu'une porte d'entrée, la 7777, et elle est fermée. Les joueurs frappent, mais personne ne leur ouvre. Il faut ouvrir cette porte sur le serveur."
+  "explanation": "Le serveur de la LAN n'a qu'une porte d'entrée, la 7777, et elle est fermée. Les joueurs frappent, mais personne ne leur ouvre. Il faut ouvrir cette porte sur le serveur.",
+  "hint": "Les joueurs frappent à une porte du serveur : est-elle ouverte ?"
 }

@@ -19,5 +19,6 @@
     "Retirer l'adresse du PC de Léo"
   ],
   "answer": 0,
-  "explanation": "Ta console affiche 0.0.0.0 : ça veut dire qu'elle n'a pas d'adresse. Sans adresse, c'est comme une maison sans numéro : personne ne peut l'inviter dans une partie."
+  "explanation": "Ta console affiche 0.0.0.0 : ça veut dire qu'elle n'a pas d'adresse. Sans adresse, c'est comme une maison sans numéro : personne ne peut l'inviter dans une partie.",
+  "hint": "Regarde l'adresse de chaque appareil : l'une d'elles ressemble-t-elle à une vraie adresse ?"
 }

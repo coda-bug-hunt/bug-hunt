@@ -19,5 +19,6 @@
     "Débrancher le serveur de la LAN"
   ],
   "answer": 0,
-  "explanation": "L'adresse 127.0.0.1 veut dire « moi-même ». Avec elle, Hugo s'envoie ses messages à lui-même, comme s'il jouait en ligne… tout seul. Il faut lui donner une vraie adresse du réseau de la LAN."
+  "explanation": "L'adresse 127.0.0.1 veut dire « moi-même ». Avec elle, Hugo s'envoie ses messages à lui-même, comme s'il jouait en ligne… tout seul. Il faut lui donner une vraie adresse du réseau de la LAN.",
+  "hint": "127.0.0.1 désigne une machine bien particulière : laquelle ?"
 }

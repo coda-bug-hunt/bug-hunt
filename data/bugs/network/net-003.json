@@ -19,5 +19,6 @@
     "Mettre la sortie du PC sur 192.168.1.10, sa propre adresse"
   ],
   "answer": 0,
-  "explanation": "Pour aller sur Internet, le PC passe par une porte de sortie, la passerelle : ici, c'est la box, en 192.168.1.1. Mais le PC la cherche en 192.168.1.254, où il n'y a rien."
+  "explanation": "Pour aller sur Internet, le PC passe par une porte de sortie, la passerelle : ici, c'est la box, en 192.168.1.1. Mais le PC la cherche en 192.168.1.254, où il n'y a rien.",
+  "hint": "Par quelle sortie le PC quitte-t-il son réseau, et à quelle adresse la cherche-t-il ?"
 }

@@ -19,5 +19,6 @@
     "total = p + 1"
   ],
   "answer": 0,
-  "explanation": "La boucle (la ligne for) passe sur chaque prix, mais total est remplacé à chaque fois au lieu d'être augmenté. Il faut écrire total = total + p."
+  "explanation": "La boucle (la ligne for) passe sur chaque prix, mais total est remplacé à chaque fois au lieu d'être augmenté. Il faut écrire total = total + p.",
+  "hint": "À chaque tour de boucle, total devrait grossir : est-ce vraiment le cas ?"
 }

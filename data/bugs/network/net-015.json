@@ -19,5 +19,6 @@
     "Donner au PC de Sarah l'adresse 192.168.1.20"
   ],
   "answer": 0,
-  "explanation": "Tout le monde joue sur le serveur, sauf Sarah. Son PC est dans le réseau 192.168.2, le serveur dans le 192.168.1, et son masque /16, trop large, lui fait croire qu'ils sont voisins. Il faut la remettre dans le bon réseau, avec le même masque /24 que le serveur."
+  "explanation": "Tout le monde joue sur le serveur, sauf Sarah. Son PC est dans le réseau 192.168.2, le serveur dans le 192.168.1, et son masque /16, trop large, lui fait croire qu'ils sont voisins. Il faut la remettre dans le bon réseau, avec le même masque /24 que le serveur.",
+  "hint": "Compare l'adresse et le masque de Sarah à ceux du serveur."
 }

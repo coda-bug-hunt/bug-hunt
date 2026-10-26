@@ -19,5 +19,6 @@
     "Débrancher la box d'Internet"
   ],
   "answer": 0,
-  "explanation": "Normalement, la box donne une adresse à chaque appareil. Quand ta console n'en reçoit pas, elle s'en invente une qui commence par 169.254. Avec elle, elle ne parle à personne : il faut redemander une vraie adresse à la box."
+  "explanation": "Normalement, la box donne une adresse à chaque appareil. Quand ta console n'en reçoit pas, elle s'en invente une qui commence par 169.254. Avec elle, elle ne parle à personne : il faut redemander une vraie adresse à la box.",
+  "hint": "Qui distribue les adresses à la maison ? La console en a-t-elle vraiment reçu une ?"
 }

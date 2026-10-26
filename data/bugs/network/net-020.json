@@ -19,5 +19,6 @@
     "Donner au nouveau serveur le masque /26"
   ],
   "answer": 0,
-  "explanation": "Le masque /25 coupe le réseau en deux moitiés, comme deux équipes : de 0 à 127, et de 128 à 255. Sarah est dans la première, le nouveau serveur s'est caché dans la deuxième. Il faut le ramener dans l'équipe de Sarah."
+  "explanation": "Le masque /25 coupe le réseau en deux moitiés, comme deux équipes : de 0 à 127, et de 128 à 255. Sarah est dans la première, le nouveau serveur s'est caché dans la deuxième. Il faut le ramener dans l'équipe de Sarah.",
+  "hint": "Avec /25, le réseau est coupé en deux moitiés : de quel côté est chacun ?"
 }
