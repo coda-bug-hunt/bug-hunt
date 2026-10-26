@@ -3,22 +3,22 @@
   "track": "network",
   "difficulty": 2,
   "points": 300,
-  "title": "Le PC de Tom n'arrive pas à imprimer",
-  "diagram": {
-    "devices": [
-      { "id": "pc", "label": "PC de Tom", "ip": "192.168.1.11", "mask": "255.255.255.128" },
-      { "id": "switch", "label": "Switch" },
-      { "id": "printer", "label": "Imprimante", "ip": "192.168.1.200", "mask": "255.255.255.0" }
-    ],
-    "links": [["pc", "switch"], ["switch", "printer"]]
-  },
-  "bugTarget": "pc",
+  "title": "Le serveur refuse d'enregistrer les scores",
+  "view": "terminal",
+  "context": "Message du jeu : « Impossible d'enregistrer le score »",
+  "code": [
+    "$ df -h",
+    "Disque  Taille  Libre  Plein",
+    "/       50G     0      100%",
+    "/sauv   200G    188G   6%"
+  ],
+  "bugLine": 2,
   "choices": [
-    "Mettre le masque du PC de Tom à /24, comme l'imprimante",
-    "Mettre le masque de l'imprimante à /25",
-    "Donner au PC de Tom l'adresse 192.168.1.200"
+    "Libérer de la place sur le disque /",
+    "Vider le disque /sauv",
+    "Redémarrer le jeu"
   ],
   "answer": 0,
-  "explanation": "Le masque (le /24 ou /25 après l'adresse) dit jusqu'où va le réseau d'une machine. Avec /25, le PC de Tom croit que l'imprimante est dans un autre réseau, et ne lui parle pas directement.",
-  "hint": "Le masque dit jusqu'où va le réseau : les deux appareils voient-ils le même réseau ?"
+  "explanation": "Le disque principal est plein à 100 % : le serveur n'a plus de place pour écrire les scores. Il faut y libérer de la place, par exemple en effaçant les vieux fichiers.",
+  "hint": "Pour enregistrer, il faut de la place : où en reste-t-il ?"
 }

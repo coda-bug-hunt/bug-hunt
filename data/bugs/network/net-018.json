@@ -3,22 +3,23 @@
   "track": "network",
   "difficulty": 2,
   "points": 300,
-  "title": "Toc toc, porte 25565 ?",
-  "diagram": {
-    "devices": [
-      { "id": "pc", "label": "PC du joueur", "ip": "192.168.1.10" },
-      { "id": "switch", "label": "Switch réseau" },
-      { "id": "server", "label": "Serveur de jeu", "ip": "192.168.1.20", "ports": [{ "port": 25565, "open": false }, { "port": 25566, "open": true }] }
-    ],
-    "links": [["pc", "switch"], ["switch", "server"]]
-  },
-  "bugTarget": "server",
+  "title": "Ta facture Amazon est arrivée",
+  "view": "email",
+  "code": [
+    "De : Amazon <commande@amazon.fr>",
+    "Objet : Ta facture n° 4521",
+    "Fichier : facture.pdf.exe",
+    "",
+    "Bonjour,",
+    "Ta facture est en pièce jointe."
+  ],
+  "bugLine": 2,
   "choices": [
-    "Ouvrir la porte 25565 du serveur",
-    "Ouvrir la porte 25566 du PC du joueur",
-    "Fermer la porte 25566 du serveur"
+    "Ne pas ouvrir le fichier : c'est un programme",
+    "Ouvrir le fichier pour vérifier la facture",
+    "Renommer le fichier en facture.pdf"
   ],
   "answer": 0,
-  "explanation": "Une machine a plusieurs portes d'entrée, appelées ports. Le jeu frappe à la porte 25565, mais le serveur a ouvert la 25566 : la porte du voisin. Il faut ouvrir la bonne porte sur le serveur.",
-  "hint": "À quelle porte le jeu frappe-t-il, et laquelle est ouverte ?"
+  "explanation": "Le nom se termine par .exe : c'est un programme, pas un PDF. L'ouvrir peut installer un virus. Le .pdf au milieu sert à tromper.",
+  "hint": "Regarde bien la toute fin du nom du fichier."
 }
