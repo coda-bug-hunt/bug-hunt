@@ -26,12 +26,33 @@ give the answer away.
 A good hint asks a question that sends the player to the right place:
 "Combien de minutes y a-t-il dans une heure ?", not "Il faut multiplier par 60".
 
-## Dev bug
+## Views
+
+`view` says how the bug is drawn. Without it, a dev bug is `code` and a network
+bug is `diagram`, so older files need no change. Every view but `diagram` is a
+list of lines the player touches, **whatever the track**: a network bug can be a
+terminal.
+
+| `view` | Each line is | Example of bug |
+| --- | --- | --- |
+| `code` | A line of code (`language` says which) | Python, HTML/CSS, SQL |
+| `terminal` | A command (`$ ...`) or a line of its output | `ping google.fr` fails, `ping 8.8.8.8` works: the DNS |
+| `email` | A header (`De :`, `Objet :`) or a line of the message | A phishing link to `paypal.secure-login.ru` |
+| `config` | A setting, `key = value` | `band = 5GHz` for a console that only does 2.4 GHz |
+| `rules` | A firewall rule, in the order they apply | "Tout bloquer" before "Autoriser 443" |
+| `diagram` | — (devices and links, below) | A wrong gateway |
+
+## Bug drawn as lines (every view but `diagram`)
 
 | Field | Type | Rule |
 | --- | --- | --- |
 | `code` | array of strings | One string per line, indentation kept |
 | `bugLine` | integer | 0-based index of the faulty line in `code` |
+| `language` | string, optional | Shown above the lines: `Python`, `HTML/CSS`, `SQL` |
+| `context` | string, optional | In French, shown above the lines: an error message to trace back, what the player sees on screen |
+
+The fix of a `code` bug is a line of code (shown as a diff after the answer);
+for the other views, it is an action ("Ne pas cliquer, et le signaler").
 
 Example: `dev/dev-001.json`.
 

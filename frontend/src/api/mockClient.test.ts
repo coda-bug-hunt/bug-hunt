@@ -16,13 +16,13 @@ function fullBug(bug: PublicBug): MockBug {
 }
 
 function rightSelection(bug: MockBug) {
-  return bug.track === 'dev'
+  return 'bugLine' in bug
     ? { bugId: bug.id, selectedLine: bug.bugLine }
     : { bugId: bug.id, selectedTarget: bug.bugTarget }
 }
 
 function wrongSelection(bug: MockBug) {
-  return bug.track === 'dev'
+  return 'bugLine' in bug
     ? { bugId: bug.id, selectedLine: bug.bugLine + 1 }
     : { bugId: bug.id, selectedTarget: 'nowhere' }
 }
@@ -202,3 +202,50 @@ describe('leaderboard and admin', () => {
     await expect(api.setHidden('1234', 'Ghost', true)).rejects.toMatchObject({ code: 'unknown_player' })
   })
 })
+
+describe('bug views', () => {
+  const terminal: MockBug = {
+    id: 'mock-net-0', track: 'network', difficulty: 0, points: 100, view: 'terminal',
+    title: 'Les sites ne répondent plus',
+    context: 'Le PC arrive à joindre 8.8.8.8, mais aucun site.',
+    code: ['$ ping google.fr', 'ping: google.fr : nom inconnu', '$ ping 8.8.8.8', '64 octets de 8.8.8.8 : temps=12 ms'],
+    bugLine: 1,
+    choices: ['Corriger le DNS du PC', 'Changer de câble', 'Redémarrer google.fr'],
+    answer: 0,
+    explanation: 'Le PC joint Internet, mais ne traduit plus les noms : c’est le DNS.',
+  }
+  const sql: MockBug = { ...mockBugs.find((bug) => bug.id === 'mock-dev-0')!, language: 'SQL' } as MockBug
+  const bugs = mockBugs.map((bug) => (bug.id === terminal.id ? terminal : bug.id === sql.id ? sql : bug))
+
+  it('sends the view, the language and the context with the bug, never the line', async () => {
+    const api = createMockClient({ bugs, random: () => 0 })
+    const session = await start(api)
+    const first = await api.nextBug(session)
+    expect(first!.bug).toMatchObject({ language: 'SQL' })
+    await api.select(session, rightSelection(fullBug(first!.bug)))
+    await api.answer(session, { bugId: first!.bug.id, choice: 0 })
+
+    const second = await api.nextBug(session)
+    expect(second!.bug).toMatchObject({ track: 'network', view: 'terminal', context: terminal.context })
+    expect(second!.bug).toHaveProperty('code')
+    expect(second!.bug).not.toHaveProperty('diagram')
+    expect(second!.bug).not.toHaveProperty('bugLine')
+  })
+
+  it('checks the line of a network bug drawn as lines', async () => {
+    const api = createMockClient({ bugs, random: () => 0 })
+    const session = await start(api)
+    await playUntil(api, session, 1)
+    expect(await api.select(session, { bugId: terminal.id, selectedLine: 1 })).toEqual({ lineCorrect: true, correctLine: 1 })
+  })
+})
+
+// Answers the bugs before `index` right, so `index` is the current bug.
+async function playUntil(api: GameApi, session: GameSession, index: number) {
+  for (let i = 0; i < index; i++) {
+    const bug = fullBug((await api.nextBug(session))!.bug)
+    await api.select(session, rightSelection(bug))
+    await api.answer(session, { bugId: bug.id, choice: bug.answer })
+  }
+  await api.nextBug(session)
+}

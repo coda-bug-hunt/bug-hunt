@@ -49,9 +49,12 @@ Team workflow and rules: see CONTRIBUTING.md. Follow them.
 
 ## Bug JSON format
 
-Fields: id, track (dev|network), difficulty (0-4), points, title, code (array of
-lines) or diagram, bugLine (0-based) or bugTarget, choices (3), answer (0-based),
-explanation. Game texts in French, everything else in English.
+Fields: id, track (dev|network), difficulty (0-4), points, title, optional view
+(code|terminal|email|config|rules|diagram), code (array of lines) or diagram,
+bugLine (0-based) or bugTarget, optional language and context, choices (3),
+answer (0-based), explanation, hint. Every view but diagram is a list of lines,
+whatever the track. Details: data/bugs/README.md. Game texts in French,
+everything else in English.
 
 ## API contract (v1)
 
@@ -61,8 +64,8 @@ Types: `frontend/src/api/types.ts`. Game routes need `Authorization: Bearer <tok
 | Method | Route | Input | Output |
 | --- | --- | --- | --- |
 | POST | `/api/games` | `pseudo`, `deviceId` | 201 `gameId`, `token`, `totalBugs` (10) · 400 `pseudo_invalid`, `pseudo_unavailable` |
-| GET | `/api/games/{id}/next` | – | 200 `index`, `bug` (no `bugLine`, `bugTarget`, `answer`, `explanation`; optional `hint`, which never gives the answer), `timeLimit`, `remainingSeconds` · 204 when the game is over |
-| POST | `/api/games/{id}/selection` | `bugId`, `selectedLine` or `selectedTarget` | 200 `lineCorrect`, `correctLine` or `correctTarget` · 409 `already_selected`, `not_current_bug` |
+| GET | `/api/games/{id}/next` | – | 200 `index`, `bug` (no `bugLine`, `bugTarget`, `answer`, `explanation`; `code` or `diagram`; optional `view`, `language`, `context`, and `hint`, which never gives the answer), `timeLimit`, `remainingSeconds` · 204 when the game is over |
+| POST | `/api/games/{id}/selection` | `bugId`, `selectedLine` (bug drawn as lines) or `selectedTarget` (diagram) | 200 `lineCorrect`, `correctLine` or `correctTarget` · 409 `already_selected`, `not_current_bug` |
 | POST | `/api/games/{id}/answers` | `bugId`, `choice` (0-2, or `null` on timeout, allowed without a selection) | 200 `correct`, `correctChoice`, `points`, `explanation`, `score`, `finished` · 409 `already_answered`, `selection_missing`, `not_current_bug` |
 | GET | `/api/games/{id}/result` | – | 200 `score`, `maxScore` (3000), `byTrack`, `percentByTrack` (track points / 1500), `affinity` (`dev`, `network`, `both`, or `null` in dev-only mode), `rank`, `playersCount` · 409 `game_not_finished` |
 | GET | `/api/leaderboard` | – | 200 `top` (10: `rank`, `pseudo`, `score`, `affinity`, `byTrack`), `gauges` (`dev`, `network`), `gamesPlayed` |

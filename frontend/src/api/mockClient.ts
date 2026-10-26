@@ -51,15 +51,23 @@ export type MockClientOptions = {
 function toPublic(bug: MockBug): PublicBug {
   const base = {
     id: bug.id,
+    track: bug.track,
     difficulty: bug.difficulty,
     points: bug.points,
     title: bug.title,
     choices: bug.choices,
     ...(bug.hint && { hint: bug.hint }),
   }
-  return bug.track === 'dev'
-    ? { ...base, track: 'dev', code: bug.code }
-    : { ...base, track: 'network', diagram: bug.diagram }
+  if ('bugLine' in bug) {
+    return {
+      ...base,
+      ...(bug.view && { view: bug.view }),
+      code: bug.code,
+      ...(bug.language && { language: bug.language }),
+      ...(bug.context && { context: bug.context }),
+    }
+  }
+  return { ...base, ...(bug.view && { view: bug.view }), diagram: bug.diagram }
 }
 
 export function createMockClient(options: MockClientOptions = {}): GameApi {
@@ -167,7 +175,7 @@ export function createMockClient(options: MockClientOptions = {}): GameApi {
       const game = gameFor(session)
       const bug = currentBug(game, request.bugId)
       if (game.lineCorrect !== null) throw new ApiRequestError('already_selected')
-      if (bug.track === 'dev') {
+      if ('bugLine' in bug) {
         game.lineCorrect = 'selectedLine' in request && request.selectedLine === bug.bugLine
         return { lineCorrect: game.lineCorrect, correctLine: bug.bugLine }
       }

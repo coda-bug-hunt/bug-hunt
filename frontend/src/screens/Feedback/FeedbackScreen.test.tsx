@@ -123,3 +123,17 @@ describe('FeedbackScreen streak', () => {
     expect(screen.queryByText(/d'affilée/)).toBeNull()
   })
 })
+
+describe('FeedbackScreen views', () => {
+  const email: PublicBug = {
+    id: 'net-mail', track: 'network', difficulty: 0, points: 100, view: 'email', title: 'Un e-mail de ta banque ?',
+    code: ['De : support@banque-secure.ru', 'Objet : Ton compte est bloqué', 'Clique ici pour le débloquer'],
+    choices: ['Ne pas cliquer, et le signaler', 'Cliquer pour vérifier', 'Répondre avec ton mot de passe'],
+  }
+
+  it('shows the fix as a sentence, not as a code diff, outside the code view', () => {
+    renderFeedback({ bug: email, verdict: { lineCorrect: true, correctSelection: 0 } })
+    expect(screen.queryByRole('list', { name: 'La correction' })).toBeNull()
+    expect(screen.getByText('Ligne 1 : Ne pas cliquer, et le signaler')).toBeTruthy()
+  })
+})

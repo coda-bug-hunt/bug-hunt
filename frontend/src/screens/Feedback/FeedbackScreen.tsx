@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import type { AnswerResponse, PublicBug } from '../../api'
 import Duck from '../../components/Duck'
 import type { Verdict } from '../../game/gameReducer'
+import { viewOf } from '../Bug/bugView'
 import { sound } from '../../sound/player'
 import SoundToggle from '../../sound/SoundToggle'
 
@@ -45,7 +46,7 @@ function FeedbackScreen({ bug, answer, verdict, index, totalBugs, streak, onNext
   }, [answer.correct])
 
   let correction
-  if (bug.track === 'dev') {
+  if ('code' in bug && viewOf(bug) === 'code') {
     const buggyLine = typeof target === 'number' ? bug.code[target]?.trim() : undefined
     correction = (
       <ul aria-label="La correction" className="overflow-hidden rounded-[10px] border border-line font-mono text-[13px]">
@@ -53,6 +54,10 @@ function FeedbackScreen({ bug, answer, verdict, index, totalBugs, streak, onNext
         <DiffLine sign="+" label="Ajouté" text={fix} className="bg-lime/14 text-lime" />
       </ul>
     )
+  } else if ('code' in bug) {
+    // Terminal, e-mail, settings: the fix is an action, not a line of code.
+    const line = typeof target === 'number' ? `Ligne ${target + 1} : ${fix}` : fix
+    correction = <p className="font-mono text-[13px] text-lime">{line}</p>
   } else {
     const device = bug.diagram.devices.find((candidate) => candidate.id === target)
     correction = <p className="font-mono text-[13px] text-lime">{device ? `Sur ${device.label} : ${fix}` : fix}</p>

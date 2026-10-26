@@ -1,15 +1,15 @@
 // Demo bugs for the mock client: one per level and track. Full versions, with
 // the answer, as the server stores them. Real content lives in data/bugs/.
 
-import type { Choice, PublicDevBug, PublicNetworkBug } from './types'
+import type { Choice, PublicDiagramBug, PublicLineBug } from './types'
 
 type Secret = { answer: Choice; explanation: string }
 
-export type MockDevBug = PublicDevBug & Secret & { bugLine: number }
-export type MockNetworkBug = PublicNetworkBug & Secret & { bugTarget: string }
-export type MockBug = MockDevBug | MockNetworkBug
+export type MockLineBug = PublicLineBug & Secret & { bugLine: number }
+export type MockDiagramBug = PublicDiagramBug & Secret & { bugTarget: string }
+export type MockBug = MockLineBug | MockDiagramBug
 
-const devBugs: MockDevBug[] = [
+const devBugs: MockLineBug[] = [
   {
     id: 'mock-dev-0', track: 'dev', difficulty: 0, points: 100,
     title: 'Le panier compte mal',
@@ -62,7 +62,7 @@ const devBugs: MockDevBug[] = [
   },
 ]
 
-const networkBugs: MockNetworkBug[] = [
+const networkBugs: MockDiagramBug[] = [
   {
     id: 'mock-net-0', track: 'network', difficulty: 0, points: 100,
     title: 'Le PC n’a pas Internet',
