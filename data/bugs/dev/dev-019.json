@@ -3,20 +3,22 @@
   "track": "dev",
   "difficulty": 3,
   "points": 400,
-  "title": "La table de 7 s'arrête à 7 x 9",
+  "title": "Le bouton Quitter n'est pas violet comme Jouer",
+  "language": "HTML/CSS",
   "code": [
-    "def show_table(n):",
-    "    for i in range(1, 10):",
-    "        print(n, \"x\", i, \"=\", n * i)",
-    "show_table(7)"
+    "<style>",
+    "  .violet { background: purple; }",
+    "</style>",
+    "<button class=\"violet\">Jouer</button>",
+    "<button class=\"violette\">Quitter</button>"
   ],
-  "bugLine": 1,
+  "bugLine": 4,
   "choices": [
-    "for i in range(1, 11):",
-    "for i in range(0, 10):",
-    "for i in range(2, 11):"
+    "<button class=\"violet\">Quitter</button>",
+    "<button class=\".violet\">Quitter</button>",
+    "<button id=\"violette\">Quitter</button>"
   ],
   "answer": 0,
-  "explanation": "range(1, 10) compte de 1 à 9 : le dernier nombre n'est jamais compris. Pour aller jusqu'à 10, il faut range(1, 11).",
-  "hint": "range s'arrête-t-il sur le dernier nombre, ou juste avant ?"
+  "explanation": "Le style s'applique à la classe violet. Le bouton Quitter a la classe violette : un autre nom, donc aucun style. Le point devant .violet ne s'écrit que dans le style.",
+  "hint": "Compare le nom de la classe dans le style et sur chaque bouton."
 }

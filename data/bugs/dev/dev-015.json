@@ -3,21 +3,21 @@
   "track": "dev",
   "difficulty": 4,
   "points": 500,
-  "title": "Les soldes à -50 % réduisent aussi les frais de port",
+  "title": "Neo42 a 1 200 points, mais le total affiche 3",
+  "language": "SQL",
+  "context": "Neo42 a joué 3 manches : 300, 400 et 500 points.",
   "code": [
-    "def final_price(price, shipping):",
-    "    price = price + shipping",
-    "    price = price * 0.5",
-    "    return price",
-    "print(final_price(20, 5))"
+    "SELECT COUNT(points)",
+    "FROM manches",
+    "WHERE pseudo = 'Neo42';"
   ],
-  "bugLine": 1,
+  "bugLine": 0,
   "choices": [
-    "Mettre la ligne 2 après la ligne 3",
-    "Mettre la ligne 4 avant la ligne 3",
-    "Mettre la ligne 3 après la ligne 4"
+    "SELECT SUM(points)",
+    "SELECT MAX(points)",
+    "SELECT COUNT(*)"
   ],
   "answer": 0,
-  "explanation": "Les frais de port sont ajoutés avant la réduction, donc ils sont coupés en deux aussi. Il faut d'abord réduire le prix, puis ajouter les frais.",
-  "hint": "La réduction doit-elle aussi toucher les frais de port ? Regarde l'ordre des calculs."
+  "explanation": "COUNT compte les lignes : 3 manches. Pour additionner les points, il faut SUM : 300 + 400 + 500 = 1 200.",
+  "hint": "Veut-on compter les manches, ou additionner leurs points ?"
 }

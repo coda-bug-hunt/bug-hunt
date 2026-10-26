@@ -3,22 +3,21 @@
   "track": "dev",
   "difficulty": 3,
   "points": 400,
-  "title": "Il y a 2 votes, mais on en compte 3",
+  "title": "Tous les joueurs ont perdu leur score",
+  "language": "SQL",
+  "context": "On voulait remettre à zéro le score de Neo42 seulement.",
   "code": [
-    "def count_votes(votes):",
-    "    count = 1",
-    "    for v in votes:",
-    "        count = count + 1",
-    "    return count",
-    "print(count_votes([\"oui\", \"non\"]))"
+    "-- Le tricheur repart de zéro",
+    "UPDATE joueurs",
+    "SET score = 0;"
   ],
-  "bugLine": 1,
+  "bugLine": 2,
   "choices": [
-    "count = 0",
-    "count = 2",
-    "count = -1"
+    "SET score = 0 WHERE pseudo = 'Neo42';",
+    "SET score = NULL;",
+    "SET pseudo = 'Neo42', score = 0;"
   ],
   "answer": 0,
-  "explanation": "Le compteur commence à 1 alors qu'aucun vote n'est encore compté. La boucle ajoute 1 par vote : il faut partir de 0.",
-  "hint": "Avant d'avoir lu le moindre vote, combien de votes as-tu comptés ?"
+  "explanation": "Sans WHERE, UPDATE modifie toutes les lignes de la table : tous les joueurs repartent à 0. WHERE limite la modification à Neo42.",
+  "hint": "Sur quels joueurs cette modification s'applique-t-elle ?"
 }
