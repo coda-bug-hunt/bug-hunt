@@ -25,6 +25,11 @@ describe('TimerRing', () => {
     expect(ring(10).circle.getAttribute('class')).toContain('stroke-danger')
   })
 
+  it('lets taps through to the duck under it', () => {
+    // The ring is drawn over its children: without this, the hint button can't be touched.
+    expect(ring(30).circle.closest('svg')!.getAttribute('class')).toContain('pointer-events-none')
+  })
+
   it('only glides between seconds when motion is allowed', () => {
     const classes = ring(30).circle.getAttribute('class')!.split(' ')
     expect(classes.filter((name) => name.includes('transition') || name.includes('duration')).every((name) => name.startsWith('motion-safe:'))).toBe(true)
