@@ -55,6 +55,10 @@ In a `terminal`, a line that starts with `$ ` is a command; any other line is
 its output. In an `email`, the headers come first (`De : ...`, `Objet : ...`),
 then one empty line, then the message: the empty line can't be touched, so it
 is never the `bugLine`. Links (`http://...`, `www....`) are underlined.
+In a `config`, each `key = value` line is a row; a line without `=` (`[wifi]`)
+is a section name. In `rules`, a line starts with `Autoriser` or `Bloquer`,
+and the rules are numbered in the order they apply. In both, `language` names
+the panel (`Box Wi-Fi`, `Pare-feu de l'école`).
 
 The fix of a `code` bug is a line of code (shown as a diff after the answer);
 for the other views, it is an action ("Ne pas cliquer, et le signaler").

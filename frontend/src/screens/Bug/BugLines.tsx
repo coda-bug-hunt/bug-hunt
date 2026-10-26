@@ -2,7 +2,9 @@ import type { PublicLineBug } from '../../api'
 import type { Selection, Verdict } from '../../game/gameReducer'
 import { viewOf } from './bugView'
 import CodeLines from './CodeLines'
+import ConfigLines from './ConfigLines'
 import EmailLines from './EmailLines'
+import RulesLines from './RulesLines'
 import TerminalLines from './TerminalLines'
 
 type BugLinesProps = {
@@ -28,6 +30,10 @@ function BugLines({ bug, selected, verdict, onSelect }: BugLinesProps) {
         <TerminalLines {...lines} language={bug.language} />
       ) : view === 'email' ? (
         <EmailLines {...lines} />
+      ) : view === 'config' ? (
+        <ConfigLines {...lines} language={bug.language} />
+      ) : view === 'rules' ? (
+        <RulesLines {...lines} language={bug.language} />
       ) : (
         <>
           {bug.language && (

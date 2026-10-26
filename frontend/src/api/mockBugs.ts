@@ -186,6 +186,27 @@ const viewBugs: MockLineBug[] = [
     answer: 0,
     explanation: 'Le PC joint la box et Internet, mais ne traduit plus les noms en adresses : c’est le DNS.',
   },
+  {
+    id: 'mock-dev-config', track: 'dev', difficulty: 3, points: 400, view: 'config',
+    title: 'Personne ne peut rejoindre le tournoi',
+    hint: 'Le serveur répond bien : combien de joueurs accepte-t-il ?',
+    language: 'Serveur de jeu',
+    code: ['[serveur]', 'nom = Tournoi Coda', 'port = 25565', 'joueurs_max = 0', 'mode = survie'],
+    bugLine: 3,
+    choices: ['joueurs_max = 16', 'port = 0', 'mode = créatif'],
+    answer: 0,
+    explanation: 'Avec joueurs_max = 0, le serveur est plein avant même que quelqu’un arrive.',
+  },
+  {
+    id: 'mock-net-rules', track: 'network', difficulty: 4, points: 500, view: 'rules',
+    title: 'Le site de l’école est injoignable',
+    hint: 'Le pare-feu lit les règles de haut en bas et s’arrête à la première qui correspond.',
+    code: ['Bloquer tout depuis Internet', 'Autoriser le port 443 depuis Internet', 'Autoriser tout depuis le réseau de l’école'],
+    bugLine: 0,
+    choices: ['Mettre « Bloquer tout » en dernier', 'Supprimer la règle 2', 'Bloquer le port 443'],
+    answer: 0,
+    explanation: 'La règle 1 bloque tout avant que la règle 2 soit lue : « Bloquer tout » doit venir en dernier.',
+  },
 ]
 
 export const mockBugs: MockBug[] = [...devBugs, ...networkBugs, ...viewBugs]

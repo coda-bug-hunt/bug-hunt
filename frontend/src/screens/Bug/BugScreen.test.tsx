@@ -166,6 +166,17 @@ describe('BugScreen views', () => {
     expect(screen.getByText('http://netflix.ru').className).toContain('underline')
   })
 
+  it('draws settings and firewall rules in their own skin', () => {
+    const config: NextBugResponse = { ...next, bug: { ...lines.bug, view: 'config', code: ['bande = 5GHz'] } }
+    const { unmount } = render(<BugScreen state={stateWith(42, config)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(screen.getByText('Réglages')).toBeTruthy()
+    unmount()
+
+    const rules: NextBugResponse = { ...next, bug: { ...lines.bug, view: 'rules', code: ['Bloquer tout'] } }
+    render(<BugScreen state={stateWith(42, rules)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(screen.getByText('Pare-feu')).toBeTruthy()
+  })
+
   it('names the language of the code when the bug gives one', () => {
     const sql: NextBugResponse = { ...next, bug: { ...next.bug, language: 'SQL' } }
     render(<BugScreen state={stateWith(42, sql)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
