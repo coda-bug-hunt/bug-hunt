@@ -148,4 +148,44 @@ const networkBugs: MockDiagramBug[] = [
   },
 ]
 
-export const mockBugs: MockBug[] = [...devBugs, ...networkBugs]
+// One demo bug per line view, drawn as often as the bug of the same level.
+const viewBugs: MockLineBug[] = [
+  {
+    id: 'mock-net-email', track: 'network', difficulty: 1, points: 200, view: 'email',
+    title: 'Netflix te demande de payer',
+    hint: 'Avant de cliquer, regarde où mène le lien.',
+    code: [
+      'De : Netflix <info@netflix.com>',
+      'Objet : Ton paiement a échoué',
+      '',
+      'Bonjour,',
+      'Ton abonnement sera suspendu ce soir.',
+      'Mets ta carte à jour ici : http://netflix.connexion-securite.ru',
+    ],
+    bugLine: 5,
+    choices: ['Aller sur netflix.com soi-même, sans cliquer', 'Cliquer vite avant la suspension', 'Répondre avec sa carte bancaire'],
+    answer: 0,
+    explanation: 'Le lien mène à connexion-securite.ru, pas à netflix.com : c’est du hameçonnage.',
+  },
+  {
+    id: 'mock-net-terminal', track: 'network', difficulty: 2, points: 300, view: 'terminal',
+    title: 'Internet marche, mais pas les sites',
+    hint: 'Avec une adresse ça passe, avec un nom ça bloque : qui fait la traduction ?',
+    context: 'Aucun site ne s’ouvre sur le PC.',
+    language: 'bash',
+    code: [
+      '$ ping 192.168.1.1',
+      '64 octets de 192.168.1.1 : temps=2 ms',
+      '$ ping 8.8.8.8',
+      '64 octets de 8.8.8.8 : temps=14 ms',
+      '$ ping google.fr',
+      'ping: google.fr : nom inconnu',
+    ],
+    bugLine: 5,
+    choices: ['Corriger le DNS du PC', 'Changer le câble du PC', 'Redémarrer google.fr'],
+    answer: 0,
+    explanation: 'Le PC joint la box et Internet, mais ne traduit plus les noms en adresses : c’est le DNS.',
+  },
+]
+
+export const mockBugs: MockBug[] = [...devBugs, ...networkBugs, ...viewBugs]

@@ -152,6 +152,20 @@ describe('BugScreen views', () => {
     expect(onSelect).toHaveBeenCalledWith(1)
   })
 
+  it('draws each line view in its own skin', () => {
+    const { unmount } = render(<BugScreen state={stateWith(42, lines)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(screen.getByText('Terminal')).toBeTruthy()
+    unmount()
+
+    const email: NextBugResponse = {
+      ...next,
+      bug: { ...lines.bug, view: 'email', code: ['De : Netflix <info@netflix.com>', '', 'Clique ici : http://netflix.ru'] },
+    }
+    render(<BugScreen state={stateWith(42, email)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    expect(screen.getByText('De :')).toBeTruthy()
+    expect(screen.getByText('http://netflix.ru').className).toContain('underline')
+  })
+
   it('names the language of the code when the bug gives one', () => {
     const sql: NextBugResponse = { ...next, bug: { ...next.bug, language: 'SQL' } }
     render(<BugScreen state={stateWith(42, sql)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)

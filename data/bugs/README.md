@@ -51,6 +51,11 @@ terminal.
 | `language` | string, optional | Shown above the lines: `Python`, `HTML/CSS`, `SQL` |
 | `context` | string, optional | In French, shown above the lines: an error message to trace back, what the player sees on screen |
 
+In a `terminal`, a line that starts with `$ ` is a command; any other line is
+its output. In an `email`, the headers come first (`De : ...`, `Objet : ...`),
+then one empty line, then the message: the empty line can't be touched, so it
+is never the `bugLine`. Links (`http://...`, `www....`) are underlined.
+
 The fix of a `code` bug is a line of code (shown as a diff after the answer);
 for the other views, it is an action ("Ne pas cliquer, et le signaler").
 
