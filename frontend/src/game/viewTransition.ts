@@ -8,5 +8,6 @@ export function withViewTransition(update: () => void): void {
     update()
     return
   }
-  document.startViewTransition(() => flushSync(update))
+  // A screen change during a transition skips it: `ready` then rejects, which is expected.
+  document.startViewTransition(() => flushSync(update)).ready.catch(() => {})
 }
