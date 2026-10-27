@@ -11,7 +11,8 @@ const BANNER_MS = 5000
 const FANFARE_MS = 3000
 
 // Polls the leaderboard and remembers what changed since the last answer:
-// nicknames that moved (highlighted 3 s) and a new record (banner for 5 s).
+// nicknames that moved (highlighted 3 s), a new record (banner for 5 s) and
+// when a game last ended.
 export function useLiveBoard(client: GameApi, interval: number) {
   const previous = useRef<Leaderboard | null>(null)
   const timers = useRef<number[]>([])
@@ -19,6 +20,8 @@ export function useLiveBoard(client: GameApi, interval: number) {
   const generation = useRef({ moved: 0, record: 0 })
   const [moved, setMoved] = useState<string[]>([])
   const [record, setRecord] = useState<LeaderboardEntry | null>(null)
+  // When the last game ended (or the first load): the idle showcase counts from it.
+  const [changedAt, setChangedAt] = useState(() => Date.now())
 
   useEffect(() => {
     const pending = timers.current
@@ -32,6 +35,7 @@ export function useLiveBoard(client: GameApi, interval: number) {
   const polled = usePolling(async () => {
     const board = await client.getLeaderboard()
     const changes = compareBoards(previous.current, board)
+    if (previous.current?.gamesPlayed !== board.gamesPlayed) setChangedAt(Date.now())
     previous.current = board
     if (changes.moved.length > 0) {
       const id = ++generation.current.moved
@@ -52,5 +56,5 @@ export function useLiveBoard(client: GameApi, interval: number) {
     return board
   }, interval)
 
-  return { ...polled, moved, record }
+  return { ...polled, moved, record, changedAt }
 }

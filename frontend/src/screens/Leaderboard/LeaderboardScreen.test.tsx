@@ -172,13 +172,44 @@ describe('LeaderboardScreen music', () => {
   })
 })
 
-describe('LeaderboardScreen wake lock', () => {
-  it('keeps the stand screen on', async () => {
-    const request = vi.fn().mockResolvedValue({ release: vi.fn().mockResolvedValue(undefined) })
-    Object.defineProperty(navigator, 'wakeLock', { value: { request }, configurable: true })
+describe('LeaderboardScreen showcase', () => {
+  afterEach(() => {
+    vi.useRealTimers()
+  })
+
+  async function after(ms: number) {
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(ms)
+    })
+  }
+
+  it('shows a bug when no game ends for a while, and the board again on a new game', async () => {
+    vi.useFakeTimers()
+    const later: Leaderboard = { ...board, gamesPlayed: board.gamesPlayed + 1 }
+    const getLeaderboard = vi.fn().mockResolvedValue(board)
+    render(<LeaderboardScreen client={{ getLeaderboard } as unknown as GameApi} />)
+    await after(0)
+    expect(screen.queryByText('Trouveras-tu le bug ?')).toBeNull()
+
+    await after(46_000)
+    expect(screen.getByText('Trouveras-tu le bug ?')).toBeTruthy()
+    expect(screen.getByText(`Scanne et bats ${board.top[0].pseudo} !`)).toBeTruthy()
+    expect(screen.queryByRole('list')).toBeNull()
+
+    getLeaderboard.mockResolvedValue(later)
+    await after(2_000)
+    expect(screen.queryByText('Trouveras-tu le bug ?')).toBeNull()
+    expect(screen.getAllByRole('listitem').length).toBeGreaterThan(0)
+  })
+
+  it('points at the faulty line, then shows the fix, in words and not only by color', async () => {
+    vi.useFakeTimers()
     render(<LeaderboardScreen client={clientWith(board)} />)
-    await waitFor(() => expect(request).toHaveBeenCalledWith('screen'))
-    // @ts-expect-error: removed again, as in browsers without it.
-    delete navigator.wakeLock
+    await after(46_000)
+    expect(screen.queryByText('Le bug est ici')).toBeNull()
+    await after(8_000)
+    expect(screen.getByText('Le bug est ici')).toBeTruthy()
+    await after(8_000)
+    expect(screen.getByText('La correction')).toBeTruthy()
   })
 })

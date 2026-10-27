@@ -1,11 +1,13 @@
-import { useEffect, useLayoutEffect, useRef, type Ref } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type Ref } from 'react'
 import { api, type GameApi, type LeaderboardEntry } from '../../api'
 import { useWakeLock } from '../../hooks/useWakeLock'
 import { music } from '../../sound/music'
 import { sound, useMuted } from '../../sound/player'
 import AffinityTag from './AffinityTag'
 import DayPanel from './DayPanel'
+import IdleShowcase from './IdleShowcase'
 import RecordBanner from './RecordBanner'
+import { SHOWCASE_BUGS, showcaseAt } from './showcase'
 import { useLiveBoard } from './useLiveBoard'
 
 const REFRESH_MS = 2000
@@ -69,8 +71,20 @@ function useSlidingRows(data: unknown) {
 
 // Big screen of the stand (Coda mockup E7), landscape, read from 3 metres.
 // `client` is only passed by tests.
+// The current time, refreshed every `interval` ms.
+function useNow(interval: number) {
+  const [now, setNow] = useState(() => Date.now())
+  useEffect(() => {
+    const timer = window.setInterval(() => setNow(Date.now()), interval)
+    return () => window.clearInterval(timer)
+  }, [interval])
+  return now
+}
+
 function LeaderboardScreen({ client = api }: { client?: GameApi }) {
-  const { data, moved, record } = useLiveBoard(client, REFRESH_MS)
+  const { data, moved, record, changedAt } = useLiveBoard(client, REFRESH_MS)
+  const now = useNow(1000)
+  const showcase = data ? showcaseAt(now - changedAt) : null
   const rowRef = useSlidingRows(data)
   const muted = useMuted()
   useWakeLock(true)
@@ -108,11 +122,19 @@ function LeaderboardScreen({ client = api }: { client?: GameApi }) {
             <span className="text-sm">{muted ? 'M : remettre le son' : 'M : couper le son'}</span>
           </span>
         </div>
-        <ol className="flex flex-col gap-1.5">
-          {data?.top.map((entry) => (
-            <Row key={entry.pseudo} ref={rowRef(entry.pseudo)} entry={entry} moved={moved.includes(entry.pseudo)} />
-          ))}
-        </ol>
+        {showcase ? (
+          <IdleShowcase
+            bug={SHOWCASE_BUGS[showcase.round % SHOWCASE_BUGS.length]}
+            step={showcase.step}
+            leader={data?.top[0]?.pseudo ?? null}
+          />
+        ) : (
+          <ol className="flex flex-col gap-1.5">
+            {data?.top.map((entry) => (
+              <Row key={entry.pseudo} ref={rowRef(entry.pseudo)} entry={entry} moved={moved.includes(entry.pseudo)} />
+            ))}
+          </ol>
+        )}
         {record && <RecordBanner record={record} />}
       </section>
       {data && <DayPanel leaderboard={data} />}
