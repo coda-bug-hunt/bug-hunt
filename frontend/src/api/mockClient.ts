@@ -4,10 +4,10 @@
 import { ApiRequestError, type GameApi, type GameSession } from './gameApi'
 import { randomId } from './deviceId'
 import { isValidPseudo } from './pseudo'
-import { mockBugs, type MockBug } from './mockBugs'
+import { mockBugs } from './mockBugs'
 import { publicBugOf } from './publicBug'
 import { LEVELS, MAX_PER_TRACK, TIME_LIMIT, affinityOf, percentOf, pointsFor } from './mockRules'
-import type { Affinity, ByTrack, LeaderboardEntry } from './types'
+import type { Affinity, ByTrack, FullBug, LeaderboardEntry } from './types'
 
 const TOP_SIZE = 10
 const ADMIN_LIST_SIZE = 50
@@ -16,7 +16,7 @@ type GameState = {
   id: string
   token: string
   pseudoKey: string
-  bugs: MockBug[]
+  bugs: FullBug[]
   index: number
   sentAt: number | null
   lineCorrect: boolean | null
@@ -45,7 +45,7 @@ export type MockClientOptions = {
   now?: () => number
   random?: () => number
   adminPin?: string
-  bugs?: MockBug[]
+  bugs?: FullBug[]
 }
 
 // Explicit list of public fields: a secret field added later cannot leak.
@@ -60,14 +60,14 @@ export function createMockClient(options: MockClientOptions = {}): GameApi {
   const players = new Map<string, PlayerState>()
   const finishedAffinities: Affinity[] = []
 
-  function pick(track: MockBug['track'], level: number): MockBug {
+  function pick(track: FullBug['track'], level: number): FullBug {
     const pool = catalog.filter((bug) => bug.track === track && bug.difficulty === level)
     if (pool.length === 0) throw new Error(`No ${track} bug for level ${level}`)
     return pool[Math.floor(random() * pool.length)]
   }
 
   // One dev bug then one network bug per level, from 0 to 4.
-  function drawBugs(): MockBug[] {
+  function drawBugs(): FullBug[] {
     return LEVELS.flatMap((level) => [pick('dev', level), pick('network', level)])
   }
 
@@ -78,7 +78,7 @@ export function createMockClient(options: MockClientOptions = {}): GameApi {
     return game
   }
 
-  function currentBug(game: GameState, bugId: string): MockBug {
+  function currentBug(game: GameState, bugId: string): FullBug {
     const bug = game.bugs[game.index]
     if (!bug || bug.id !== bugId) throw new ApiRequestError('not_current_bug')
     return bug

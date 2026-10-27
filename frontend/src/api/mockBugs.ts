@@ -1,13 +1,10 @@
-// Demo bugs for the mock client: one per level and track. Full versions, with
+// Demo bugs for the mock client: one per level and track, plus one per view
+// drawn as lines (terminal, e-mail, settings, firewall). Full versions, with
 // the answer, as the server stores them. Real content lives in data/bugs/.
 
 import type { FullBug, FullDiagramBug, FullLineBug } from './types'
 
-export type MockLineBug = FullLineBug
-export type MockDiagramBug = FullDiagramBug
-export type MockBug = FullBug
-
-const devBugs: MockLineBug[] = [
+const devBugs: FullLineBug[] = [
   {
     id: 'mock-dev-0', track: 'dev', difficulty: 0, points: 100,
     title: 'Le panier compte mal',
@@ -60,7 +57,7 @@ const devBugs: MockLineBug[] = [
   },
 ]
 
-const networkBugs: MockDiagramBug[] = [
+const networkBugs: FullDiagramBug[] = [
   {
     id: 'mock-net-0', track: 'network', difficulty: 0, points: 100,
     title: 'Le PC n’a pas Internet',
@@ -147,7 +144,7 @@ const networkBugs: MockDiagramBug[] = [
 ]
 
 // One demo bug per line view, drawn as often as the bug of the same level.
-const viewBugs: MockLineBug[] = [
+const viewBugs: FullLineBug[] = [
   {
     id: 'mock-net-email', track: 'network', difficulty: 1, points: 200, view: 'email',
     title: 'Netflix te demande de payer',
@@ -207,4 +204,4 @@ const viewBugs: MockLineBug[] = [
   },
 ]
 
-export const mockBugs: MockBug[] = [...devBugs, ...networkBugs, ...viewBugs]
+export const mockBugs: FullBug[] = [...devBugs, ...networkBugs, ...viewBugs]

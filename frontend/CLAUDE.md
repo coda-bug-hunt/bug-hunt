@@ -16,8 +16,9 @@ Always run lint, build and tests before saying a task is done.
 ## Structure
 
 - src/api/ - API types, client interface, mock client, HTTP client
-- src/game/ - game state (reducer), useGame, countdown, saved session, view transitions
-- src/hooks/ - shared hooks (usePolling)
+- src/game/ - game state (reducer), useGame, countdown, saved session, view transitions,
+  the one-bug client of the admin test tool
+- src/hooks/ - shared hooks (usePolling, useWakeLock)
 - src/sound/ - generated sounds, vibration, mute setting, speaker button
 - src/components/ - UI shared by several screens (Duck mascot, TrackIcon)
 - src/screens/ - one folder per screen (Home, Bug, Feedback, End, Leaderboard, Admin),

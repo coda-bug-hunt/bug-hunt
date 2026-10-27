@@ -1,8 +1,8 @@
 // @vitest-environment jsdom
 import { act, renderHook, waitFor } from '@testing-library/react'
 import { describe, expect, it, vi } from 'vitest'
-import type { GameApi, GameSession } from '../api'
-import { mockBugs, type MockBug } from '../api/mockBugs'
+import type { FullBug, GameApi, GameSession } from '../api'
+import { mockBugs } from '../api/mockBugs'
 import { createMockClient } from '../api/mockClient'
 import { useGame } from './useGame'
 
@@ -71,7 +71,7 @@ describe('useGame', () => {
 
 describe('useGame with a network bug drawn as lines', () => {
   it('sends the touched line, not a device', async () => {
-    const terminal: MockBug = {
+    const terminal: FullBug = {
       id: 'mock-net-0', track: 'network', difficulty: 0, points: 100, view: 'terminal', title: 'Les sites ne répondent plus',
       code: ['$ ping google.fr', 'ping: google.fr : nom inconnu'], bugLine: 1,
       choices: ['Corriger le DNS du PC', 'Changer de câble', 'Redémarrer google.fr'], answer: 0, explanation: 'C’est le DNS.',

@@ -1,27 +1,27 @@
 import { describe, expect, it } from 'vitest'
 import type { GameApi, GameSession } from './gameApi'
-import { mockBugs, type MockBug } from './mockBugs'
+import { mockBugs } from './mockBugs'
 import { createMockClient } from './mockClient'
-import type { PublicBug } from './types'
+import type { FullBug, PublicBug } from './types'
 
 function fakeClock() {
   let time = 0
   return { now: () => time, advance: (seconds: number) => void (time += seconds * 1000) }
 }
 
-function fullBug(bug: PublicBug): MockBug {
+function fullBug(bug: PublicBug): FullBug {
   const found = mockBugs.find((candidate) => candidate.id === bug.id)
   if (!found) throw new Error(`Unknown bug ${bug.id}`)
   return found
 }
 
-function rightSelection(bug: MockBug) {
+function rightSelection(bug: FullBug) {
   return 'bugLine' in bug
     ? { bugId: bug.id, selectedLine: bug.bugLine }
     : { bugId: bug.id, selectedTarget: bug.bugTarget }
 }
 
-function wrongSelection(bug: MockBug) {
+function wrongSelection(bug: FullBug) {
   return 'bugLine' in bug
     ? { bugId: bug.id, selectedLine: bug.bugLine + 1 }
     : { bugId: bug.id, selectedTarget: 'nowhere' }
@@ -219,7 +219,7 @@ describe('leaderboard and admin', () => {
 })
 
 describe('bug views', () => {
-  const terminal: MockBug = {
+  const terminal: FullBug = {
     id: 'mock-net-0', track: 'network', difficulty: 0, points: 100, view: 'terminal',
     title: 'Les sites ne répondent plus',
     context: 'Le PC arrive à joindre 8.8.8.8, mais aucun site.',
@@ -229,7 +229,7 @@ describe('bug views', () => {
     answer: 0,
     explanation: 'Le PC joint Internet, mais ne traduit plus les noms : c’est le DNS.',
   }
-  const sql: MockBug = { ...mockBugs.find((bug) => bug.id === 'mock-dev-0')!, language: 'SQL' } as MockBug
+  const sql: FullBug = { ...mockBugs.find((bug) => bug.id === 'mock-dev-0')!, language: 'SQL' } as FullBug
   const bugs = mockBugs.map((bug) => (bug.id === terminal.id ? terminal : bug.id === sql.id ? sql : bug))
 
   it('sends the view, the language and the context with the bug, never the line', async () => {

@@ -32,7 +32,8 @@ The client is picked once, at start-up, from two variables:
 | `VITE_API_URL` | Base URL of the API, in `http` mode | `/api` |
 
 - In dev, `mock` is set by `.env.development`.
-- The mock follows the real rules (points, 60 s, affinity) with 10 demo bugs.
+- The mock follows the real rules (points, 60 s, affinity) with 14 demo bugs:
+  one per level and track, plus one per view drawn as lines.
   Its data lives in the browser tab: a game played on a phone does not show
   on the big screen of another device. Use the console snippet below.
 - In dev, Vite proxies `/api` to `http://localhost:8000`. `http` mode can
@@ -44,18 +45,18 @@ The client is picked once, at start-up, from two variables:
 | Route | For | Notes |
 | --- | --- | --- |
 | `/` | Players, on their phone | Home, then the 10 bugs, feedback after each, end screen. A reload resumes the game (`sessionStorage`). |
-| `/leaderboard` | Big screen of the stand, landscape | Refreshes every 2 s. Click once to unlock the sound; **M** mutes it. |
-| `/admin` | The stand team | Hide or show nicknames. PIN asked once per tab (mock PIN: `0000`). |
+| `/leaderboard` | Big screen of the stand, landscape | Refreshes every 2 s. Click once to unlock the sound; **M** mutes it. After 45 s without a new game, it alternates with a showcase bug. The screen stays awake. |
+| `/admin` | The stand team | *Joueurs*: hide or show nicknames. *Bugs*: play any bug in the real screens, without score. PIN asked once per tab (mock PIN: `0000`). |
 
 ## Test it by hand
 
-**Right answers of the mock**: dev bugs, line 2 then fix A; first network bug, the PC then fix A.
+**Right answers of the mock**: dev bugs, line 2 then fix A; first network bug, the PC then fix A. The bugs of the other views: their `bugLine` in `src/api/mockBugs.ts`, or play them one by one from `/admin` › *Bugs*.
 
 | Feature | How |
 | --- | --- |
 | Tutorial | Shown on the first bug of the first game of a device. To see it again: `localStorage.clear()` in the console. |
 | Sound and vibration | On by default, unlocked by "Lancer la partie". Speaker button to mute; vibration on Android only. |
-| Duck hint | Wait 20 s on a bug, or touch the duck. |
+| Duck hint | From 5 s, the duck offers it every other 8 s and bobs; touch the duck. |
 | Streak | 3 right answers in a row. |
 | Ring timer | Around the duck; red under 10 s. |
 | Reduced motion | iPhone: Accessibility › Motion › Reduce Motion. Android: Accessibility › Remove animations. Chrome: DevTools › Rendering › `prefers-reduced-motion: reduce`. Nothing should move. |
