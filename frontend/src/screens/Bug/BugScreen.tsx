@@ -21,6 +21,14 @@ const HINT_AFTER_SECONDS = 20
 // First-bug tutorial: one duck bubble per gesture, then the usual tips.
 type TutorialStep = 'line' | 'fix' | 'done'
 
+function BulbIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+      <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.8V16h5v-.3c0-.7.4-1.4 1-1.8A6 6 0 0 0 12 3z" />
+    </svg>
+  )
+}
+
 type BugScreenProps = {
   state: GameState
   totalBugs: number
@@ -111,16 +119,36 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <span
-          className={`inline-flex items-center gap-1.5 self-start rounded-md px-2.5 py-1 text-xs font-bold tracking-[0.08em] ${bug.track === 'dev' ? 'bg-lime/14 text-lime' : 'bg-pink/14 text-pink'}`}
-        >
-          <TrackIcon track={bug.track} />
-          {bug.track === 'dev' ? 'DEV' : 'SR'} · NIVEAU {bug.difficulty}
-        </span>
+        <div className="flex items-center justify-between gap-3">
+          <span
+            className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-bold tracking-[0.08em] ${bug.track === 'dev' ? 'bg-lime/14 text-lime' : 'bg-pink/14 text-pink'}`}
+          >
+            <TrackIcon track={bug.track} />
+            {bug.track === 'dev' ? 'DEV' : 'SR'} · NIVEAU {bug.difficulty}
+          </span>
+          {bug.hint && !hintShown && !verdict && (
+            // 44 px to touch, without pushing the code down: the negative margin eats the extra height.
+            <button
+              type="button"
+              onClick={() => setHintShown(true)}
+              aria-label="Afficher l'indice"
+              className="-my-2.5 flex h-11 cursor-pointer items-center gap-1.5 rounded-lg border border-lime px-3 font-display text-sm font-bold text-lime focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime"
+            >
+              <BulbIcon />
+              Indice
+            </button>
+          )}
+        </div>
         <h1 ref={heading} tabIndex={-1} className="font-display text-[26px] leading-tight font-bold outline-none">
           {bug.title}
         </h1>
         <p className="text-[15px] text-ink-soft">{instructions[viewOf(bug)]}</p>
+        {hintShown && (
+          <p role="note" aria-label="Indice" className="rounded-[10px] border border-lime bg-lime/8 px-3.5 py-2.5 text-sm text-ink">
+            <span className="font-bold text-lime">Indice : </span>
+            {bug.hint}
+          </p>
+        )}
       </div>
 
       {'code' in bug ? (
