@@ -1,5 +1,6 @@
 import { useCallback, useState, type ReactNode } from 'react'
 import { useGame } from './game/useGame'
+import { useWakeLock } from './hooks/useWakeLock'
 import { useResult } from './game/useResult'
 import { clearGame, readGame, saveGame, type ActiveGame } from './game/session'
 import BugScreen from './screens/Bug/BugScreen'
@@ -16,6 +17,8 @@ const primaryButton =
 
 function GameView({ game, onLeave }: { game: ActiveGame; onLeave: () => void }) {
   const { state, select, answer, next, retry } = useGame(game, onLeave)
+  // The phone stays on from the first bug to the result.
+  useWakeLock(true)
 
   if (state.phase === 'loading') {
     return (

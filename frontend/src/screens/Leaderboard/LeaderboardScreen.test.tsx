@@ -171,3 +171,14 @@ describe('LeaderboardScreen music', () => {
     vi.useRealTimers()
   })
 })
+
+describe('LeaderboardScreen wake lock', () => {
+  it('keeps the stand screen on', async () => {
+    const request = vi.fn().mockResolvedValue({ release: vi.fn().mockResolvedValue(undefined) })
+    Object.defineProperty(navigator, 'wakeLock', { value: { request }, configurable: true })
+    render(<LeaderboardScreen client={clientWith(board)} />)
+    await waitFor(() => expect(request).toHaveBeenCalledWith('screen'))
+    // @ts-expect-error: removed again, as in browsers without it.
+    delete navigator.wakeLock
+  })
+})
