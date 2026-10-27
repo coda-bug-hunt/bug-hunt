@@ -11,7 +11,7 @@ import { randomPseudo } from './randomPseudo'
 const focusRing = 'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime'
 
 function Chip({ children }: { children: ReactNode }) {
-  return <span className="rounded-full border border-line bg-surface px-3 py-1.5 text-[13px]">{children}</span>
+  return <span className="rounded-full border border-line bg-surface px-2.5 py-1.5 text-xs">{children}</span>
 }
 
 function DiceIcon() {
@@ -64,21 +64,21 @@ function HomeScreen({ onStart }: HomeScreenProps) {
   }
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-5 px-5 pt-7 pb-6">
+    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-4 px-5 pt-5 pb-5">
       <div className="flex items-center justify-between">
         <span className="font-display text-sm font-bold tracking-[0.14em]">CODA</span>
         <span className="rounded-full bg-lime px-2.5 py-1 text-xs font-bold text-night">JPO · 7 nov.</span>
       </div>
 
-      <div className="mt-2 flex items-end gap-2">
-        <Duck mood="idle" size={132} />
-        <p className="mb-[70px] flex-1 rounded-2xl rounded-bl-sm border border-line bg-surface px-3.5 py-3 text-sm leading-snug text-ink-soft">
+      <div className="flex items-end gap-2">
+        <Duck mood="idle" size={100} />
+        <p className="mb-[52px] flex-1 rounded-2xl rounded-bl-sm border border-line bg-surface px-3.5 py-3 text-sm leading-snug text-ink-soft">
           Explique-moi ton code, je t'écoute.
         </p>
       </div>
 
-      <div className="flex flex-col gap-2.5">
-        <h1 className="font-display text-[44px] leading-[1.02] font-bold">
+      <div className="flex flex-col gap-2">
+        <h1 className="font-display text-[40px] leading-[1.02] font-bold">
           Chasse aux <span className="text-lime">bugs</span>
         </h1>
         <p className="text-[15px] leading-normal text-ink-soft">
@@ -87,18 +87,18 @@ function HomeScreen({ onStart }: HomeScreenProps) {
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className="flex flex-wrap gap-1.5">
         <Chip>10 bugs</Chip>
         <Chip>60 s par bug</Chip>
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-lime bg-lime/12 px-3 py-1.5 text-[13px] font-bold text-lime">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-lime bg-lime/12 px-2.5 py-1.5 text-xs font-bold text-lime">
           <TrackIcon track="dev" />5 dev
         </span>
-        <span className="inline-flex items-center gap-1.5 rounded-full border border-pink bg-pink/12 px-3 py-1.5 text-[13px] font-bold text-pink">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-pink bg-pink/12 px-2.5 py-1.5 text-xs font-bold text-pink">
           <TrackIcon track="network" />5 SR
         </span>
       </div>
 
-      <form onSubmit={start} className="mt-auto flex flex-col gap-2.5" noValidate>
+      <form onSubmit={start} className="mt-auto flex flex-col gap-2" noValidate>
         <label htmlFor="pseudo" className="text-sm font-medium">
           Ton pseudo
         </label>
@@ -126,12 +126,12 @@ function HomeScreen({ onStart }: HomeScreenProps) {
           </button>
         </div>
         <p id="pseudo-help" aria-live="polite" className={`text-xs ${error || (!valid && pseudo) ? 'text-danger' : 'text-muted'}`}>
-          {error ?? 'Tape ton pseudo ou laisse le dé en choisir un (3 à 16 caractères : lettres, chiffres, - et _).'}
+          {error ?? '3 à 16 caractères : lettres, chiffres, - et _.'}
         </p>
         <button
           type="submit"
           disabled={!valid || sending}
-          className={`mt-1.5 h-14 cursor-pointer rounded-xl bg-lime font-display text-[17px] font-bold text-night disabled:cursor-not-allowed disabled:opacity-50 ${focusRing}`}
+          className={`h-14 cursor-pointer rounded-xl bg-lime font-display text-[17px] font-bold text-night disabled:cursor-not-allowed disabled:opacity-50 ${focusRing}`}
         >
           {sending ? 'Lancement…' : 'Lancer la partie'}
         </button>
