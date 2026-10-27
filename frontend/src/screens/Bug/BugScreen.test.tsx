@@ -107,28 +107,38 @@ describe('BugScreen hint', () => {
     expect(duck.getAttribute('aria-expanded')).toBe('true')
   })
 
-  it('has an Indice button from the first second, which shows the hint under the instructions', () => {
-    render(<BugScreen state={stateWith(60, hinted)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
-    const button = screen.getByRole('button', { name: "Afficher l'indice" })
-    expect(button.textContent).toContain('Indice')
-    fireEvent.click(button)
-    expect(screen.getByRole('note', { name: 'Indice' }).textContent).toContain(hint)
-    // Shown once: the button gives way to the hint.
+  it('offers the hint from 5 seconds, then alternates it with its tip every 8 seconds', () => {
+    render(<BugScreen state={stateWith(56, hinted)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    const bubble = () => document.getElementById('duck-bubble')!.textContent
+    expect(bubble()).toMatch(/Lis chaque ligne/)
+    act(() => vi.advanceTimersByTime(1000))
+    const first = bubble()
+    expect(first).toMatch(/indice/i)
+    act(() => vi.advanceTimersByTime(8000))
+    expect(bubble()).toMatch(/Lis chaque ligne/)
+    act(() => vi.advanceTimersByTime(8000))
+    // Said another way each time, so the visitor notices it.
+    expect(bubble()).toMatch(/indice/i)
+    expect(bubble()).not.toBe(first)
+    // No extra button: the duck is the way to the hint.
     expect(screen.queryByRole('button', { name: "Afficher l'indice" })).toBeNull()
   })
 
-  it('offers the hint after 20 seconds', () => {
-    render(<BugScreen state={stateWith(45, hinted)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
-    expect(screen.queryByText(/Un indice \?/)).toBeNull()
-    act(() => vi.advanceTimersByTime(5000))
-    expect(screen.getByText(/Un indice \?/)).toBeTruthy()
+  it('moves while it offers the hint, and only where motion is allowed', () => {
+    render(<BugScreen state={stateWith(56, hinted)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    const duck = screen.getByRole('button', { name: 'Demander un indice au canard' })
+    expect(duck.className).not.toContain('animate-')
+    act(() => vi.advanceTimersByTime(1000))
+    expect(duck.className).toContain('motion-safe:animate-duck-bob')
+    fireEvent.click(duck)
+    expect(document.getElementById('duck-bubble')!.textContent).toBe(hint)
+    expect(duck.className).not.toContain('animate-')
   })
 
   it('offers nothing when the bug has no hint', () => {
     render(<BugScreen state={stateWith(30)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
     expect(screen.queryByRole('button', { name: 'Demander un indice au canard' })).toBeNull()
-    expect(screen.queryByRole('button', { name: "Afficher l'indice" })).toBeNull()
-    expect(screen.queryByText(/Un indice \?/)).toBeNull()
+    expect(screen.queryByText(/indice/i)).toBeNull()
   })
 })
 

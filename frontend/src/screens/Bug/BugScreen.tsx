@@ -16,18 +16,21 @@ import TutorialTip from './TutorialTip'
 import { markTutorialSeen, tutorialSeen } from './tutorial'
 
 // The duck offers its hint once this much of the bug has gone by.
-const HINT_AFTER_SECONDS = 20
+// The duck offers its hint from 5 s, then every other 8 s, alternating with
+// its usual tip and saying it another way each time.
+const HINT_FROM_SECONDS = 5
+const HINT_EVERY_SECONDS = 8
+const HINT_OFFERS = ['Un indice ? Touche-moi !', "Bloqué ? Touche-moi, j'ai un indice.", 'Coin ! Un petit indice ? Touche-moi.']
+
+// The offer to say `elapsed` seconds into the bug, or null for the usual tip.
+function hintOffer(elapsed: number): string | null {
+  if (elapsed < HINT_FROM_SECONDS) return null
+  const slot = Math.floor((elapsed - HINT_FROM_SECONDS) / HINT_EVERY_SECONDS)
+  return slot % 2 === 0 ? HINT_OFFERS[(slot / 2) % HINT_OFFERS.length] : null
+}
 
 // First-bug tutorial: one duck bubble per gesture, then the usual tips.
 type TutorialStep = 'line' | 'fix' | 'done'
-
-function BulbIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
-      <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.8V16h5v-.3c0-.7.4-1.4 1-1.8A6 6 0 0 0 12 3z" />
-    </svg>
-  )
-}
 
 type BugScreenProps = {
   state: GameState
@@ -59,13 +62,14 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
   }, [step])
 
   const [hintShown, setHintShown] = useState(false)
-  const hintOffered = Boolean(bug.hint) && current.timeLimit - left >= HINT_AFTER_SECONDS
+  const offer = bug.hint && !hintShown ? hintOffer(current.timeLimit - left) : null
+  const hintOffered = offer !== null
   let bubble =
     'code' in bug
       ? "Coin… Lis chaque ligne à voix haute, comme si tu me l'expliquais."
       : 'Coin… Compare bien les réglages de chaque appareil.'
   if (hintShown) bubble = bug.hint!
-  else if (hintOffered) bubble = 'Un indice ? Touche-moi !'
+  else if (offer) bubble = offer
 
   function lineTipDone() {
     setStep('fix')
@@ -119,36 +123,16 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between gap-3">
-          <span
-            className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-bold tracking-[0.08em] ${bug.track === 'dev' ? 'bg-lime/14 text-lime' : 'bg-pink/14 text-pink'}`}
-          >
-            <TrackIcon track={bug.track} />
-            {bug.track === 'dev' ? 'DEV' : 'SR'} · NIVEAU {bug.difficulty}
-          </span>
-          {bug.hint && !hintShown && !verdict && (
-            // 44 px to touch, without pushing the code down: the negative margin eats the extra height.
-            <button
-              type="button"
-              onClick={() => setHintShown(true)}
-              aria-label="Afficher l'indice"
-              className="-my-2.5 flex h-11 cursor-pointer items-center gap-1.5 rounded-lg border border-lime px-3 font-display text-sm font-bold text-lime focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime"
-            >
-              <BulbIcon />
-              Indice
-            </button>
-          )}
-        </div>
+        <span
+          className={`inline-flex items-center gap-1.5 self-start rounded-md px-2.5 py-1 text-xs font-bold tracking-[0.08em] ${bug.track === 'dev' ? 'bg-lime/14 text-lime' : 'bg-pink/14 text-pink'}`}
+        >
+          <TrackIcon track={bug.track} />
+          {bug.track === 'dev' ? 'DEV' : 'SR'} · NIVEAU {bug.difficulty}
+        </span>
         <h1 ref={heading} tabIndex={-1} className="font-display text-[26px] leading-tight font-bold outline-none">
           {bug.title}
         </h1>
         <p className="text-[15px] text-ink-soft">{instructions[viewOf(bug)]}</p>
-        {hintShown && (
-          <p role="note" aria-label="Indice" className="rounded-[10px] border border-lime bg-lime/8 px-3.5 py-2.5 text-sm text-ink">
-            <span className="font-bold text-lime">Indice : </span>
-            {bug.hint}
-          </p>
-        )}
       </div>
 
       {'code' in bug ? (
@@ -173,7 +157,7 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
                 aria-label="Demander un indice au canard"
                 aria-expanded={hintShown}
                 aria-controls="duck-bubble"
-                className="flex-none cursor-pointer rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime"
+                className={`flex-none cursor-pointer rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime ${hintOffered ? 'motion-safe:animate-duck-bob' : ''}`}
               >
                 <Duck mood={hintShown ? 'happy' : 'think'} size={72} />
               </button>
