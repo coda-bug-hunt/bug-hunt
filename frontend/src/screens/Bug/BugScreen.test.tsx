@@ -107,13 +107,15 @@ describe('BugScreen hint', () => {
     expect(duck.getAttribute('aria-expanded')).toBe('true')
   })
 
-  it('has an Indice button from the first second, which shows the hint under the instructions', () => {
+  it('has an Indice button next to the duck, whose bubble alone says the hint', () => {
     render(<BugScreen state={stateWith(60, hinted)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
     const button = screen.getByRole('button', { name: "Afficher l'indice" })
     expect(button.textContent).toContain('Indice')
+    expect(button.getAttribute('aria-controls')).toBe('duck-bubble')
     fireEvent.click(button)
-    expect(screen.getByRole('note', { name: 'Indice' }).textContent).toContain(hint)
-    // Shown once: the button gives way to the hint.
+    expect(document.getElementById('duck-bubble')!.textContent).toBe(hint)
+    // Said once, by the duck: no second copy elsewhere, and the button gives way.
+    expect(screen.getAllByText(hint)).toHaveLength(1)
     expect(screen.queryByRole('button', { name: "Afficher l'indice" })).toBeNull()
   })
 

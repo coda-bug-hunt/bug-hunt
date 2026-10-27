@@ -119,36 +119,16 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
       </div>
 
       <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between gap-3">
-          <span
-            className={`inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-bold tracking-[0.08em] ${bug.track === 'dev' ? 'bg-lime/14 text-lime' : 'bg-pink/14 text-pink'}`}
-          >
-            <TrackIcon track={bug.track} />
-            {bug.track === 'dev' ? 'DEV' : 'SR'} · NIVEAU {bug.difficulty}
-          </span>
-          {bug.hint && !hintShown && !verdict && (
-            // 44 px to touch, without pushing the code down: the negative margin eats the extra height.
-            <button
-              type="button"
-              onClick={() => setHintShown(true)}
-              aria-label="Afficher l'indice"
-              className="-my-2.5 flex h-11 cursor-pointer items-center gap-1.5 rounded-lg border border-lime px-3 font-display text-sm font-bold text-lime focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime"
-            >
-              <BulbIcon />
-              Indice
-            </button>
-          )}
-        </div>
+        <span
+          className={`inline-flex items-center gap-1.5 self-start rounded-md px-2.5 py-1 text-xs font-bold tracking-[0.08em] ${bug.track === 'dev' ? 'bg-lime/14 text-lime' : 'bg-pink/14 text-pink'}`}
+        >
+          <TrackIcon track={bug.track} />
+          {bug.track === 'dev' ? 'DEV' : 'SR'} · NIVEAU {bug.difficulty}
+        </span>
         <h1 ref={heading} tabIndex={-1} className="font-display text-[26px] leading-tight font-bold outline-none">
           {bug.title}
         </h1>
         <p className="text-[15px] text-ink-soft">{instructions[viewOf(bug)]}</p>
-        {hintShown && (
-          <p role="note" aria-label="Indice" className="rounded-[10px] border border-lime bg-lime/8 px-3.5 py-2.5 text-sm text-ink">
-            <span className="font-bold text-lime">Indice : </span>
-            {bug.hint}
-          </p>
-        )}
       </div>
 
       {'code' in bug ? (
@@ -184,13 +164,27 @@ function BugScreen({ state, totalBugs, onSelect, onAnswer }: BugScreenProps) {
           {step === 'line' ? (
             <TutorialTip text="Touche la ligne où se cache le bug." onDone={lineTipDone} />
           ) : (
-            <p
-              id="duck-bubble"
-              aria-live="polite"
-              className={`flex-1 rounded-2xl rounded-bl-sm border bg-surface px-3.5 py-2.5 text-sm leading-snug ${hintShown || hintOffered ? 'border-lime text-ink' : 'border-line text-ink-soft'}`}
-            >
-              {bubble}
-            </p>
+            <div className="flex flex-1 flex-col items-start gap-2">
+              <p
+                id="duck-bubble"
+                aria-live="polite"
+                className={`w-full rounded-2xl rounded-bl-sm border bg-surface px-3.5 py-2.5 text-sm leading-snug ${hintShown || hintOffered ? 'border-lime text-ink' : 'border-line text-ink-soft'}`}
+              >
+                {bubble}
+              </p>
+              {bug.hint && !hintShown && (
+                <button
+                  type="button"
+                  onClick={() => setHintShown(true)}
+                  aria-label="Afficher l'indice"
+                  aria-controls="duck-bubble"
+                  className="flex h-11 cursor-pointer items-center gap-1.5 rounded-lg border border-lime px-3 font-display text-sm font-bold text-lime focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime"
+                >
+                  <BulbIcon />
+                  Indice
+                </button>
+              )}
+            </div>
           )}
         </div>
       )}
