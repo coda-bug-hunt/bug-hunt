@@ -103,8 +103,18 @@ describe('BugScreen hint', () => {
     expect(screen.queryByText(hint)).toBeNull()
     const duck = screen.getByRole('button', { name: 'Demander un indice au canard' })
     fireEvent.click(duck)
-    expect(screen.getByText(hint)).toBeTruthy()
+    expect(screen.getAllByText(hint).length).toBeGreaterThan(0)
     expect(duck.getAttribute('aria-expanded')).toBe('true')
+  })
+
+  it('has an Indice button from the first second, which shows the hint under the instructions', () => {
+    render(<BugScreen state={stateWith(60, hinted)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
+    const button = screen.getByRole('button', { name: "Afficher l'indice" })
+    expect(button.textContent).toContain('Indice')
+    fireEvent.click(button)
+    expect(screen.getByRole('note', { name: 'Indice' }).textContent).toContain(hint)
+    // Shown once: the button gives way to the hint.
+    expect(screen.queryByRole('button', { name: "Afficher l'indice" })).toBeNull()
   })
 
   it('offers the hint after 20 seconds', () => {
@@ -117,6 +127,7 @@ describe('BugScreen hint', () => {
   it('offers nothing when the bug has no hint', () => {
     render(<BugScreen state={stateWith(30)} totalBugs={10} onSelect={() => {}} onAnswer={() => {}} />)
     expect(screen.queryByRole('button', { name: 'Demander un indice au canard' })).toBeNull()
+    expect(screen.queryByRole('button', { name: "Afficher l'indice" })).toBeNull()
     expect(screen.queryByText(/Un indice \?/)).toBeNull()
   })
 })

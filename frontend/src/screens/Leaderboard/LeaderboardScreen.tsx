@@ -1,5 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState, type Ref } from 'react'
 import { api, type GameApi, type LeaderboardEntry } from '../../api'
+import { useWakeLock } from '../../hooks/useWakeLock'
 import { music } from '../../sound/music'
 import { sound, useMuted } from '../../sound/player'
 import AffinityTag from './AffinityTag'
@@ -86,6 +87,7 @@ function LeaderboardScreen({ client = api }: { client?: GameApi }) {
   const showcase = data ? showcaseAt(now - changedAt) : null
   const rowRef = useSlidingRows(data)
   const muted = useMuted()
+  useWakeLock(true)
 
   // The stand PC has speakers: any key or click unlocks the audio and starts
   // the background music; M mutes everything.
