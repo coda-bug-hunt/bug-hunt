@@ -72,6 +72,27 @@ final class GameControllerTest extends ApiTestCase
         self::assertSame(0, self::getContainer()->get(GameRepository::class)->count());
     }
 
+    public function testANicknameTakenByAnotherDeviceIsUnavailable(): void
+    {
+        $this->request('POST', '/api/games', ['pseudo' => 'Neo42', 'deviceId' => 'device1']);
+
+        $body = $this->request('POST', '/api/games', ['pseudo' => 'NEO42', 'deviceId' => 'device2']);
+
+        self::assertResponseStatusCodeSame(400);
+        self::assertSame(['error' => 'pseudo_unavailable'], $body);
+        self::assertSame(1, self::getContainer()->get(GameRepository::class)->count());
+    }
+
+    // Same code as a taken nickname: the phone shows the same neutral message.
+    public function testABannedNicknameIsUnavailable(): void
+    {
+        $body = $this->request('POST', '/api/games', ['pseudo' => 'c0nn4rd', 'deviceId' => 'device1']);
+
+        self::assertResponseStatusCodeSame(400);
+        self::assertSame(['error' => 'pseudo_unavailable'], $body);
+        self::assertSame(0, self::getContainer()->get(PlayerRepository::class)->count());
+    }
+
     public function testRejectsAMissingDeviceId(): void
     {
         $body = $this->request('POST', '/api/games', ['pseudo' => 'Neo42']);

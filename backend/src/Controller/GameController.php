@@ -55,8 +55,14 @@ final class GameController extends AbstractController
             throw new ApiException('bad_request', Response::HTTP_BAD_REQUEST);
         }
 
-        $now = $this->now();
+        // A banned word and a taken nickname get the same answer: the phone shows
+        // one neutral message. The same device may replay with its nickname.
         $player = $this->players->findByPseudo($pseudo);
+        if (!$this->nicknames->isAllowed($pseudo) || (null !== $player && $player->getDeviceId() !== $deviceId)) {
+            throw new ApiException('pseudo_unavailable', Response::HTTP_BAD_REQUEST);
+        }
+
+        $now = $this->now();
         if (null === $player) {
             $player = new Player($pseudo, $deviceId, $now);
         } else {

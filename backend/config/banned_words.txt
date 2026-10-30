@@ -1,0 +1,96 @@
+# Banned words in nicknames (French and English), read by src/Player/NicknamePolicy.php.
+# One word per line, lowercase, letters only, written plainly: the policy undoes
+# the disguises (C0nn4rd, f_u_c_k) before comparing.
+# A word is banned anywhere inside the nickname. A word starting with "=" hides
+# in ordinary words ("con" in Conan, "cul" in Hercule): it is banned only as the
+# whole nickname or as one of its parts between -, _ or digits (le-con, cul42).
+# Adding a word? Check that tests/Player/NicknamePolicyTest.php stays green.
+
+# French
+batard
+bicot
+bougnoul
+branle
+connard
+connasse
+conasse
+couille
+encule
+enkule
+enfoire
+foutre
+gouine
+merde
+negre
+nichon
+niquetamere
+petasse
+pouffiasse
+putain
+salop
+tagueule
+tageule
+travelo
+youpin
+=bite
+=chier
+=con
+=conne
+=cul
+=fdp
+=ftg
+=mongol
+=nique
+=niquer
+=ntm
+=pd
+=pede
+=pute
+=tg
+=viol
+
+# English
+asshole
+bastard
+bitch
+dildo
+faggot
+fuck
+nigga
+nigger
+penis
+porn
+retarded
+shit
+slut
+vagina
+wanker
+whore
+=ass
+=boob
+=boobs
+=cock
+=cunt
+=fag
+=dick
+=fck
+=fuk
+=kkk
+=kys
+=pussy
+=rape
+=rapist
+=retard
+=sex
+=sexe
+=sexy
+=tits
+=twat
+=wank
+
+# Hate
+hitler
+neonazi
+=heil
+=nazi
+=nazis
