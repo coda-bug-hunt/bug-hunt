@@ -18,9 +18,10 @@ help: ## Affiche cette aide
 
 ## ---- Démarrage ----
 
+# sed -i.bak : la seule forme comprise par le sed de macOS (BSD) et celui de Linux (GNU).
 .env:
 	cp .env.example .env
-	sed -i "s/^APP_SECRET=.*/APP_SECRET=$$(openssl rand -hex 16)/" .env
+	sed -i.bak "s/^APP_SECRET=.*/APP_SECRET=$$(openssl rand -hex 16)/" .env && rm .env.bak
 
 install: .env build up ## Première installation : build, démarrage, dépendances, base de données
 	$(PHP) composer install
