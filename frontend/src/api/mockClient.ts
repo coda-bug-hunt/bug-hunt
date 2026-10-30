@@ -148,6 +148,7 @@ export function createMockClient(options: MockClientOptions = {}): GameApi {
         bug: publicBugOf(bug),
         timeLimit: TIME_LIMIT,
         remainingSeconds: Math.max(0, Math.ceil(TIME_LIMIT - elapsed)),
+        score: scoreOf(game.byTrack),
       }
     },
 

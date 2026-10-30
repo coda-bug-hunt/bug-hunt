@@ -75,7 +75,7 @@ final class GameController extends AbstractController
         );
     }
 
-    // GET /api/games/{id}/next: the current bug, without its answer. 204 once the game is over.
+    // GET /api/games/{id}/next: the current bug, without its answer, and the score so far. 204 once the game is over.
     #[Route('/{id}/next', methods: ['GET'])]
     public function next(string $id, Request $request): Response
     {
@@ -100,6 +100,8 @@ final class GameController extends AbstractController
             'bug' => $bug->toPublic($game->getChoiceOrder($bug->id)),
             'timeLimit' => Timer::TIME_LIMIT,
             'remainingSeconds' => Timer::remainingSeconds((int) $game->getCurrentSentAt(), $now),
+            // Points so far: a reload in the middle of a game shows the right score at once.
+            'score' => $game->getScore(),
         ]);
     }
 

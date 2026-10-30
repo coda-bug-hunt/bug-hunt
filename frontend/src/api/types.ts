@@ -94,6 +94,8 @@ export type NextBugResponse = {
   bug: PublicBug
   timeLimit: number
   remainingSeconds: number
+  // Points so far: a reload in the middle of a game shows the right score at once.
+  score: number
 }
 
 // --- POST /api/games/{gameId}/selection ---

@@ -56,6 +56,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         phase: 'playing',
         current: action.next,
         endTime: endTimeFrom(action.next.remainingSeconds, action.now),
+        score: action.next.score,
         selected: null,
         verdict: null,
         answer: null,

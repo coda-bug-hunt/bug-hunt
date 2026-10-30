@@ -95,10 +95,11 @@ final class GameControllerTest extends ApiTestCase
         $body = $this->request('GET', "/api/games/{$game['gameId']}/next", token: $game['token']);
 
         self::assertResponseIsSuccessful();
-        self::assertSame(['index', 'bug', 'timeLimit', 'remainingSeconds'], array_keys($body));
+        self::assertSame(['index', 'bug', 'timeLimit', 'remainingSeconds', 'score'], array_keys($body));
         self::assertSame(0, $body['index']);
         self::assertSame(60, $body['timeLimit']);
         self::assertSame(60, $body['remainingSeconds']);
+        self::assertSame(0, $body['score']);
         self::assertSame('dev-001', $body['bug']['id']);
         self::assertSame(['total = price - shipping', 'print(total)'], $body['bug']['code']);
         self::assertSame('Regarde le signe entre le prix et les frais.', $body['bug']['hint']);
@@ -135,6 +136,18 @@ final class GameControllerTest extends ApiTestCase
         foreach (self::SECRET_FIELDS as $secret) {
             self::assertArrayNotHasKey($secret, $bug);
         }
+    }
+
+    // A reload in the middle of a game shows the right score at once (#116).
+    public function testServesTheScoreSoFarWithTheBug(): void
+    {
+        $this->saveGame((new Game('game1', 'token1', 'Neo42', 'device1', ['dev-001', 'net-001', 'dev-002'], 0))
+            ->setCurrentIndex(2)->setDevPoints(100)->setNetworkPoints(100));
+
+        $body = $this->request('GET', '/api/games/game1/next', token: 'token1');
+
+        self::assertSame(2, $body['index']);
+        self::assertSame(200, $body['score']);
     }
 
     public function testCallingNextAgainDoesNotRestartTheTimer(): void
