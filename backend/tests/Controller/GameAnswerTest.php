@@ -157,10 +157,28 @@ final class GameAnswerTest extends ApiTestCase
         self::assertSame(1, $this->game()->getCurrentIndex());
     }
 
+    public function testARightAnswerAt30SecondsScores(): void
+    {
+        $this->request('GET', '/api/games/game1/next', token: 'token1');
+        $this->clock->sleep(30);
+        $this->select(['bugId' => 'dev-001', 'selectedLine' => 0]);
+
+        self::assertSame(100, $this->answer(['bugId' => 'dev-001', 'choice' => 0])['points']);
+    }
+
+    public function testARightAnswerJustAfterTheLimitScoresWithTheGrace(): void
+    {
+        $this->request('GET', '/api/games/game1/next', token: 'token1');
+        $this->clock->sleep(61);
+        $this->select(['bugId' => 'dev-001', 'selectedLine' => 0]);
+
+        self::assertSame(100, $this->answer(['bugId' => 'dev-001', 'choice' => 0])['points']);
+    }
+
     public function testARightAnswerAfterTheTimeLimitScoresNothing(): void
     {
         $this->request('GET', '/api/games/game1/next', token: 'token1');
-        $this->clock->sleep(65);
+        $this->clock->sleep(63);
         $this->select(['bugId' => 'dev-001', 'selectedLine' => 0]);
 
         $body = $this->answer(['bugId' => 'dev-001', 'choice' => 0]);

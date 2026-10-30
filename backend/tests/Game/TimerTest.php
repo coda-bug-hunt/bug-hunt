@@ -27,10 +27,12 @@ final class TimerTest extends TestCase
         yield 'never negative' => [90_000, 0];
     }
 
-    public function testTheTimeIsOverAfterTheLimit(): void
+    // 2 seconds of grace for network delay: an answer counts up to 62 s.
+    public function testTheTimeIsOverAfterTheLimitAndItsGrace(): void
     {
         self::assertFalse(Timer::isOver(10_000, 10_000 + 30_000));
-        self::assertFalse(Timer::isOver(10_000, 10_000 + 60_000));
-        self::assertTrue(Timer::isOver(10_000, 10_000 + 60_001));
+        self::assertFalse(Timer::isOver(10_000, 10_000 + 61_000));
+        self::assertFalse(Timer::isOver(10_000, 10_000 + 62_000));
+        self::assertTrue(Timer::isOver(10_000, 10_000 + 62_001));
     }
 }

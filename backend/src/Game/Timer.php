@@ -10,6 +10,9 @@ final class Timer
 {
     public const TIME_LIMIT = 60;
 
+    // Network delay: an answer sent on screen at 60 s may reach the server a little later.
+    public const GRACE_SECONDS = 2;
+
     // Whole seconds left, rounded up, never below 0.
     public static function remainingSeconds(int $sentAt, int $now): int
     {
@@ -18,9 +21,9 @@ final class Timer
         return max(0, (int) ceil(self::TIME_LIMIT - $elapsed));
     }
 
-    // An answer after the limit scores 0. The 2-second grace for network delay comes with #28.
+    // An answer after the limit and its grace scores 0.
     public static function isOver(int $sentAt, int $now): bool
     {
-        return $now - $sentAt > self::TIME_LIMIT * 1000;
+        return $now - $sentAt > (self::TIME_LIMIT + self::GRACE_SECONDS) * 1000;
     }
 }
