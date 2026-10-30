@@ -18,7 +18,7 @@ describe('testBugClient', () => {
   it('serves the bug once, as a player sees it, without its answer', async () => {
     const client = createTestBugClient(lines)
     const next = await client.nextBug(TEST_SESSION)
-    expect(next).toMatchObject({ index: 0, timeLimit: 60, remainingSeconds: 60 })
+    expect(next).toMatchObject({ index: 0, timeLimit: 60, remainingSeconds: 60, score: 0 })
     expect(next!.bug).toMatchObject({ id: 'net-006', view: 'terminal', code: lines.code, hint: 'Regarde le câble.' })
     for (const secret of ['bugLine', 'answer', 'explanation']) expect(next!.bug).not.toHaveProperty(secret)
 

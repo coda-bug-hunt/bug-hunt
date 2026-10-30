@@ -10,6 +10,7 @@ const next: NextBugResponse = {
   index: 2,
   timeLimit: 60,
   remainingSeconds: 42,
+  score: 0,
   bug: {
     id: 'bug-2', track: 'dev', difficulty: 1, points: 200, title: 'Les 18 ans sont refusés',
     code: ['return age > 18;'], choices: ['a', 'b', 'c'],

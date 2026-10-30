@@ -20,7 +20,7 @@ export function createTestBugClient(bug: FullBug): GameApi {
     async nextBug() {
       if (answered) return null
       served = true
-      return { index: 0, bug: publicBugOf(bug), timeLimit: TIME_LIMIT, remainingSeconds: TIME_LIMIT }
+      return { index: 0, bug: publicBugOf(bug), timeLimit: TIME_LIMIT, remainingSeconds: TIME_LIMIT, score: 0 }
     },
 
     async select(_session, request) {

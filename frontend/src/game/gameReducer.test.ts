@@ -2,13 +2,13 @@ import { describe, expect, it } from 'vitest'
 import type { AnswerResponse, NextBugResponse, PublicBug } from '../api'
 import { gameReducer, initialGameState } from './gameReducer'
 
-function nextBug(index: number, track: PublicBug['track']): NextBugResponse {
+function nextBug(index: number, track: PublicBug['track'], score = 0): NextBugResponse {
   const base = { id: `bug-${index}`, difficulty: 0 as const, points: 100, title: 'Titre', choices: ['a', 'b', 'c'] as [string, string, string] }
   const bug: PublicBug =
     track === 'dev'
       ? { ...base, track: 'dev', code: ['line'] }
       : { ...base, track: 'network', diagram: { devices: [], links: [] } }
-  return { index, bug, timeLimit: 60, remainingSeconds: 42 }
+  return { index, bug, timeLimit: 60, remainingSeconds: 42, score }
 }
 
 const answer: AnswerResponse = {
@@ -27,9 +27,14 @@ describe('gameReducer', () => {
     state = gameReducer(state, { type: 'answered', answer })
     expect(state).toMatchObject({ phase: 'feedback', score: 50 })
 
-    state = gameReducer(state, { type: 'bugLoaded', next: nextBug(1, 'network'), now: 0 })
+    state = gameReducer(state, { type: 'bugLoaded', next: nextBug(1, 'network', 50), now: 0 })
     expect(state).toMatchObject({ phase: 'playing', selected: null, verdict: null, answer: null, score: 50 })
     expect(state.tracks).toEqual(['dev', 'network'])
+  })
+
+  it('takes the score from the server when a reload resumes a game', () => {
+    const state = gameReducer(initialGameState, { type: 'bugLoaded', next: nextBug(4, 'dev', 350), now: 0 })
+    expect(state.score).toBe(350)
   })
 
   it('ends the game', () => {

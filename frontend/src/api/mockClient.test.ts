@@ -137,6 +137,17 @@ describe('scoring', () => {
     expect(again!.bug.id).toBe(first!.bug.id)
     expect(again!.remainingSeconds).toBe(40)
   })
+
+  it('sends the score so far with each bug', async () => {
+    const api = createMockClient()
+    const session = await start(api)
+    const first = await api.nextBug(session)
+    expect(first!.score).toBe(0)
+    const bug = fullBug(first!.bug)
+    await api.select(session, rightSelection(bug))
+    const answer = await api.answer(session, { bugId: bug.id, choice: bug.answer })
+    expect((await api.nextBug(session))!.score).toBe(answer.score)
+  })
 })
 
 describe('errors', () => {
