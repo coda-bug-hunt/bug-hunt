@@ -50,9 +50,23 @@ describe('EndScreen', () => {
     expect(screen.getByText(message)).toBeTruthy()
   })
 
+  it.each([
+    ['dev', 'Bachelor Développeur Web Fullstack', 'bachelor-developpeur-web-avignon'],
+    ['network', 'Bachelor Systèmes et Réseaux', 'bachelor-administrateur-systemes-et-reseaux-avignon'],
+    ['both', 'Bachelor Informatique', 'bachelor-informatique-avignon'],
+  ] as const)('points %s to its Coda Avignon program, in a new tab', (affinity, program, page) => {
+    renderEnd({ affinity })
+    const link = screen.getByRole('link', { name: new RegExp(program) })
+    expect(link.getAttribute('href')).toBe(`https://www.coda.school/formation-campus/${page}`)
+    expect(link.getAttribute('target')).toBe('_blank')
+    expect(link.getAttribute('rel')).toBe('noopener noreferrer')
+    expect(link.textContent).toMatch(/nouvel onglet/)
+  })
+
   it('hides the affinity block in dev-only mode', () => {
     renderEnd({ affinity: null })
     expect(screen.queryByText('TON PROFIL')).toBeNull()
+    expect(screen.queryByRole('link')).toBeNull()
   })
 
   it('replays', async () => {

@@ -6,13 +6,21 @@ import { sound } from '../../sound/player'
 import { formatScore, rankText } from './endFormat'
 
 // Drafts, to be validated by the team (#37).
-const affinities: Record<Affinity, { title: string; tracks: Track[]; border: string; text: string; message: string }> = {
+type AffinityText = { title: string; tracks: Track[]; border: string; text: string; message: string; program: string; page: string }
+
+// The matching program on the Avignon campus (#139). "both" goes to the
+// Bachelor Informatique, where students pick dev or systems in 3rd year.
+const PROGRAMS_URL = 'https://www.coda.school/formation-campus/'
+
+const affinities: Record<Affinity, AffinityText> = {
   dev: {
     title: 'Dev',
     tracks: ['dev'],
     border: 'border-lime',
     text: 'text-lime',
     message: "Tu lis le code comme un livre et tu repères vite ce qui cloche. Viens en discuter avec l'équipe dev sur le stand.",
+    program: 'Bachelor Développeur Web Fullstack',
+    page: 'bachelor-developpeur-web-avignon',
   },
   network: {
     title: 'SR',
@@ -20,6 +28,8 @@ const affinities: Record<Affinity, { title: string; tracks: Track[]; border: str
     border: 'border-pink',
     text: 'text-pink',
     message: "Tu as l'œil pour repérer les machines qui ne se parlent pas. Viens en discuter avec l'équipe réseau sur le stand.",
+    program: 'Bachelor Systèmes et Réseaux',
+    page: 'bachelor-administrateur-systemes-et-reseaux-avignon',
   },
   both: {
     title: 'Polyvalent',
@@ -27,6 +37,8 @@ const affinities: Record<Affinity, { title: string; tracks: Track[]; border: str
     border: 'border-ink',
     text: 'text-ink',
     message: "Code ou réseau, tu t'en sors des deux côtés. Viens découvrir les deux filières sur le stand.",
+    program: 'Bachelor Informatique',
+    page: 'bachelor-informatique-avignon',
   },
 }
 
@@ -45,6 +57,21 @@ function TrackBar({ track, percent }: { track: Track; percent: number }) {
         <div className={`h-2.5 rounded-[5px] ${dev ? 'bg-lime' : 'bg-pink'}`} style={{ width: `${percent}%` }} />
       </div>
     </div>
+  )
+}
+
+function ProgramLink({ affinity }: { affinity: AffinityText }) {
+  return (
+    <a
+      href={PROGRAMS_URL + affinity.page}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`-my-3 self-start py-3 text-[15px] leading-snug font-bold underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current ${affinity.text}`}
+    >
+      Découvrir le {affinity.program} à Coda Avignon{'\u00a0'}
+      <span aria-hidden="true">↗</span>
+      <span className="sr-only">(nouvel onglet)</span>
+    </a>
   )
 }
 
@@ -88,6 +115,7 @@ function EndScreen({ pseudo, result, onReplay }: EndScreenProps) {
           <TrackBar track="dev" percent={result.percentByTrack.dev} />
           <TrackBar track="network" percent={result.percentByTrack.network} />
           <p className="text-[15px] leading-normal text-ink-soft">{affinity.message}</p>
+          <ProgramLink affinity={affinity} />
         </section>
       )}
 
