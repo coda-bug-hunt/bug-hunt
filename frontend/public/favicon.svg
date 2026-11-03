@@ -1,0 +1,14 @@
+<!-- The duck mascot at rest (src/components/Duck.tsx, mood "idle"), still.
+     Colours are the @theme tokens of src/index.css: a favicon cannot use Tailwind classes. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="4 4 108 108">
+  <path d="M28 80 C28 64 42 58 60 62 C72 64 82 62 90 54 C98 47 108 54 106 68 C104 90 88 104 64 104 C42 104 28 94 28 80 Z" fill="#8B5CFF"/>
+  <ellipse cx="60" cy="90" rx="22" ry="9" fill="#FFFFFF" opacity="0.1"/>
+  <path d="M50 21 C47 12 53 8 57 13 C58 6 66 7 63 15 C68 13 71 18 65 21 Z" fill="#6A35F0"/>
+  <circle cx="50" cy="45" r="25" fill="#8B5CFF"/>
+  <path d="M62 78 C70 72 84 74 88 84 C80 92 68 92 62 86 Z" fill="#6A35F0"/>
+  <path d="M27 47 C19 44 11 46 9 51 C12 57 21 58 29 55 Z" fill="#DDF849"/>
+  <ellipse cx="45" cy="42" rx="8" ry="9" fill="#FFFFFF"/>
+  <circle cx="43" cy="43" r="5" fill="#0A0A1F"/>
+  <circle cx="41.5" cy="41" r="1.8" fill="#FFFFFF"/>
+  <ellipse cx="58" cy="55" rx="6" ry="3.5" fill="#FFAEFE" opacity="0.75"/>
+</svg>
