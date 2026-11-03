@@ -51,16 +51,19 @@ describe('EndScreen', () => {
   })
 
   it.each([
-    ['dev', 'Bachelor Développeur Web Fullstack', 'bachelor-developpeur-web-avignon'],
-    ['network', 'Bachelor Systèmes et Réseaux', 'bachelor-administrateur-systemes-et-reseaux-avignon'],
-    ['both', 'Bachelor Informatique', 'bachelor-informatique-avignon'],
-  ] as const)('points %s to its Coda Avignon program, in a new tab', (affinity, program, page) => {
+    ['dev', /spé Dev Full Stack/],
+    ['network', /spé Systèmes et Réseaux/],
+    ['both', /spé Dev ou Systèmes et Réseaux/],
+  ] as const)('shows %s the way in at Coda Avignon, with its 3rd-year specialisation', (affinity, speciality) => {
     renderEnd({ affinity })
-    const link = screen.getByRole('link', { name: new RegExp(program) })
-    expect(link.getAttribute('href')).toBe(`https://www.coda.school/formation-campus/${page}`)
-    expect(link.getAttribute('target')).toBe('_blank')
-    expect(link.getAttribute('rel')).toBe('noopener noreferrer')
-    expect(link.textContent).toMatch(/nouvel onglet/)
+    const tile = screen.getByRole('link', { name: /Bachelor Informatique/ })
+    expect(tile.getAttribute('href')).toBe('https://www.coda.school/formation-campus/bachelor-informatique-avignon')
+    expect(tile.getAttribute('target')).toBe('_blank')
+    expect(tile.getAttribute('rel')).toBe('noopener noreferrer')
+    expect(tile.textContent).toMatch(/Après le bac/)
+    expect(tile.textContent).toMatch(speciality)
+    expect(tile.textContent).toMatch(/Voir la formation/)
+    expect(tile.textContent).toMatch(/nouvel onglet/)
   })
 
   it('hides the affinity block in dev-only mode', () => {

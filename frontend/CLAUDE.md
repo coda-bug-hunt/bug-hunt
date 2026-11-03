@@ -51,6 +51,7 @@ Inside the player view, game steps (home, bug, feedback, end) are React state, n
 
 - Mobile first: design at 390px wide, then check a small phone (360 x 640):
   the main action stays visible without scrolling. Touch targets at least 44px (min-h-11).
+  To tighten a screen on small phones only, use the `short:` variant (max-height 700px, in src/index.css).
 - Real elements: button, a, input with label. No click handlers on divs.
 - All API calls go through the client in src/api/. Components never call fetch.
 - The client never knows the right answer before the player answers.

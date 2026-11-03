@@ -4,13 +4,10 @@ import Duck from '../../components/Duck'
 import TrackIcon from '../../components/TrackIcon'
 import { sound } from '../../sound/player'
 import { formatScore, rankText } from './endFormat'
+import ProgramTile from './ProgramTile'
 
 // Drafts, to be validated by the team (#37).
-type AffinityText = { title: string; tracks: Track[]; border: string; text: string; message: string; program: string; page: string }
-
-// The matching program on the Avignon campus (#139). "both" goes to the
-// Bachelor Informatique, where students pick dev or systems in 3rd year.
-const PROGRAMS_URL = 'https://www.coda.school/formation-campus/'
+type AffinityText = { title: string; tracks: Track[]; border: string; text: string; fill: string; message: string; speciality: string }
 
 const affinities: Record<Affinity, AffinityText> = {
   dev: {
@@ -18,27 +15,27 @@ const affinities: Record<Affinity, AffinityText> = {
     tracks: ['dev'],
     border: 'border-lime',
     text: 'text-lime',
+    fill: 'bg-lime',
     message: "Tu lis le code comme un livre et tu repères vite ce qui cloche. Viens en discuter avec l'équipe dev sur le stand.",
-    program: 'Bachelor Développeur Web Fullstack',
-    page: 'bachelor-developpeur-web-avignon',
+    speciality: 'Dev Full Stack',
   },
   network: {
     title: 'SR',
     tracks: ['network'],
     border: 'border-pink',
     text: 'text-pink',
+    fill: 'bg-pink',
     message: "Tu as l'œil pour repérer les machines qui ne se parlent pas. Viens en discuter avec l'équipe réseau sur le stand.",
-    program: 'Bachelor Systèmes et Réseaux',
-    page: 'bachelor-administrateur-systemes-et-reseaux-avignon',
+    speciality: 'Systèmes et Réseaux',
   },
   both: {
     title: 'Polyvalent',
     tracks: ['dev', 'network'],
     border: 'border-ink',
     text: 'text-ink',
+    fill: 'bg-ink',
     message: "Code ou réseau, tu t'en sors des deux côtés. Viens découvrir les deux filières sur le stand.",
-    program: 'Bachelor Informatique',
-    page: 'bachelor-informatique-avignon',
+    speciality: 'Dev ou Systèmes et Réseaux',
   },
 }
 
@@ -60,21 +57,6 @@ function TrackBar({ track, percent }: { track: Track; percent: number }) {
   )
 }
 
-function ProgramLink({ affinity }: { affinity: AffinityText }) {
-  return (
-    <a
-      href={PROGRAMS_URL + affinity.page}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`-my-3 self-start py-3 text-[15px] leading-snug font-bold underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current ${affinity.text}`}
-    >
-      Découvrir le {affinity.program} à Coda Avignon{'\u00a0'}
-      <span aria-hidden="true">↗</span>
-      <span className="sr-only">(nouvel onglet)</span>
-    </a>
-  )
-}
-
 type EndScreenProps = {
   pseudo: string
   result: GameResult
@@ -90,9 +72,12 @@ function EndScreen({ pseudo, result, onReplay }: EndScreenProps) {
   }, [])
 
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-[18px] px-5 pt-7 pb-6">
+    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col gap-[18px] px-5 pt-7 pb-6 short:gap-3 short:pt-4 short:pb-3">
       <div className="flex items-center gap-3">
-        <Duck mood="party" size={104} />
+        {/* CSS sizes override the svg attributes: a smaller duck on small phones. */}
+        <div className="shrink-0 short:[&>svg]:size-20">
+          <Duck mood="party" size={104} />
+        </div>
         <div className="flex flex-col gap-1">
           <span className="font-mono text-[13px] text-muted">Partie terminée · {pseudo}</span>
           <div className="flex items-baseline gap-1.5 font-mono">
@@ -104,7 +89,7 @@ function EndScreen({ pseudo, result, onReplay }: EndScreenProps) {
       </div>
 
       {affinity && (
-        <section className={`flex flex-col gap-4 rounded-2xl border-2 bg-surface p-5 ${affinity.border}`}>
+        <section className={`flex flex-col gap-4 rounded-2xl border-2 bg-surface p-5 short:gap-3 short:p-4 ${affinity.border}`}>
           <span className="text-xs font-bold tracking-[0.08em] text-muted">TON PROFIL</span>
           <h1 className={`flex items-center gap-2.5 font-display text-4xl font-bold ${affinity.text}`}>
             {affinity.tracks.map((track) => (
@@ -115,7 +100,7 @@ function EndScreen({ pseudo, result, onReplay }: EndScreenProps) {
           <TrackBar track="dev" percent={result.percentByTrack.dev} />
           <TrackBar track="network" percent={result.percentByTrack.network} />
           <p className="text-[15px] leading-normal text-ink-soft">{affinity.message}</p>
-          <ProgramLink affinity={affinity} />
+          <ProgramTile speciality={affinity.speciality} accent={affinity.fill} />
         </section>
       )}
 
@@ -123,7 +108,7 @@ function EndScreen({ pseudo, result, onReplay }: EndScreenProps) {
         type="button"
         onClick={onReplay}
         autoFocus
-        className="mt-auto h-14 cursor-pointer rounded-xl bg-lime font-display text-[17px] font-bold text-night focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime"
+        className="mt-auto h-14 shrink-0 cursor-pointer short:h-12 rounded-xl bg-lime font-display text-[17px] font-bold text-night focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime"
       >
         Rejouer
       </button>

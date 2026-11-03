@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Small phones (360 x 640 and below): tighter spacing so the main action stays on screen. */
+@custom-variant short (@media (max-height: 700px));
+
 /* Coda brand tokens, from the "Coda" mockup variant */
 @theme {
   --color-night: #1E0D39;
