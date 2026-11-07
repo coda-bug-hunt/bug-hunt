@@ -4,6 +4,7 @@ namespace App\Tests\Repository;
 
 use App\Entity\Game;
 use App\Entity\Player;
+use App\Repository\GameRepository;
 use App\Repository\PlayerRepository;
 use App\Tests\DatabaseTestCase;
 
@@ -118,6 +119,42 @@ final class PlayerRepositoryTest extends DatabaseTestCase
     public function testHidingAnUnknownPlayerFails(): void
     {
         self::assertFalse($this->players->setHidden('Ghost', true));
+    }
+
+    public function testDeleteAPlayerAndTheirGames(): void
+    {
+        $games = self::getContainer()->get(GameRepository::class);
+        $this->players->save(new Player('Neo42', 'device1', 1_000));
+        $this->players->save(new Player('Pixel', 'device2', 1_000));
+        $games->save(new Game('game1', 'token1', 'Neo42', 'device1', [], 1_000));
+        $games->save(new Game('game2', 'token2', 'NEO42', 'device1', [], 2_000));
+        $games->save(new Game('game3', 'token3', 'Pixel', 'device2', [], 1_000));
+
+        self::assertTrue($this->players->delete('neo42'));
+        $this->reload();
+
+        self::assertNull($this->players->findByPseudo('Neo42'));
+        self::assertNotNull($this->players->findByPseudo('Pixel'));
+        self::assertSame(['game3'], array_map(fn (Game $game): string => $game->getId(), $games->findAll()));
+    }
+
+    public function testDeletingAnUnknownPlayerFails(): void
+    {
+        self::assertFalse($this->players->delete('Ghost'));
+    }
+
+    public function testDeleteEveryPlayerAndEveryGame(): void
+    {
+        $games = self::getContainer()->get(GameRepository::class);
+        $this->players->save(new Player('Neo42', 'device1', 1_000));
+        $this->players->save(new Player('Pixel', 'device2', 1_000));
+        $games->save(new Game('game1', 'token1', 'Neo42', 'device1', [], 1_000));
+
+        self::assertSame(['games' => 1, 'players' => 2], $this->players->deleteAll());
+        $this->reload();
+
+        self::assertSame(0, $games->count());
+        self::assertSame(0, $this->players->count());
     }
 
     public function testLatestPlayersComeFirst(): void

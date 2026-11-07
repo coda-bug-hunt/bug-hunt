@@ -117,6 +117,60 @@ final class AdminControllerTest extends ApiTestCase
         self::assertFalse($this->players->findByPseudo('Neo42')?->isHidden());
     }
 
+    // Done when of #156: out of the top and the gauges, the nickname free for another device.
+    public function testADeletedPlayerLeavesTheBoardAndFreesTheNickname(): void
+    {
+        $this->finish('Neo42', 900, 1250, 'network');
+        $this->finish('Pixel', 1300, 1050, 'dev');
+
+        $this->admin('DELETE', '/api/admin/players/NEO42');
+        self::assertResponseStatusCodeSame(204);
+        $board = $this->request('GET', '/api/leaderboard');
+
+        self::assertSame(['Pixel'], array_column($board['top'], 'pseudo'));
+        self::assertSame(['dev' => 1, 'network' => 0], $board['gauges']);
+        self::assertSame(1, $board['gamesPlayed']);
+
+        $this->request('POST', '/api/games', ['pseudo' => 'Neo42', 'deviceId' => 'device2']);
+        self::assertResponseStatusCodeSame(201);
+    }
+
+    public function testDeletingAnUnknownPlayer(): void
+    {
+        $body = $this->admin('DELETE', '/api/admin/players/Ghost');
+
+        self::assertResponseStatusCodeSame(404);
+        self::assertSame(['error' => 'unknown_player'], $body);
+    }
+
+    public function testDeleteEveryPlayer(): void
+    {
+        $this->finish('Neo42', 900, 1250, 'network');
+        $this->finish('Pixel', 1300, 1050, 'dev');
+
+        $this->admin('DELETE', '/api/admin/players');
+        self::assertResponseStatusCodeSame(204);
+
+        self::assertSame(['players' => []], $this->admin('GET', '/api/admin/players'));
+        $board = $this->request('GET', '/api/leaderboard');
+        self::assertSame([[], 0], [$board['top'], $board['gamesPlayed']]);
+    }
+
+    public function testDeletingNeedsThePin(): void
+    {
+        $this->players->save(new Player('Neo42', 'device1', 1_000));
+
+        foreach (['/api/admin/players/Neo42', '/api/admin/players/Ghost', '/api/admin/players'] as $uri) {
+            foreach (['wrong', null, ''] as $pin) {
+                $body = $this->admin('DELETE', $uri, pin: $pin);
+                self::assertResponseStatusCodeSame(401);
+                self::assertSame(['error' => 'bad_pin'], $body);
+            }
+        }
+        $this->reload();
+        self::assertNotNull($this->players->findByPseudo('Neo42'));
+    }
+
     public function testListsEveryBug(): void
     {
         $body = $this->admin('GET', '/api/admin/bugs');
