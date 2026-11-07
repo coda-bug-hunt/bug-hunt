@@ -72,6 +72,8 @@ Types: `frontend/src/api/types.ts`. Game routes need `Authorization: Bearer <tok
 | GET | `/api/leaderboard` | – | 200 `top` (10: `rank`, `pseudo`, `score`, `affinity`, `byTrack`), `gauges` (`dev`, `network`), `gamesPlayed` |
 | GET | `/api/admin/players` | header `X-Admin-Pin` | 200 `players` (50 latest: `pseudo`, `bestScore`, `affinity`, `hidden`, `lastPlayedAt`) · 401 `bad_pin` |
 | PATCH | `/api/admin/players/{pseudo}` | `hidden`, header `X-Admin-Pin` | 204 · 401 `bad_pin` · 404 `unknown_player` |
+| DELETE | `/api/admin/players/{pseudo}` | header `X-Admin-Pin` | 204, the player and all their games deleted · 401 `bad_pin` · 404 `unknown_player` |
+| DELETE | `/api/admin/players` | header `X-Admin-Pin` | 204, every player and every game deleted · 401 `bad_pin` |
 | GET | `/api/admin/bugs` | header `X-Admin-Pin` | 200 `bugs` (all, by id: `id`, `track`, `difficulty`, `title`, `view`) · 401 `bad_pin` |
 | GET | `/api/admin/bugs/{id}` | header `X-Admin-Pin` | 200 `bug`, whole, answer included (test tool, no score) · 401 `bad_pin` · 404 `unknown_bug` |
 

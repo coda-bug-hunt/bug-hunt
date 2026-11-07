@@ -175,6 +175,9 @@ export type SetHiddenRequest = {
   hidden: boolean
 }
 
+// DELETE /api/admin/players/{pseudo}: the player and all their games, answers 204.
+// DELETE /api/admin/players: every player and every game, answers 204. No body either way.
+
 // GET /api/admin/bugs: every bug, sorted by id. `view` is always named.
 export type AdminBugSummary = {
   id: string

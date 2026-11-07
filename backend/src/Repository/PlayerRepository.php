@@ -121,6 +121,38 @@ class PlayerRepository extends ServiceEntityRepository
     }
 
     /**
+     * Deletes the player and every game played under their nickname, whatever
+     * its case. False when the nickname is unknown.
+     */
+    public function delete(string $pseudo): bool
+    {
+        $key = Player::keyOf($pseudo);
+
+        return $this->getEntityManager()->wrapInTransaction(function ($em) use ($key): bool {
+            $em->createQuery('DELETE FROM '.Game::class.' g WHERE LOWER(g.pseudo) = :key')
+                ->setParameter('key', $key)
+                ->execute();
+
+            return 1 === $em->createQuery('DELETE FROM '.Player::class.' p WHERE p.pseudoKey = :key')
+                ->setParameter('key', $key)
+                ->execute();
+        });
+    }
+
+    /**
+     * Deletes every game and every player.
+     *
+     * @return array{games: int, players: int} How many were deleted
+     */
+    public function deleteAll(): array
+    {
+        return $this->getEntityManager()->wrapInTransaction(fn ($em): array => [
+            'games' => $em->createQuery('DELETE FROM '.Game::class)->execute(),
+            'players' => $em->createQuery('DELETE FROM '.Player::class)->execute(),
+        ]);
+    }
+
+    /**
      * @return list<Player> The players who played last, most recent first.
      */
     public function latest(int $limit): array

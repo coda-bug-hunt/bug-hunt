@@ -2,9 +2,7 @@
 
 namespace App\Command;
 
-use App\Entity\Game;
-use App\Entity\Player;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\PlayerRepository;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -15,7 +13,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand(name: 'app:reset-scores', description: 'Delete every game and every player')]
 final class ResetScoresCommand extends Command
 {
-    public function __construct(private readonly EntityManagerInterface $em)
+    public function __construct(private readonly PlayerRepository $players)
     {
         parent::__construct();
     }
@@ -30,10 +28,9 @@ final class ResetScoresCommand extends Command
             return Command::FAILURE;
         }
 
-        $games = $this->em->createQuery('DELETE FROM '.Game::class)->execute();
-        $players = $this->em->createQuery('DELETE FROM '.Player::class)->execute();
+        $deleted = $this->players->deleteAll();
 
-        $io->success(\sprintf('Deleted %d games and %d players.', $games, $players));
+        $io->success(\sprintf('Deleted %d games and %d players.', $deleted['games'], $deleted['players']));
 
         return Command::SUCCESS;
     }

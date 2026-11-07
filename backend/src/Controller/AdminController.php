@@ -14,8 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
- * Admin view: a team member hides a nickname from the big screen, from a phone,
- * or plays any bug to test it. Every route needs the X-Admin-Pin header, checked
+ * Admin view: a team member hides or deletes a nickname, from a phone, or plays
+ * any bug to test it. Every route needs the X-Admin-Pin header, checked
  * before anything else.
  */
 #[Route('/api/admin', format: 'json')]
@@ -64,6 +64,29 @@ final class AdminController extends AbstractController
         if (!$this->players->setHidden($pseudo, $hidden)) {
             throw new ApiException('unknown_player', Response::HTTP_NOT_FOUND);
         }
+
+        return new Response(status: Response::HTTP_NO_CONTENT);
+    }
+
+    // DELETE /api/admin/players/{pseudo}: deletes the player and their games. A game in progress gets unknown_game.
+    #[Route('/players/{pseudo}', methods: ['DELETE'])]
+    public function delete(string $pseudo, Request $request): Response
+    {
+        $this->checkPin($request);
+
+        if (!$this->players->delete($pseudo)) {
+            throw new ApiException('unknown_player', Response::HTTP_NOT_FOUND);
+        }
+
+        return new Response(status: Response::HTTP_NO_CONTENT);
+    }
+
+    // DELETE /api/admin/players: deletes every player and every game, like app:reset-scores.
+    #[Route('/players', methods: ['DELETE'])]
+    public function deleteAll(Request $request): Response
+    {
+        $this->checkPin($request);
+        $this->players->deleteAll();
 
         return new Response(status: Response::HTTP_NO_CONTENT);
     }
