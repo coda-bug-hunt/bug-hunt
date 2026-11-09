@@ -1,8 +1,41 @@
 # Bug Hunt
 
-A web game for Coda's open day (November 7, 2026): visitors find and fix bugs
-in simplified code or network setups, then discover whether they lean towards
-development or networking. A live leaderboard is shown on a big screen.
+A web game built for Coda's open day (November 7, 2026). Visitors scan a QR code,
+find and fix bugs in short code snippets or network diagrams on their phone, then
+discover whether they lean towards development or networking. A live leaderboard
+runs on a big screen at the stand.
+
+<p>
+  <img src="docs/screenshots/bug.png" width="240" alt="A bug to find on a phone: three lines of code, a countdown and the duck mascot">
+  <img src="docs/screenshots/feedback.png" width="240" alt="The feedback after an answer: the fix shown as a code review diff">
+</p>
+<img src="docs/screenshots/leaderboard.png" width="730" alt="The big screen: top players, track gauges and the QR code">
+
+*Screenshots from the mock mode: the nicknames are made up.*
+
+## How it plays
+
+- A game is 10 bugs, 2 per level from 0 (high-school beginners) to 4, alternating
+  dev and network. Each is drawn from a pool of 50 written by the team.
+- 60 seconds per bug: tap the faulty line or device, then pick the right fix.
+- At the end, the player sees their profile (dev, network or both) and the matching
+  Coda program.
+- The big screen shows the top 10, the track gauges and new records. A PIN-protected
+  admin view hides nicknames and plays any bug to test it.
+
+## Technical choices
+
+- **The server is the only judge.** The 60-second timer, the points and the affinity
+  are computed by the API. The client only displays them.
+- **The answer never leaves the server early.** Public bug fields are an explicit
+  list; the fix is sent only once the player has answered.
+- **Front end and back end built in parallel** against a written API contract: the
+  front end runs on a mock client that follows the same rules.
+- **Made for phones on a stand:** no account, a game survives a page reload, sounds
+  are generated with the Web Audio API (no audio file), and nothing moves with
+  `prefers-reduced-motion`.
+- **Tested:** 274 front-end tests (Vitest) and 235 back-end tests (PHPUnit, PHPStan
+  level 6), run in CI.
 
 > **Working on a task? Start with [CONTRIBUTING.md](CONTRIBUTING.md).**
 > It explains, step by step, how each of us picks, does, reviews and merges a task.
@@ -13,6 +46,9 @@ development or networking. A live leaderboard is shown on a big screen.
 - Bezou — back end (API, storage, CI)
 - AeRia — game content (bug JSON files)
 - René (MrLeoufff) — deployment on the network track's server
+
+Coding agents were allowed, never required: see
+[Working with a coding agent](CONTRIBUTING.md#working-with-a-coding-agent).
 
 ## Stack
 
